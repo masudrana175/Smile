@@ -1,0 +1,284 @@
+/* =========================================================
+   Smile – Doctors Section
+   ========================================================= */
+
+.wdcs-doctors-section {
+	width: 100%;
+	font-family: inherit;
+}
+
+/* ---------------------------------------------------------
+   Thumbnail Tabs
+   --------------------------------------------------------- */
+.wdcs-doctors-tabs {
+	display: flex;
+	justify-content: center;
+	align-items: flex-end;
+	gap: 24px;
+	margin-bottom: 0;
+	padding: 0 16px 0;
+}
+
+.wdcs-doctor-tab {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+	background: none;
+	border: none;
+	cursor: pointer;
+	padding: 0;
+	transition: transform 0.25s ease;
+}
+
+.wdcs-doctor-tab:focus-visible {
+	outline: 2px solid #1ab5b6;
+	outline-offset: 4px;
+	border-radius: 4px;
+}
+
+.wdcs-tab-img-wrap {
+	width: 160px;
+	height: 190px;
+	overflow: hidden;
+	border-radius: 4px;
+	transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.wdcs-tab-img-wrap img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: top center;
+	display: block;
+}
+
+.wdcs-tab-img-placeholder {
+	background: #ddd;
+}
+
+/* Active tab: lift slightly */
+.wdcs-doctor-tab.is-active .wdcs-tab-img-wrap {
+	transform: translateY(-10px);
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.wdcs-tab-name {
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	color: #222;
+	text-align: center;
+	text-transform: uppercase;
+	line-height: 1.3;
+}
+
+/* ---------------------------------------------------------
+   Slider Wrapper
+   --------------------------------------------------------- */
+.wdcs-doctors-slider {
+	position: relative;
+}
+
+/* Slick arrow overrides */
+.wdcs-doctors-slider .slick-prev,
+.wdcs-doctors-slider .slick-next {
+	z-index: 10;
+	width: 36px;
+	height: 36px;
+}
+
+.wdcs-doctors-slider .slick-prev {
+	left: 12px;
+}
+
+.wdcs-doctors-slider .slick-next {
+	right: 12px;
+}
+
+.wdcs-doctors-slider .slick-prev:before,
+.wdcs-doctors-slider .slick-next:before {
+	font-size: 36px;
+	color: #fff;
+	opacity: 0.9;
+}
+
+/* ---------------------------------------------------------
+   Single Slide
+   --------------------------------------------------------- */
+.wdcs-doctor-slide {
+	outline: none;
+}
+
+.wdcs-slide-inner {
+	display: flex;
+	align-items: flex-end;
+	background: #1ab5b6;
+	min-height: 340px;
+	position: relative;
+	overflow: hidden;
+}
+
+/* Content side */
+.wdcs-slide-content {
+	flex: 1 1 55%;
+	padding: 48px 48px 48px 64px;
+	position: relative;
+	z-index: 2;
+}
+
+.wdcs-slide-heading {
+	color: #fff;
+	font-size: 26px;
+	font-weight: 700;
+	margin: 0 0 16px;
+	line-height: 1.2;
+}
+
+.wdcs-slide-text {
+	color: #fff;
+	font-size: 15px;
+	line-height: 1.65;
+	margin-bottom: 28px;
+}
+
+.wdcs-slide-text p {
+	margin: 0 0 14px;
+}
+
+.wdcs-slide-text p:last-child {
+	margin-bottom: 0;
+}
+
+/* Learn More button */
+.wdcs-learn-more {
+	display: inline-block;
+	border: 2px solid #fff;
+	color: #fff;
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	text-decoration: none;
+	padding: 12px 28px;
+	transition: background 0.2s ease, color 0.2s ease;
+}
+
+.wdcs-learn-more:hover,
+.wdcs-learn-more:focus {
+	background: #fff;
+	color: #1ab5b6;
+}
+
+/* Image side */
+.wdcs-slide-image {
+	flex: 0 0 40%;
+	align-self: flex-end;
+	position: relative;
+	z-index: 1;
+}
+
+.wdcs-slide-image img {
+	display: block;
+	width: 100%;
+	max-width: 420px;
+	height: auto;
+	margin-left: auto;
+	/* image bleeds from bottom, cropped top if needed */
+	object-fit: cover;
+	object-position: top center;
+}
+
+/* Mobile swipe hint */
+.wdcs-swipe-hint {
+	display: none;
+	text-align: center;
+	font-size: 13px;
+	color: #555;
+	margin: 10px 0 0;
+}
+
+/* ---------------------------------------------------------
+   Responsive – Tablet (≤ 900 px)
+   --------------------------------------------------------- */
+@media (max-width: 900px) {
+	.wdcs-tab-img-wrap {
+		width: 120px;
+		height: 140px;
+	}
+
+	.wdcs-slide-content {
+		padding: 36px 32px 36px 40px;
+	}
+
+	.wdcs-slide-heading {
+		font-size: 22px;
+	}
+}
+
+/* ---------------------------------------------------------
+   Responsive – Mobile (≤ 640 px)
+   --------------------------------------------------------- */
+@media (max-width: 640px) {
+	.wdcs-doctors-tabs {
+		gap: 12px;
+		padding: 0 8px;
+	}
+
+	.wdcs-tab-img-wrap {
+		width: 90px;
+		height: 105px;
+	}
+
+	.wdcs-tab-name {
+		font-size: 10px;
+	}
+
+	.wdcs-doctor-tab.is-active .wdcs-tab-img-wrap {
+		transform: translateY(-6px);
+	}
+
+	/* Stack image above content on mobile */
+	.wdcs-slide-inner {
+		flex-direction: column;
+		align-items: center;
+		min-height: unset;
+	}
+
+	.wdcs-slide-image {
+		width: 100%;
+		order: -1; /* image on top */
+		background: #1ab5b6;
+	}
+
+	.wdcs-slide-image img {
+		max-width: 280px;
+		margin: 0 auto;
+	}
+
+	.wdcs-slide-content {
+		flex: none;
+		width: 100%;
+		padding: 32px 24px 36px;
+	}
+
+	.wdcs-slide-heading {
+		font-size: 20px;
+	}
+
+	.wdcs-slide-text {
+		font-size: 14px;
+	}
+
+	.wdcs-swipe-hint {
+		display: block;
+	}
+
+	.wdcs-doctors-slider .slick-prev {
+		left: 4px;
+	}
+
+	.wdcs-doctors-slider .slick-next {
+		right: 4px;
+	}
+}

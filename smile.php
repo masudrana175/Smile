@@ -39,7 +39,8 @@ if ( ! class_exists( 'Smile' ) ) {
 		}
 
 		private function includes() {
-			// Future includes go here.
+			require_once WDCS_PLUGIN_DIR . 'includes/class-wdcs-doctors-shortcode.php';
+			new WDCS_Doctors_Shortcode();
 		}
 
 		private function hooks() {
