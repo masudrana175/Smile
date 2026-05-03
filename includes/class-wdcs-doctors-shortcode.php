@@ -119,36 +119,38 @@ class WDCS_Doctors_Shortcode {
 			</div>
 
 			<!-- Slider -->
-			<div class="wdcs-doctors-slider">
-				<?php foreach ( $doctors as $doctor ) : ?>
-				<div class="wdcs-doctor-slide">
-					<div class="wdcs-slide-inner">
-						<div class="wdcs-slide-content">
-							<h2 class="wdcs-slide-heading">
-								<?php echo esc_html( 'Meet ' . $doctor['title'] ); ?>
-							</h2>
-							<div class="wdcs-slide-text">
-								<?php echo wp_kses_post( $doctor['content'] ); ?>
+			<div class="wdcs-slider-wrap">
+				<div class="wdcs-doctors-slider">
+					<?php foreach ( $doctors as $doctor ) : ?>
+					<div class="wdcs-doctor-slide">
+						<div class="wdcs-slide-inner">
+							<div class="wdcs-slide-content">
+								<h2 class="wdcs-slide-heading">
+									<?php echo esc_html( 'Meet ' . $doctor['title'] ); ?>
+								</h2>
+								<div class="wdcs-slide-text">
+									<?php echo wp_kses_post( $doctor['content'] ); ?>
+								</div>
+								<?php if ( $doctor['link'] ) : ?>
+								<a href="<?php echo esc_url( $doctor['link'] ); ?>" class="wdcs-learn-more">
+									LEARN MORE
+								</a>
+								<?php endif; ?>
 							</div>
-							<?php if ( $doctor['link'] ) : ?>
-							<a href="<?php echo esc_url( $doctor['link'] ); ?>" class="wdcs-learn-more">
-								LEARN MORE
-							</a>
+							<?php if ( $doctor['image'] ) : ?>
+							<div class="wdcs-slide-image">
+								<img
+									src="<?php echo esc_url( $doctor['image'] ); ?>"
+									alt="<?php echo esc_attr( $doctor['title'] ); ?>"
+									loading="lazy"
+								>
+							</div>
 							<?php endif; ?>
 						</div>
-						<?php if ( $doctor['image'] ) : ?>
-						<div class="wdcs-slide-image">
-							<img
-								src="<?php echo esc_url( $doctor['image'] ); ?>"
-								alt="<?php echo esc_attr( $doctor['title'] ); ?>"
-								loading="lazy"
-							>
-						</div>
-						<?php endif; ?>
+						<p class="wdcs-swipe-hint" aria-hidden="true">&#8592; Swipe left for next doctor</p>
 					</div>
-					<p class="wdcs-swipe-hint" aria-hidden="true">&#8592; Swipe left for next doctor</p>
+					<?php endforeach; ?>
 				</div>
-				<?php endforeach; ?>
 			</div>
 
 		</div>

@@ -9,8 +9,8 @@
 		}
 
 		$section.each( function () {
-			var $wrap  = $( this );
-			var $tabs  = $wrap.find( '.wdcs-doctor-tab' );
+			var $wrap   = $( this );
+			var $tabs   = $wrap.find( '.wdcs-doctor-tab' );
 			var $slider = $wrap.find( '.wdcs-doctors-slider' );
 
 			// Init Slick.
@@ -19,11 +19,16 @@
 				slidesToScroll: 1,
 				dots          : false,
 				arrows        : true,
-				infinite      : true,
+				infinite      : false,  // allows hiding arrows at first / last slide
 				speed         : 400,
-				adaptiveHeight: true,
-				prevArrow     : '<button class="slick-prev slick-arrow" aria-label="Previous" type="button">&#10094;</button>',
-				nextArrow     : '<button class="slick-next slick-arrow" aria-label="Next" type="button">&#10095;</button>',
+				adaptiveHeight: false,
+				prevArrow: '<button class="slick-prev slick-arrow" aria-label="Previous" type="button">'
+					+ '<span class="wdcs-arrow-chevron">&#10094;</span>'
+					+ '</button>',
+				nextArrow: '<button class="slick-next slick-arrow" aria-label="Next" type="button">'
+					+ '<span class="wdcs-arrow-chevron">&#10095;</span>'
+					+ '<span class="wdcs-arrow-label">MORE</span>'
+					+ '</button>',
 			} );
 
 			// Sync slider → tabs.
