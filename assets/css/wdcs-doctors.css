@@ -57,7 +57,7 @@
 }
 
 /* Active tab: lift only — no shadow, no background */
-.wdcs-doctor-tab.is-active .wdcs-tab-img-wrap {
+.wdcs-doctor-tab.is-active {
 	transform: translateY(-28px);
 }
 
@@ -284,7 +284,7 @@
 		height: 113px;
 	}
 
-.wdcs-doctor-tab.is-active .wdcs-tab-img-wrap {
+	.wdcs-doctor-tab.is-active {
 		transform: translateY(-6px);
 	}
 
