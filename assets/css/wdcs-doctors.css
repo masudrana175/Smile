@@ -58,7 +58,7 @@
 
 /* Active tab: lift only — no shadow, no background */
 .wdcs-doctor-tab.is-active .wdcs-tab-img-wrap {
-	transform: translateY(-10px);
+	transform: translateY(-28px);
 }
 
 .wdcs-tab-name {}
