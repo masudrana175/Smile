@@ -56,7 +56,7 @@
 	background: #ddd;
 }
 
-/* Active tab: lift only — no shadow, no background */
+/* Active tab: lift image + title together */
 .wdcs-doctor-tab.is-active {
 	transform: translateY(-28px);
 }
@@ -64,16 +64,14 @@
 .wdcs-tab-name {}
 
 /* ---------------------------------------------------------
-   Slider Wrapper – provides space for outside arrows
+   Slider Wrapper
    --------------------------------------------------------- */
 .wdcs-slider-wrap {
 	position: relative;
-	padding: 0 80px;
 }
 
 .wdcs-doctors-slider {
 	position: relative;
-	/* allow arrows to visually sit outside the teal card */
 	overflow: visible;
 }
 
@@ -105,17 +103,17 @@
 }
 
 .wdcs-doctors-slider .slick-prev {
-	left: -68px;
+	left: 16px;
 }
 
 .wdcs-doctors-slider .slick-next {
-	right: -68px;
+	right: 16px;
 }
 
 .wdcs-arrow-chevron {
 	display: block;
 	font-size: 38px;
-	color: #333;
+	color: #fff;
 	font-style: normal;
 	line-height: 1;
 }
@@ -125,7 +123,7 @@
 	font-size: 11px;
 	font-weight: 700;
 	letter-spacing: 0.1em;
-	color: #333;
+	color: #fff;
 	text-transform: uppercase;
 }
 
@@ -134,12 +132,12 @@
 	display: none !important;
 }
 
-/* Hover: teal accent */
+/* Hover: slight dim */
 .wdcs-doctors-slider .slick-prev:hover .wdcs-arrow-chevron,
 .wdcs-doctors-slider .slick-next:hover .wdcs-arrow-chevron,
 .wdcs-doctors-slider .slick-prev:hover .wdcs-arrow-label,
 .wdcs-doctors-slider .slick-next:hover .wdcs-arrow-label {
-	color: #1ab5b6;
+	opacity: 0.75;
 }
 
 /* ---------------------------------------------------------
@@ -151,10 +149,10 @@
 
 .wdcs-slide-inner {
 	display: flex;
-	align-items: stretch;
+	align-items: flex-end;
 	background: #1ab5b6;
 	position: relative;
-	overflow: hidden;
+	overflow: visible; /* allows doctor image head to bleed above card */
 }
 
 /* Content side */
@@ -213,19 +211,20 @@
 	color: #1ab5b6;
 }
 
-/* Image side */
+/* Image side – bleeds above the colored card */
 .wdcs-slide-image {
 	flex: 0 0 40%;
 	align-self: flex-end;
 	position: relative;
 	z-index: 1;
+	margin-top: -80px; /* pulls image upward so head shows above card */
 }
 
 .wdcs-slide-image img {
 	display: block;
 	width: 100%;
 	max-width: 420px;
-	height: 100%;
+	height: auto;
 	margin-left: auto;
 	object-fit: cover;
 	object-position: top center;
@@ -244,18 +243,6 @@
    Responsive – Tablet (≤ 1024 px)
    --------------------------------------------------------- */
 @media (max-width: 1024px) {
-	.wdcs-slider-wrap {
-		padding: 0 54px;
-	}
-
-	.wdcs-doctors-slider .slick-prev {
-		left: -46px;
-	}
-
-	.wdcs-doctors-slider .slick-next {
-		right: -46px;
-	}
-
 	.wdcs-tab-img-wrap {
 		width: 200px;
 		height: 226px;
@@ -288,18 +275,6 @@
 		transform: translateY(-6px);
 	}
 
-	.wdcs-slider-wrap {
-		padding: 0 44px;
-	}
-
-	.wdcs-doctors-slider .slick-prev {
-		left: -38px;
-	}
-
-	.wdcs-doctors-slider .slick-next {
-		right: -38px;
-	}
-
 	.wdcs-arrow-chevron {
 		font-size: 26px;
 	}
@@ -317,11 +292,11 @@
 	.wdcs-slide-image {
 		width: 100%;
 		order: -1;
+		margin-top: 0; /* reset bleed on mobile — stacked layout */
 	}
 
 	.wdcs-slide-image img {
 		max-width: 100%;
-		height: auto;
 	}
 
 	.wdcs-slide-content {
