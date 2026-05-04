@@ -245,15 +245,15 @@
    --------------------------------------------------------- */
 @media (max-width: 1024px) {
 	.wdcs-slider-wrap {
-		padding: 0 60px;
+		padding: 0 54px;
 	}
 
 	.wdcs-doctors-slider .slick-prev {
-		left: -52px;
+		left: -46px;
 	}
 
 	.wdcs-doctors-slider .slick-next {
-		right: -52px;
+		right: -46px;
 	}
 
 	.wdcs-tab-img-wrap {
