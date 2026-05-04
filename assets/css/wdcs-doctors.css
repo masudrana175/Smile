@@ -159,9 +159,8 @@
 
 .wdcs-slide-inner {
 	display: flex;
-	align-items: flex-end;
+	align-items: stretch;
 	background: #1ab5b6;
-	height: 430px;
 	position: relative;
 	overflow: hidden;
 }
@@ -172,8 +171,6 @@
 	padding: 48px 48px 48px 64px;
 	position: relative;
 	z-index: 2;
-	overflow-y: auto;
-	height: 100%;
 	box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
@@ -227,7 +224,6 @@
 /* Image side */
 .wdcs-slide-image {
 	flex: 0 0 40%;
-	height: 100%;
 	align-self: flex-end;
 	position: relative;
 	z-index: 1;
@@ -236,8 +232,8 @@
 .wdcs-slide-image img {
 	display: block;
 	width: 100%;
-	height: 100%;
 	max-width: 420px;
+	height: 100%;
 	margin-left: auto;
 	object-fit: cover;
 	object-position: top center;
@@ -328,27 +324,22 @@
 	.wdcs-slide-inner {
 		flex-direction: column;
 		align-items: center;
-		height: auto;
-		min-height: unset;
 	}
 
 	.wdcs-slide-image {
 		width: 100%;
-		height: 260px;
 		order: -1;
 	}
 
 	.wdcs-slide-image img {
 		max-width: 100%;
-		height: 100%;
+		height: auto;
 	}
 
 	.wdcs-slide-content {
 		flex: none;
 		width: 100%;
-		height: auto;
 		padding: 32px 24px 36px;
-		overflow-y: visible;
 	}
 
 	.wdcs-slide-heading {

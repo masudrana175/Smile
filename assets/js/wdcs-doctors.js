@@ -21,7 +21,7 @@
 				arrows        : true,
 				infinite      : false,  // allows hiding arrows at first / last slide
 				speed         : 400,
-				adaptiveHeight: false,
+				adaptiveHeight: true,
 				prevArrow: '<button class="slick-prev slick-arrow" aria-label="Previous" type="button">'
 					+ '<span class="wdcs-arrow-chevron">&#10094;</span>'
 					+ '</button>',
