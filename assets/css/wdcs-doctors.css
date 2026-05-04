@@ -61,15 +61,7 @@
 	transform: translateY(-10px);
 }
 
-.wdcs-tab-name {
-	font-size: 12px;
-	font-weight: 700;
-	letter-spacing: 0.06em;
-	color: #222;
-	text-align: center;
-	text-transform: uppercase;
-	line-height: 1.3;
-}
+.wdcs-tab-name {}
 
 /* ---------------------------------------------------------
    Slider Wrapper – provides space for outside arrows
@@ -292,11 +284,7 @@
 		height: 113px;
 	}
 
-	.wdcs-tab-name {
-		font-size: 10px;
-	}
-
-	.wdcs-doctor-tab.is-active .wdcs-tab-img-wrap {
+.wdcs-doctor-tab.is-active .wdcs-tab-img-wrap {
 		transform: translateY(-6px);
 	}
 
