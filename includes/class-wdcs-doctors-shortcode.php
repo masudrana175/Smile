@@ -45,6 +45,19 @@ class WDCS_Doctors_Shortcode {
 		);
 	}
 
+	/**
+	 * Resolves a meta value that may be an attachment ID or a direct URL.
+	 */
+	private function resolve_image( $meta ) {
+		if ( empty( $meta ) ) {
+			return '';
+		}
+		if ( is_numeric( $meta ) ) {
+			return (string) wp_get_attachment_url( intval( $meta ) );
+		}
+		return esc_url_raw( $meta );
+	}
+
 	public function render( $atts ) {
 		$atts = shortcode_atts( array(
 			'posts_per_page' => -1,
@@ -70,22 +83,18 @@ class WDCS_Doctors_Shortcode {
 		$doctors = array();
 		while ( $query->have_posts() ) {
 			$query->the_post();
-			$post_id        = get_the_ID();
-			$image_meta     = get_post_meta( $post_id, 'dr_featured_image', true );
-			$image_url      = '';
-			if ( ! empty( $image_meta ) ) {
-				// Support both attachment ID and direct URL.
-				if ( is_numeric( $image_meta ) ) {
-					$image_url = wp_get_attachment_url( intval( $image_meta ) );
-				} else {
-					$image_url = esc_url( $image_meta );
-				}
-			}
+			$post_id   = get_the_ID();
 			$doctors[] = array(
-				'title'   => get_the_title(),
-				'content' => get_post_meta( $post_id, 'doctore_content', true ),
-				'image'   => $image_url,
-				'link'    => get_permalink(),
+				'title'       => get_the_title(),
+				// Tab thumbnail label — falls back to post title if empty.
+				'tab_title'   => get_post_meta( $post_id, 'dr_slide_thumbnail_title', true ),
+				// Small photo shown in the tab row.
+				'tab_image'   => $this->resolve_image( get_post_meta( $post_id, 'dr_featured_image', true ) ),
+				// Large photo shown inside the teal slide card.
+				'slide_image' => $this->resolve_image( get_post_meta( $post_id, 'dr_slide_thumbnail', true ) ),
+				// Bio text inside the slide card.
+				'content'     => get_post_meta( $post_id, 'dc_slide_text', true ),
+				'link'        => get_permalink(),
 			);
 		}
 		wp_reset_postdata();
@@ -97,23 +106,24 @@ class WDCS_Doctors_Shortcode {
 			<!-- Thumbnail tabs -->
 			<div class="wdcs-doctors-tabs">
 				<?php foreach ( $doctors as $index => $doctor ) : ?>
+				<?php $tab_label = ! empty( $doctor['tab_title'] ) ? $doctor['tab_title'] : $doctor['title']; ?>
 				<button
 					class="wdcs-doctor-tab<?php echo 0 === $index ? ' is-active' : ''; ?>"
 					data-index="<?php echo esc_attr( $index ); ?>"
-					aria-label="<?php echo esc_attr( $doctor['title'] ); ?>"
+					aria-label="<?php echo esc_attr( $tab_label ); ?>"
 				>
-					<?php if ( $doctor['image'] ) : ?>
+					<?php if ( $doctor['tab_image'] ) : ?>
 					<div class="wdcs-tab-img-wrap">
 						<img
-							src="<?php echo esc_url( $doctor['image'] ); ?>"
-							alt="<?php echo esc_attr( $doctor['title'] ); ?>"
+							src="<?php echo esc_url( $doctor['tab_image'] ); ?>"
+							alt="<?php echo esc_attr( $tab_label ); ?>"
 							loading="lazy"
 						>
 					</div>
 					<?php else : ?>
 					<div class="wdcs-tab-img-wrap wdcs-tab-img-placeholder"></div>
 					<?php endif; ?>
-					<span class="wdcs-tab-name"><?php echo esc_html( strtoupper( $doctor['title'] ) ); ?></span>
+					<span class="wdcs-tab-name"><?php echo esc_html( strtoupper( $tab_label ) ); ?></span>
 				</button>
 				<?php endforeach; ?>
 			</div>
@@ -137,10 +147,10 @@ class WDCS_Doctors_Shortcode {
 								</a>
 								<?php endif; ?>
 							</div>
-							<?php if ( $doctor['image'] ) : ?>
+							<?php if ( $doctor['slide_image'] ) : ?>
 							<div class="wdcs-slide-image">
 								<img
-									src="<?php echo esc_url( $doctor['image'] ); ?>"
+									src="<?php echo esc_url( $doctor['slide_image'] ); ?>"
 									alt="<?php echo esc_attr( $doctor['title'] ); ?>"
 									loading="lazy"
 								>
