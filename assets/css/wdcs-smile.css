@@ -74,6 +74,18 @@
 	position: relative;
 }
 
+.wdcs-slider-wrap .wdcs-doctor-slide {
+	margin-top: 60px;
+}
+
+.wdcs-doctors-slider,
+.wdcs-doctors-slider .slick-list,
+.wdcs-doctors-slider .slick-track,
+.wdcs-doctors-slider .slick-slide,
+.wdcs-doctors-slider .slick-slide > div {
+	height: auto;
+}
+
 .wdcs-doctors-slider {
 	position: relative;
 	overflow: visible;
