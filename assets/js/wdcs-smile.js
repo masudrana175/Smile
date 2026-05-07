@@ -68,5 +68,32 @@
 			} );
 		} );
 
+		/* =====================================================
+		   Gallery Carousel  [wdcs_gallery]
+		   ===================================================== */
+		$( '.wdcs-gallery-section' ).each( function () {
+			var $slider = $( this ).find( '.wdcs-gallery-slider' );
+
+			$slider.slick( {
+				slidesToShow  : 3,
+				slidesToScroll: 1,
+				dots          : true,
+				arrows        : true,
+				infinite      : false,
+				speed         : 400,
+				prevArrow: '<button class="slick-prev slick-arrow" aria-label="Previous" type="button">'
+					+ '<span class="wdcs-arrow-chevron">&#10094;</span>'
+					+ '</button>',
+				nextArrow: '<button class="slick-next slick-arrow" aria-label="Next" type="button">'
+					+ '<span class="wdcs-arrow-chevron">&#10095;</span>'
+					+ '<span class="wdcs-arrow-label">MORE</span>'
+					+ '</button>',
+				responsive: [
+					{ breakpoint: 1024, settings: { slidesToShow: 2 } },
+					{ breakpoint: 640,  settings: { slidesToShow: 1 } },
+				],
+			} );
+		} );
+
 	} );
 } )( jQuery );
