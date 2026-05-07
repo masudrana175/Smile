@@ -376,8 +376,8 @@
 	display: none;
 }
 
-.wdcs-doctors-slider .slick-prev { left: 16px; }
-.wdcs-doctors-slider .slick-next { right: 16px; }
+.wdcs-doctors-slider .slick-prev { left: -70px; }
+.wdcs-doctors-slider .slick-next { right: -70px; }
 
 .wdcs-doctors-slider .wdcs-arrow-chevron {
 	display: block;
@@ -424,7 +424,7 @@
 
 .wdcs-slide-content {
 	flex: 1 1 55%;
-	padding: 48px 48px 48px 64px;
+	padding: 30px;
 	position: relative;
 	z-index: 2;
 	box-sizing: border-box;
@@ -501,8 +501,10 @@
 /* Doctors – Tablet */
 @media (max-width: 1024px) {
 	.wdcs-tab-img-wrap { width: 200px; height: 226px; }
-	.wdcs-slide-content { padding: 36px 32px 36px 40px; }
+	.wdcs-slide-content { padding: 30px; }
 	.wdcs-slide-heading { font-size: 22px; }
+	.wdcs-doctors-slider .slick-prev { left: -50px; }
+	.wdcs-doctors-slider .slick-next { right: -50px; }
 }
 
 /* Doctors – Mobile */
