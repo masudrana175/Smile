@@ -440,3 +440,211 @@
 	.wdcs-looking-slider .slick-prev { left: -24px; }
 	.wdcs-looking-slider .slick-next { right: -24px; }
 }
+
+
+/* =========================================================
+   Dentistry Services  [wdcs_services]
+   ========================================================= */
+
+.wdcs-services-section {
+	width: 100%;
+	font-family: inherit;
+	position: relative;
+}
+
+/* ---------------------------------------------------------
+   Arrows (dark – sit on white background)
+   --------------------------------------------------------- */
+.wdcs-services-slider .slick-prev,
+.wdcs-services-slider .slick-next {
+	z-index: 10;
+	width: auto;
+	height: auto;
+	background: none;
+	border: none;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 4px;
+	top: 50%;
+	transform: translateY(-50%);
+	cursor: pointer;
+	line-height: 1;
+	position: absolute;
+}
+
+.wdcs-services-slider .slick-prev:before,
+.wdcs-services-slider .slick-next:before {
+	display: none;
+}
+
+.wdcs-services-slider .slick-prev { left: -48px; }
+.wdcs-services-slider .slick-next { right: -48px; }
+
+.wdcs-services-slider .wdcs-arrow-chevron {
+	display: block;
+	font-size: 38px;
+	color: #333;
+	font-style: normal;
+	line-height: 1;
+}
+
+.wdcs-services-slider .wdcs-arrow-label {
+	display: block;
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.1em;
+	color: #333;
+	text-transform: uppercase;
+}
+
+.wdcs-services-slider .slick-arrow.slick-disabled {
+	display: none !important;
+}
+
+.wdcs-services-slider .slick-prev:hover .wdcs-arrow-chevron,
+.wdcs-services-slider .slick-next:hover .wdcs-arrow-chevron,
+.wdcs-services-slider .slick-prev:hover .wdcs-arrow-label,
+.wdcs-services-slider .slick-next:hover .wdcs-arrow-label {
+	color: #1ab5b6;
+}
+
+/* ---------------------------------------------------------
+   Slide + Card
+   --------------------------------------------------------- */
+.wdcs-services-slide {
+	padding: 0 10px;
+	box-sizing: border-box;
+}
+
+/* Row gap when rows: 2 is active */
+.wdcs-services-slider .slick-slide > div + div .wdcs-services-card {
+	margin-top: 20px;
+}
+
+.wdcs-services-card {
+	display: flex;
+	flex-direction: column;
+	border: 1px solid #e0e0e0;
+	border-radius: 8px;
+	padding: 24px;
+	box-sizing: border-box;
+	background: #fff;
+}
+
+/* ---------------------------------------------------------
+   Card Header – icon + titles side by side
+   --------------------------------------------------------- */
+.wdcs-services-header {
+	display: flex;
+	align-items: flex-start;
+	gap: 16px;
+	margin-bottom: 20px;
+}
+
+.wdcs-services-icon {
+	flex-shrink: 0;
+}
+
+.wdcs-services-icon img {
+	display: inline-block;
+	width: auto;
+}
+
+.wdcs-services-titles {
+	display: flex;
+	flex-direction: column;
+}
+
+.wdcs-services-title {
+	font-family: "Metropolis", Sans-serif;
+	font-size: 22px;
+	font-weight: 700;
+	color: var(--e-global-color-text);
+	margin: 0 0 4px;
+	line-height: 1.2;
+}
+
+.wdcs-services-subtitle {
+	font-family: "Metropolis", Sans-serif;
+	font-size: 15px;
+	font-style: italic;
+	color: var(--e-global-color-text);
+	display: block;
+	padding-bottom: 10px;
+	/* Teal SVG wave line beneath subtitle */
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='8' viewBox='0 0 160 8'%3E%3Cpath d='M0,4 Q40,0 80,4 Q120,8 160,4' stroke='%231ab5b6' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: left bottom;
+	background-size: 120px 8px;
+}
+
+/* ---------------------------------------------------------
+   Card Body
+   --------------------------------------------------------- */
+.wdcs-services-text {
+	font-family: "Metropolis", Sans-serif;
+	font-size: 15px;
+	line-height: 1.65;
+	color: var(--e-global-color-text);
+	margin: 0 0 20px;
+	flex: 1;
+}
+
+/* Learn More – same style & hover as looking-for */
+.wdcs-services-more {
+	display: inline-block;
+	font-family: "Metropolis", Sans-serif;
+	font-size: 16px;
+	font-weight: 600;
+	text-transform: uppercase;
+	text-decoration: none;
+	color: var(--e-global-color-5218933);
+	transition: color 0.3s;
+	align-self: flex-start;
+	margin-top: auto;
+}
+
+.wdcs-services-more:hover,
+.wdcs-services-more:focus {
+	text-decoration: underline;
+	color: var(--e-global-color-text);
+	--e-transform-translateY: 3px;
+	transition: background .3s, border .3s, border-radius .3s, box-shadow .3s, transform var(--e-transform-transition-duration, .4s);
+	transform: perspective(var(--e-transform-perspective, 0))
+		rotate(var(--e-transform-rotateZ, 0))
+		rotateX(var(--e-transform-rotateX, 0))
+		rotateY(var(--e-transform-rotateY, 0))
+		translate(var(--e-transform-translate, 0))
+		translateX(var(--e-transform-translateX, 0))
+		translateY(var(--e-transform-translateY, 0))
+		scaleX(calc(var(--e-transform-flipX, 1) * var(--e-transform-scaleX, var(--e-transform-scale, 1))))
+		scaleY(calc(var(--e-transform-flipY, 1) * var(--e-transform-scaleY, var(--e-transform-scale, 1))))
+		skewX(var(--e-transform-skewX, 0))
+		skewY(var(--e-transform-skewY, 0));
+	transform-origin: var(--e-transform-origin-y) var(--e-transform-origin-x);
+}
+
+/* Services – Tablet */
+@media (max-width: 1024px) {
+	.wdcs-services-slider .slick-prev { left: -36px; }
+	.wdcs-services-slider .slick-next { right: -36px; }
+	.wdcs-services-title { font-size: 18px; }
+}
+
+/* Services – Mobile landscape */
+@media (max-width: 768px) {
+	.wdcs-services-slider .slick-prev { left: -28px; }
+	.wdcs-services-slider .slick-next { right: -28px; }
+	.wdcs-services-slider .wdcs-arrow-chevron { font-size: 26px; }
+	.wdcs-services-slider .wdcs-arrow-label { font-size: 9px; }
+}
+
+/* Services – Mobile portrait */
+@media (max-width: 480px) {
+	.wdcs-services-slide { padding: 0 6px; }
+	.wdcs-services-slider .slick-prev { left: -24px; }
+	.wdcs-services-slider .slick-next { right: -24px; }
+	.wdcs-services-slider .slick-slide > div + div .wdcs-services-card { margin-top: 12px; }
+}

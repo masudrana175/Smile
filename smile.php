@@ -44,6 +44,9 @@ if ( ! class_exists( 'Smile' ) ) {
 
 			require_once WDCS_PLUGIN_DIR . 'includes/class-wdcs-looking-shortcode.php';
 			new WDCS_Looking_Shortcode();
+
+			require_once WDCS_PLUGIN_DIR . 'includes/class-wdcs-services-shortcode.php';
+			new WDCS_Services_Shortcode();
 		}
 
 		private function hooks() {
