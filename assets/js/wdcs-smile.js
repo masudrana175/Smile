@@ -75,8 +75,8 @@
 			var $slider = $( this ).find( '.wdcs-gallery-slider' );
 
 			$slider.slick( {
-				slidesToShow  : 6,
-				slidesToScroll: 2,
+				slidesToShow  : 3,
+				slidesToScroll: 1,
 				dots          : true,
 				arrows        : true,
 				infinite      : false,
@@ -89,8 +89,8 @@
 					+ '<span class="wdcs-arrow-label">MORE</span>'
 					+ '</button>',
 				responsive: [
-					{ breakpoint: 1024, settings: { slidesToShow: 4, slidesToScroll: 2 } },
-					{ breakpoint: 768,  settings: { slidesToShow: 2, slidesToScroll: 2 } },
+					{ breakpoint: 1024, settings: { slidesToShow: 2, slidesToScroll: 1 } },
+					{ breakpoint: 768,  settings: { slidesToShow: 1, slidesToScroll: 1 } },
 				],
 			} );
 		} );

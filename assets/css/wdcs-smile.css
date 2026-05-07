@@ -596,7 +596,11 @@
 .wdcs-gallery-section {
 	width: 100%;
 	position: relative;
-	padding-top: 36px; /* space for dots above slider */
+	padding-top: 36px;
+}
+
+.wdcs-gallery-slider {
+	width: 100%;
 }
 
 /* ---------------------------------------------------------
@@ -703,7 +707,7 @@
    Slide – one image per slide
    --------------------------------------------------------- */
 .wdcs-gallery-slide {
-	padding: 0 4px;
+	padding: 0 15px;
 	box-sizing: border-box;
 }
 
@@ -752,5 +756,5 @@
 }
 
 @media (max-width: 480px) {
-	.wdcs-gallery-slide { padding: 0 4px; }
+	.wdcs-gallery-slide { padding: 0 8px; }
 }

@@ -66,11 +66,8 @@ class WDCS_Gallery_Shortcode {
 				<div class="wdcs-gallery-slide">
 					<div class="wdcs-gallery-item">
 						<img src="<?php echo esc_url( $url ); ?>"
-							alt="<?php echo 0 === $index % 2 ? 'Before' : 'After'; ?>"
+							alt="Gallery image"
 							loading="lazy">
-						<span class="wdcs-gallery-label">
-							<?php echo 0 === $index % 2 ? 'BEFORE' : 'AFTER'; ?>
-						</span>
 					</div>
 				</div>
 				<?php endforeach; ?>
