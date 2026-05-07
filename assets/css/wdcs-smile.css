@@ -503,17 +503,18 @@
 
 .wdcs-services-title {
 	font-family: "Metropolis", Sans-serif;
-	font-size: 22px;
+	font-size: 29px;
 	font-weight: 700;
+	line-height: 28px;
 	color: var(--e-global-color-text);
 	margin: 0 0 4px;
-	line-height: 1.2;
 }
 
 /* Subtitle + animated SVG wave separator */
 .wdcs-services-subtitle {
 	font-family: "Metropolis", Sans-serif;
-	font-size: 15px;
+	font-size: 18px;
+	font-weight: 400;
 	font-style: italic;
 	color: var(--e-global-color-text);
 	display: block;
@@ -534,8 +535,9 @@
    --------------------------------------------------------- */
 .wdcs-services-text {
 	font-family: "Metropolis", Sans-serif;
-	font-size: 15px;
-	line-height: 1.65;
+	font-size: 18px;
+	font-weight: 400;
+	line-height: 1.4em;
 	color: var(--e-global-color-text);
 	margin: 0 0 20px;
 	flex: 1;
