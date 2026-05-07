@@ -596,54 +596,13 @@
 .wdcs-gallery-section {
 	width: 100%;
 	position: relative;
-	padding-top: 48px;
+	padding-top: 52px;
 }
 
 .wdcs-gallery-slider {
 	width: 100%;
 }
 
-/* ---------------------------------------------------------
-   Dots – positioned above the slider
-   --------------------------------------------------------- */
-.wdcs-gallery-slider .slick-dots {
-	position: absolute;
-	top: -44px;
-	bottom: auto;
-	width: 100%;
-	display: flex !important;
-	justify-content: center;
-	align-items: center;
-	gap: 6px;
-	padding: 0;
-	margin: 0;
-	list-style: none;
-}
-
-.wdcs-gallery-slider .slick-dots li {
-	width: 10px;
-	height: 10px;
-	margin: 0;
-}
-
-.wdcs-gallery-slider .slick-dots li button {
-	width: 10px;
-	height: 10px;
-	padding: 0;
-	border-radius: 50%;
-	background: #bbb;
-	border: none;
-	font-size: 0;
-	cursor: pointer;
-}
-
-.wdcs-gallery-slider .slick-dots li.slick-active button {
-	background: #333;
-}
-
-.wdcs-gallery-slider .slick-dots li button:before {
-	display: none;
-}
 
 /* ---------------------------------------------------------
    Arrows – top-right of the section
@@ -672,8 +631,8 @@
 	display: none;
 }
 
-.wdcs-gallery-slider .slick-prev { right: 48px; left: auto; }
-.wdcs-gallery-slider .slick-next { right: 0; left: auto; }
+.wdcs-gallery-slider .slick-prev { right: 52px; left: auto; top: -48px; }
+.wdcs-gallery-slider .slick-next { right: 0; left: auto; top: -48px; }
 
 .wdcs-gallery-slider .wdcs-arrow-chevron {
 	display: block;
