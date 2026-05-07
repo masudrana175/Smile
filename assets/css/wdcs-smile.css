@@ -376,13 +376,13 @@
 	display: none;
 }
 
-.wdcs-doctors-slider .slick-prev { left: -70px; }
-.wdcs-doctors-slider .slick-next { right: -70px; }
+.wdcs-doctors-slider .slick-prev { left: -90px; }
+.wdcs-doctors-slider .slick-next { right: -90px; }
 
 .wdcs-doctors-slider .wdcs-arrow-chevron {
 	display: block;
 	font-size: 38px;
-	color: #fff;
+	color: #000;
 	font-style: normal;
 	line-height: 1;
 }
@@ -392,7 +392,7 @@
 	font-size: 11px;
 	font-weight: 700;
 	letter-spacing: 0.1em;
-	color: #fff;
+	color: #000;
 	text-transform: uppercase;
 }
 
@@ -503,8 +503,8 @@
 	.wdcs-tab-img-wrap { width: 200px; height: 226px; }
 	.wdcs-slide-content { padding: 30px; }
 	.wdcs-slide-heading { font-size: 22px; }
-	.wdcs-doctors-slider .slick-prev { left: -50px; }
-	.wdcs-doctors-slider .slick-next { right: -50px; }
+	.wdcs-doctors-slider .slick-prev { left: -70px; }
+	.wdcs-doctors-slider .slick-next { right: -70px; }
 }
 
 /* Doctors – Mobile */
