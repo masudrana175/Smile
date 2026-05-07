@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'WDCS_VERSION', '1.0.7' );
+define( 'WDCS_VERSION', '1.0.8' );
 define( 'WDCS_PLUGIN_FILE', __FILE__ );
 define( 'WDCS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WDCS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -50,6 +50,9 @@ if ( ! class_exists( 'Smile' ) ) {
 
 			require_once WDCS_PLUGIN_DIR . 'includes/class-wdcs-gallery-shortcode.php';
 			new WDCS_Gallery_Shortcode();
+
+			require_once WDCS_PLUGIN_DIR . 'includes/class-wdcs-doctors-list-shortcode.php';
+			new WDCS_Doctors_List_Shortcode();
 		}
 
 		private function hooks() {
@@ -71,6 +74,12 @@ if ( ! class_exists( 'Smile' ) ) {
 				array( 'jquery' ),
 				'1.8.1',
 				true
+			);
+			wp_register_style(
+				'wdcs-great-vibes',
+				'https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap',
+				array(),
+				null
 			);
 			wp_register_style(
 				'wdcs-smile',
