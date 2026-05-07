@@ -485,7 +485,7 @@
 	width: 100%;
 	max-width: 420px;
 	height: auto;
-	margin-left: auto;
+	margin-left: 0;
 	object-fit: cover;
 	object-position: top center;
 }
