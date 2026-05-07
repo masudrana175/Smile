@@ -47,17 +47,42 @@ if ( ! class_exists( 'Smile' ) ) {
 		}
 
 		private function hooks() {
+			add_action( 'wp_enqueue_scripts', array( $this, 'register_assets' ) );
 			register_activation_hook( WDCS_PLUGIN_FILE, array( $this, 'activate' ) );
 			register_deactivation_hook( WDCS_PLUGIN_FILE, array( $this, 'deactivate' ) );
 		}
 
-		public function activate() {
-			// Activation logic.
+		public function register_assets() {
+			wp_register_style(
+				'slick-css',
+				'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.css',
+				array(),
+				'1.8.1'
+			);
+			wp_register_script(
+				'slick-js',
+				'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js',
+				array( 'jquery' ),
+				'1.8.1',
+				true
+			);
+			wp_register_style(
+				'wdcs-smile',
+				WDCS_PLUGIN_URL . 'assets/css/wdcs-smile.css',
+				array( 'slick-css' ),
+				WDCS_VERSION
+			);
+			wp_register_script(
+				'wdcs-smile',
+				WDCS_PLUGIN_URL . 'assets/js/wdcs-smile.js',
+				array( 'jquery', 'slick-js' ),
+				WDCS_VERSION,
+				true
+			);
 		}
 
-		public function deactivate() {
-			// Deactivation logic.
-		}
+		public function activate() {}
+		public function deactivate() {}
 	}
 }
 

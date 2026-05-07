@@ -7,42 +7,6 @@ class WDCS_Doctors_Shortcode {
 
 	public function __construct() {
 		add_shortcode( 'wdcs_doctors', array( $this, 'render' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue' ) );
-	}
-
-	public function enqueue() {
-		wp_register_style(
-			'slick-css',
-			'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.css',
-			array(),
-			'1.8.1'
-		);
-		wp_register_style(
-			'slick-theme-css',
-			'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.min.css',
-			array( 'slick-css' ),
-			'1.8.1'
-		);
-		wp_register_script(
-			'slick-js',
-			'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js',
-			array( 'jquery' ),
-			'1.8.1',
-			true
-		);
-		wp_register_style(
-			'wdcs-doctors',
-			WDCS_PLUGIN_URL . 'assets/css/wdcs-doctors.css',
-			array( 'slick-css', 'slick-theme-css' ),
-			WDCS_VERSION
-		);
-		wp_register_script(
-			'wdcs-doctors',
-			WDCS_PLUGIN_URL . 'assets/js/wdcs-doctors.js',
-			array( 'jquery', 'slick-js' ),
-			WDCS_VERSION,
-			true
-		);
 	}
 
 	/**
@@ -77,8 +41,8 @@ class WDCS_Doctors_Shortcode {
 			return '';
 		}
 
-		wp_enqueue_style( 'wdcs-doctors' );
-		wp_enqueue_script( 'wdcs-doctors' );
+		wp_enqueue_style( 'wdcs-smile' );
+		wp_enqueue_script( 'wdcs-smile' );
 
 		$doctors = array();
 		while ( $query->have_posts() ) {
@@ -86,13 +50,9 @@ class WDCS_Doctors_Shortcode {
 			$post_id   = get_the_ID();
 			$doctors[] = array(
 				'title'       => get_the_title(),
-				// Tab thumbnail label — falls back to post title if empty.
 				'tab_title'   => get_post_meta( $post_id, 'dr_slide_thumbnail_title', true ),
-				// Small photo shown in the tab row.
 				'tab_image'   => $this->resolve_image( get_post_meta( $post_id, 'dr_featured_image', true ) ),
-				// Large photo shown inside the teal slide card.
 				'slide_image' => $this->resolve_image( get_post_meta( $post_id, 'dr_slide_thumbnail', true ) ),
-				// Bio text inside the slide card.
 				'content'     => get_post_meta( $post_id, 'dc_slide_text', true ),
 				'link'        => get_permalink(),
 			);
