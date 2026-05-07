@@ -108,6 +108,7 @@
 	position: relative;
 	z-index: 1;
 	margin-top: -60px;
+	margin-right: 30px;
 }
 
 .wdcs-doctor-row-image img {
@@ -123,6 +124,11 @@
 /* Reversed row: image on left */
 .wdcs-doctor-row.is-reversed .wdcs-doctor-row-inner {
 	flex-direction: row-reverse;
+}
+
+.wdcs-doctor-row.is-reversed .wdcs-doctor-row-image {
+	margin-right: 0;
+	margin-left: 30px;
 }
 
 .wdcs-doctor-row.is-reversed .wdcs-doctor-row-image img {
