@@ -361,8 +361,8 @@
 }
 
 .wdcs-looking-icon img {
-	display: block;
-	max-width: 100%;
+	display: inline-block;
+	width: auto;
 }
 
 /* Title */
