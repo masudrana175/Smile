@@ -700,21 +700,14 @@
 }
 
 /* ---------------------------------------------------------
-   Slide
+   Slide – one image per slide
    --------------------------------------------------------- */
 .wdcs-gallery-slide {
-	padding: 0 8px;
+	padding: 0 4px;
 	box-sizing: border-box;
 }
 
-/* Before/After pair */
-.wdcs-gallery-pair {
-	display: flex;
-	gap: 4px;
-}
-
 .wdcs-gallery-item {
-	flex: 1;
 	position: relative;
 	overflow: hidden;
 }

@@ -55,9 +55,6 @@ class WDCS_Gallery_Shortcode {
 			return '';
 		}
 
-		// Group into before/after pairs.
-		$pairs = array_chunk( $images, 2 );
-
 		wp_enqueue_style( 'wdcs-smile' );
 		wp_enqueue_script( 'wdcs-smile' );
 
@@ -65,19 +62,15 @@ class WDCS_Gallery_Shortcode {
 		?>
 		<div class="wdcs-gallery-section">
 			<div class="wdcs-gallery-slider">
-				<?php foreach ( $pairs as $pair ) : ?>
+				<?php foreach ( $images as $index => $url ) : ?>
 				<div class="wdcs-gallery-slide">
-					<div class="wdcs-gallery-pair">
-						<div class="wdcs-gallery-item">
-							<img src="<?php echo esc_url( $pair[0] ); ?>" alt="Before" loading="lazy">
-							<span class="wdcs-gallery-label">BEFORE</span>
-						</div>
-						<?php if ( ! empty( $pair[1] ) ) : ?>
-						<div class="wdcs-gallery-item">
-							<img src="<?php echo esc_url( $pair[1] ); ?>" alt="After" loading="lazy">
-							<span class="wdcs-gallery-label">AFTER</span>
-						</div>
-						<?php endif; ?>
+					<div class="wdcs-gallery-item">
+						<img src="<?php echo esc_url( $url ); ?>"
+							alt="<?php echo 0 === $index % 2 ? 'Before' : 'After'; ?>"
+							loading="lazy">
+						<span class="wdcs-gallery-label">
+							<?php echo 0 === $index % 2 ? 'BEFORE' : 'AFTER'; ?>
+						</span>
 					</div>
 				</div>
 				<?php endforeach; ?>
