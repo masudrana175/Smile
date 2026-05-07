@@ -4,6 +4,98 @@
 
 
 /* =========================================================
+   Our Staff  [wdcs_staff]
+   ========================================================= */
+
+.wdcs-staff-section {
+	width: 100%;
+	font-family: inherit;
+}
+
+.wdcs-staff-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 40px 30px;
+	align-items: start;
+}
+
+/* Image */
+.wdcs-staff-image {
+	width: 100%;
+	overflow: hidden;
+}
+
+.wdcs-staff-image img {
+	display: block;
+	width: 100%;
+	height: auto;
+	object-fit: cover;
+	object-position: top center;
+}
+
+/* Body */
+.wdcs-staff-body {
+	padding: 20px 0 0;
+}
+
+/* Name */
+.wdcs-staff-name {
+	font-family: var(--e-global-typography-secondary-font-family), Sans-serif;
+	font-weight: var(--e-global-typography-secondary-font-weight);
+	color: var(--e-global-color-text);
+	font-size: 20px;
+	line-height: 1.2;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	margin: 0 0 6px;
+}
+
+/* Designation + wave */
+.wdcs-staff-designation {
+	font-family: var(--e-global-typography-primary-font-family), Sans-serif;
+	font-weight: 400;
+	font-style: italic;
+	color: #1ab5b6;
+	font-size: 16px;
+	display: block;
+	margin-bottom: 4px;
+}
+
+.wdcs-staff-designation::after {
+	content: '';
+	display: block;
+	width: 60%;
+	height: 10px;
+	margin-top: 6px;
+	margin-bottom: 16px;
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='247' height='22' fill='none'%3E%3Cmask id='a' width='246' height='23' x='0' y='1' maskUnits='userSpaceOnUse' style='mask-type:alpha'%3E%3Cpath fill='%23D9D9D9' d='M0 1h246v23H0z'/%3E%3C/mask%3E%3Cg mask='url(%23a)'%3E%3Cpath fill='%23017791' d='M.225 13.987c40.77-3.247 81.218-6.304 122.486-5.61 40.217.68 80.07 3.493 119.823 8.284 4.828.577 4.966-4.727.193-5.301-40.597-4.886-82.029-7.082-123.059-6.436-39.896.627-80.713 2.548-119.53 8.822-.233.04-.132.263.087.25v-.009z'/%3E%3C/g%3E%3C/svg%3E") repeat-x;
+	background-size: cover;
+}
+
+/* Description */
+.wdcs-staff-description {
+	font-family: var(--e-global-typography-primary-font-family), Sans-serif;
+	font-weight: var(--e-global-typography-primary-font-weight);
+	color: var(--e-global-color-text);
+	font-size: 16px;
+	line-height: 1.6em;
+}
+
+.wdcs-staff-description p { margin: 0 0 12px; }
+.wdcs-staff-description p:last-child { margin-bottom: 0; }
+
+/* Staff – Tablet → 2 col */
+@media (max-width: 1024px) {
+	.wdcs-staff-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Staff – Mobile → 1 col */
+@media (max-width: 640px) {
+	.wdcs-staff-grid { grid-template-columns: 1fr; gap: 32px; }
+}
+
+
+/* =========================================================
    Doctors List  [wdcs_doctors_list]
    ========================================================= */
 
