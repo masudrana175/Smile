@@ -44,7 +44,6 @@ class WDCS_Doctors_List_Shortcode {
 		}
 		wp_reset_postdata();
 
-		wp_enqueue_style( 'wdcs-great-vibes' );
 		wp_enqueue_style( 'wdcs-smile' );
 
 		ob_start();
