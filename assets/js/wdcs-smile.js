@@ -68,28 +68,5 @@
 			} );
 		} );
 
-		/* =====================================================
-		   Dentistry Services  [wdcs_services]
-		   ===================================================== */
-		$( '.wdcs-services-section' ).each( function () {
-			var $slider = $( this ).find( '.wdcs-services-slider' );
-
-			$slider.slick( {
-				slidesToShow  : 1,
-				slidesToScroll: 1,
-				dots          : false,
-				arrows        : true,
-				infinite      : false,
-				speed         : 400,
-				prevArrow: '<button class="slick-prev slick-arrow" aria-label="Previous" type="button">'
-					+ '<span class="wdcs-arrow-chevron">&#10094;</span>'
-					+ '</button>',
-				nextArrow: '<button class="slick-next slick-arrow" aria-label="Next" type="button">'
-					+ '<span class="wdcs-arrow-chevron">&#10095;</span>'
-					+ '<span class="wdcs-arrow-label">MORE</span>'
-					+ '</button>',
-			} );
-		} );
-
 	} );
 } )( jQuery );

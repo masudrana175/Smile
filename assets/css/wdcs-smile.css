@@ -453,77 +453,6 @@
 }
 
 /* ---------------------------------------------------------
-   Arrows (dark – sit on white background)
-   --------------------------------------------------------- */
-.wdcs-services-slider .slick-prev,
-.wdcs-services-slider .slick-next {
-	z-index: 10;
-	width: auto;
-	height: auto;
-	background: none;
-	border: none;
-	padding: 0;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 4px;
-	top: 50%;
-	transform: translateY(-50%);
-	cursor: pointer;
-	line-height: 1;
-	position: absolute;
-}
-
-.wdcs-services-slider .slick-prev:before,
-.wdcs-services-slider .slick-next:before {
-	display: none;
-}
-
-.wdcs-services-slider .slick-prev { left: -48px; }
-.wdcs-services-slider .slick-next { right: -48px; }
-
-.wdcs-services-slider .wdcs-arrow-chevron {
-	display: block;
-	font-size: 38px;
-	color: #333;
-	font-style: normal;
-	line-height: 1;
-}
-
-.wdcs-services-slider .wdcs-arrow-label {
-	display: block;
-	font-size: 11px;
-	font-weight: 700;
-	letter-spacing: 0.1em;
-	color: #333;
-	text-transform: uppercase;
-}
-
-.wdcs-services-slider .slick-arrow.slick-disabled {
-	display: none !important;
-}
-
-.wdcs-services-slider .slick-prev:hover .wdcs-arrow-chevron,
-.wdcs-services-slider .slick-next:hover .wdcs-arrow-chevron,
-.wdcs-services-slider .slick-prev:hover .wdcs-arrow-label,
-.wdcs-services-slider .slick-next:hover .wdcs-arrow-label {
-	color: #1ab5b6;
-}
-
-/* Allow box-shadows to bleed outside Slick's clipping */
-.wdcs-services-slider .slick-list {
-	overflow: visible;
-}
-
-/* ---------------------------------------------------------
-   Slide wrapper
-   --------------------------------------------------------- */
-.wdcs-services-slide {
-	box-sizing: border-box;
-	padding: 12px; /* room for box-shadow on all four sides */
-}
-
-/* ---------------------------------------------------------
    CSS Grid – equal-height cards, 3 columns × 2 rows
    --------------------------------------------------------- */
 .wdcs-services-grid {
@@ -531,6 +460,8 @@
 	grid-template-columns: repeat(3, 1fr);
 	gap: 20px;
 	align-items: stretch;
+	padding: 12px; /* space for box-shadow bleed */
+	box-sizing: border-box;
 }
 
 /* ---------------------------------------------------------
@@ -649,16 +580,10 @@
 /* Services – Tablet → 2-col grid */
 @media (max-width: 1024px) {
 	.wdcs-services-grid { grid-template-columns: repeat(2, 1fr); }
-	.wdcs-services-slider .slick-prev { left: -36px; }
-	.wdcs-services-slider .slick-next { right: -36px; }
 	.wdcs-services-title { font-size: 18px; }
 }
 
-/* Services – Mobile landscape → 1-col grid */
+/* Services – Mobile → 1-col grid */
 @media (max-width: 640px) {
 	.wdcs-services-grid { grid-template-columns: 1fr; }
-	.wdcs-services-slider .slick-prev { left: -28px; }
-	.wdcs-services-slider .slick-next { right: -28px; }
-	.wdcs-services-slider .wdcs-arrow-chevron { font-size: 26px; }
-	.wdcs-services-slider .wdcs-arrow-label { font-size: 9px; }
 }
