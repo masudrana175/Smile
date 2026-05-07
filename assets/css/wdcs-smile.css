@@ -458,10 +458,8 @@
 .wdcs-services-grid {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
-	gap: 20px;
+	gap: 25px;
 	align-items: stretch;
-	padding: 12px; /* space for box-shadow bleed */
-	box-sizing: border-box;
 }
 
 /* ---------------------------------------------------------
