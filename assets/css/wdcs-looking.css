@@ -1,0 +1,219 @@
+/* =========================================================
+   Smile – What Are You Looking For Section
+   ========================================================= */
+
+.wdcs-looking-section {
+	width: 100%;
+	font-family: inherit;
+	position: relative;
+}
+
+/* ---------------------------------------------------------
+   Slider
+   --------------------------------------------------------- */
+.wdcs-looking-slider {
+	position: relative;
+}
+
+/* Equal-height slides via flex track */
+.wdcs-looking-slider .slick-track {
+	display: flex;
+}
+
+.wdcs-looking-slider .slick-slide {
+	display: flex;
+	height: auto;
+}
+
+/* Slick wraps content in an extra div — make it stretch */
+.wdcs-looking-slider .slick-slide > div {
+	display: flex;
+	width: 100%;
+}
+
+/* ---------------------------------------------------------
+   Arrows – same bare angle chevron style as doctors
+   --------------------------------------------------------- */
+.wdcs-looking-slider .slick-prev,
+.wdcs-looking-slider .slick-next {
+	z-index: 10;
+	width: auto;
+	height: auto;
+	background: none;
+	border: none;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 4px;
+	top: 50%;
+	transform: translateY(-50%);
+	cursor: pointer;
+	line-height: 1;
+	position: absolute;
+}
+
+.wdcs-looking-slider .slick-prev:before,
+.wdcs-looking-slider .slick-next:before {
+	display: none;
+}
+
+.wdcs-looking-slider .slick-prev {
+	left: -48px;
+}
+
+.wdcs-looking-slider .slick-next {
+	right: -48px;
+}
+
+.wdcs-looking-slider .wdcs-arrow-chevron {
+	display: block;
+	font-size: 38px;
+	color: #333;
+	font-style: normal;
+	line-height: 1;
+}
+
+.wdcs-looking-slider .wdcs-arrow-label {
+	display: block;
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.1em;
+	color: #333;
+	text-transform: uppercase;
+}
+
+.wdcs-looking-slider .slick-arrow.slick-disabled {
+	display: none !important;
+}
+
+.wdcs-looking-slider .slick-prev:hover .wdcs-arrow-chevron,
+.wdcs-looking-slider .slick-next:hover .wdcs-arrow-chevron,
+.wdcs-looking-slider .slick-prev:hover .wdcs-arrow-label,
+.wdcs-looking-slider .slick-next:hover .wdcs-arrow-label {
+	color: #1ab5b6;
+}
+
+/* ---------------------------------------------------------
+   Slide padding
+   --------------------------------------------------------- */
+.wdcs-looking-slide {
+	padding: 0 10px;
+	box-sizing: border-box;
+	width: 100%;
+}
+
+/* ---------------------------------------------------------
+   Card
+   --------------------------------------------------------- */
+.wdcs-looking-card {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	border: 1px solid #d8d8d8;
+	border-radius: 8px;
+	padding: 28px 24px 24px;
+	box-sizing: border-box;
+	background: #fff;
+}
+
+/* Icon */
+.wdcs-looking-icon {
+	margin-bottom: 20px;
+}
+
+.wdcs-looking-icon img {
+	display: block;
+	height: 80px;
+	width: auto;
+	max-width: 100%;
+	object-fit: contain;
+	object-position: left center;
+}
+
+/* Title */
+.wdcs-looking-title {
+	font-size: 18px;
+	font-weight: 700;
+	color: #1a1a1a;
+	margin: 0 0 12px;
+	line-height: 1.3;
+}
+
+/* Description */
+.wdcs-looking-text {
+	font-size: 14px;
+	line-height: 1.6;
+	color: #444;
+	margin: 0;
+	flex: 1; /* pushes LEARN MORE to bottom */
+}
+
+/* Learn More */
+.wdcs-looking-more {
+	display: inline-block;
+	margin-top: 20px;
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	text-decoration: none;
+	color: #862020;
+	transition: opacity 0.2s ease;
+}
+
+.wdcs-looking-more:hover,
+.wdcs-looking-more:focus {
+	opacity: 0.7;
+}
+
+/* ---------------------------------------------------------
+   Responsive – Tablet (≤ 1024 px) → 3 cards
+   --------------------------------------------------------- */
+@media (max-width: 1024px) {
+	.wdcs-looking-slider .slick-prev {
+		left: -36px;
+	}
+
+	.wdcs-looking-slider .slick-next {
+		right: -36px;
+	}
+}
+
+/* ---------------------------------------------------------
+   Responsive – Mobile landscape (≤ 768 px) → 2 cards
+   --------------------------------------------------------- */
+@media (max-width: 768px) {
+	.wdcs-looking-slider .slick-prev {
+		left: -28px;
+	}
+
+	.wdcs-looking-slider .slick-next {
+		right: -28px;
+	}
+
+	.wdcs-looking-slider .wdcs-arrow-chevron {
+		font-size: 26px;
+	}
+
+	.wdcs-looking-slider .wdcs-arrow-label {
+		font-size: 9px;
+	}
+}
+
+/* ---------------------------------------------------------
+   Responsive – Mobile portrait (≤ 480 px) → 1 card
+   --------------------------------------------------------- */
+@media (max-width: 480px) {
+	.wdcs-looking-slide {
+		padding: 0 6px;
+	}
+
+	.wdcs-looking-slider .slick-prev {
+		left: -24px;
+	}
+
+	.wdcs-looking-slider .slick-next {
+		right: -24px;
+	}
+}
