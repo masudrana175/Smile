@@ -596,7 +596,7 @@
 .wdcs-gallery-section {
 	width: 100%;
 	position: relative;
-	padding-top: 36px;
+	padding-top: 48px;
 }
 
 .wdcs-gallery-slider {
@@ -608,7 +608,7 @@
    --------------------------------------------------------- */
 .wdcs-gallery-slider .slick-dots {
 	position: absolute;
-	top: -32px;
+	top: -44px;
 	bottom: auto;
 	width: 100%;
 	display: flex !important;
@@ -646,7 +646,7 @@
 }
 
 /* ---------------------------------------------------------
-   Arrows
+   Arrows – top-right of the section
    --------------------------------------------------------- */
 .wdcs-gallery-slider .slick-prev,
 .wdcs-gallery-slider .slick-next {
@@ -660,8 +660,8 @@
 	flex-direction: column;
 	align-items: center;
 	gap: 4px;
-	top: 50%;
-	transform: translateY(-50%);
+	top: -36px;
+	transform: none;
 	cursor: pointer;
 	line-height: 1;
 	position: absolute;
@@ -672,8 +672,8 @@
 	display: none;
 }
 
-.wdcs-gallery-slider .slick-prev { left: -48px; }
-.wdcs-gallery-slider .slick-next { right: -48px; }
+.wdcs-gallery-slider .slick-prev { right: 48px; left: auto; }
+.wdcs-gallery-slider .slick-next { right: 0; left: auto; }
 
 .wdcs-gallery-slider .wdcs-arrow-chevron {
 	display: block;
@@ -707,7 +707,7 @@
    Slide – one image per slide
    --------------------------------------------------------- */
 .wdcs-gallery-slide {
-	padding: 0 15px;
+	padding: 0 20px;
 	box-sizing: border-box;
 }
 
@@ -743,18 +743,11 @@
 /* ---------------------------------------------------------
    Responsive
    --------------------------------------------------------- */
-@media (max-width: 1024px) {
-	.wdcs-gallery-slider .slick-prev { left: -36px; }
-	.wdcs-gallery-slider .slick-next { right: -36px; }
-}
-
 @media (max-width: 768px) {
-	.wdcs-gallery-slider .slick-prev { left: -28px; }
-	.wdcs-gallery-slider .slick-next { right: -28px; }
 	.wdcs-gallery-slider .wdcs-arrow-chevron { font-size: 26px; }
 	.wdcs-gallery-slider .wdcs-arrow-label { font-size: 9px; }
 }
 
 @media (max-width: 480px) {
-	.wdcs-gallery-slide { padding: 0 8px; }
+	.wdcs-gallery-slide { padding: 0 10px; }
 }
