@@ -631,8 +631,8 @@
 	display: none;
 }
 
-.wdcs-gallery-slider .slick-prev { right: 52px; left: auto; top: -67px; }
-.wdcs-gallery-slider .slick-next { right: 0; left: auto; top: -67px; }
+.wdcs-gallery-slider .slick-prev { right: 75px; left: auto; top: -67px; }
+.wdcs-gallery-slider .slick-next { right: 20px; left: auto; top: -67px; }
 
 .wdcs-gallery-slider .wdcs-arrow-chevron {
 	display: block;
