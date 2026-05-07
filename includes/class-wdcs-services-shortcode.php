@@ -11,7 +11,8 @@ class WDCS_Services_Shortcode {
 
 	public function render( $atts ) {
 		$atts = shortcode_atts( array(
-			'post_id' => 0,
+			'post_id'      => 0,
+			'per_page'     => 6, // cards per slider page (3 cols × 2 rows)
 		), $atts, 'wdcs_services' );
 
 		$post_id = $atts['post_id'] ? intval( $atts['post_id'] ) : get_queried_object_id();
@@ -50,11 +51,11 @@ class WDCS_Services_Shortcode {
 				}
 			}
 			$items[] = array(
-				'icon'      => $image_url,
-				'title'     => isset( $row['dsilv_title'] )            ? $row['dsilv_title']            : '',
-				'subtitle'  => isset( $row['dsilv_sub_title'] )        ? $row['dsilv_sub_title']        : '',
-				'text'      => isset( $row['dsilv_shortdescription'] ) ? $row['dsilv_shortdescription'] : '',
-				'url'       => isset( $row['dsilv_learn_url'] )        ? $row['dsilv_learn_url']        : '',
+				'icon'     => $image_url,
+				'title'    => isset( $row['dsilv_title'] )            ? $row['dsilv_title']            : '',
+				'subtitle' => isset( $row['dsilv_sub_title'] )        ? $row['dsilv_sub_title']        : '',
+				'text'     => isset( $row['dsilv_shortdescription'] ) ? $row['dsilv_shortdescription'] : '',
+				'url'      => isset( $row['dsilv_learn_url'] )        ? $row['dsilv_learn_url']        : '',
 			);
 		}
 
@@ -65,46 +66,53 @@ class WDCS_Services_Shortcode {
 		wp_enqueue_style( 'wdcs-smile' );
 		wp_enqueue_script( 'wdcs-smile' );
 
+		// Split items into pages for the slider.
+		$pages = array_chunk( $items, intval( $atts['per_page'] ) );
+
 		ob_start();
 		?>
 		<div class="wdcs-services-section">
 			<div class="wdcs-services-slider">
-				<?php foreach ( $items as $item ) : ?>
+				<?php foreach ( $pages as $page ) : ?>
 				<div class="wdcs-services-slide">
-					<div class="wdcs-services-card">
-						<div class="wdcs-services-header">
-							<?php if ( $item['icon'] ) : ?>
-							<div class="wdcs-services-icon">
-								<img
-									src="<?php echo esc_url( $item['icon'] ); ?>"
-									alt="<?php echo esc_attr( $item['title'] ); ?>"
-									loading="lazy"
-								>
+					<div class="wdcs-services-grid">
+						<?php foreach ( $page as $item ) : ?>
+						<div class="wdcs-services-card">
+							<div class="wdcs-services-header">
+								<?php if ( $item['icon'] ) : ?>
+								<div class="wdcs-services-icon">
+									<img
+										src="<?php echo esc_url( $item['icon'] ); ?>"
+										alt="<?php echo esc_attr( $item['title'] ); ?>"
+										loading="lazy"
+									>
+								</div>
+								<?php endif; ?>
+								<div class="wdcs-services-titles">
+									<?php if ( $item['title'] ) : ?>
+									<h3 class="wdcs-services-title">
+										<?php echo esc_html( $item['title'] ); ?>
+									</h3>
+									<?php endif; ?>
+									<?php if ( $item['subtitle'] ) : ?>
+									<span class="wdcs-services-subtitle">
+										<?php echo esc_html( $item['subtitle'] ); ?>
+									</span>
+									<?php endif; ?>
+								</div>
 							</div>
+							<?php if ( $item['text'] ) : ?>
+							<p class="wdcs-services-text">
+								<?php echo wp_kses_post( $item['text'] ); ?>
+							</p>
 							<?php endif; ?>
-							<div class="wdcs-services-titles">
-								<?php if ( $item['title'] ) : ?>
-								<h3 class="wdcs-services-title">
-									<?php echo esc_html( $item['title'] ); ?>
-								</h3>
-								<?php endif; ?>
-								<?php if ( $item['subtitle'] ) : ?>
-								<span class="wdcs-services-subtitle">
-									<?php echo esc_html( $item['subtitle'] ); ?>
-								</span>
-								<?php endif; ?>
-							</div>
+							<?php if ( $item['url'] ) : ?>
+							<a href="<?php echo esc_url( $item['url'] ); ?>" class="wdcs-services-more">
+								LEARN MORE
+							</a>
+							<?php endif; ?>
 						</div>
-						<?php if ( $item['text'] ) : ?>
-						<p class="wdcs-services-text">
-							<?php echo wp_kses_post( $item['text'] ); ?>
-						</p>
-						<?php endif; ?>
-						<?php if ( $item['url'] ) : ?>
-						<a href="<?php echo esc_url( $item['url'] ); ?>" class="wdcs-services-more">
-							LEARN MORE
-						</a>
-						<?php endif; ?>
+						<?php endforeach; ?>
 					</div>
 				</div>
 				<?php endforeach; ?>

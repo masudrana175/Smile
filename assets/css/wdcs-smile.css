@@ -511,26 +511,35 @@
 }
 
 /* ---------------------------------------------------------
-   Slide + Card
+   Slide wrapper – Slick needs display:block on the slide
    --------------------------------------------------------- */
 .wdcs-services-slide {
-	padding: 0 10px;
 	box-sizing: border-box;
 }
 
-/* Row gap when rows: 2 is active */
-.wdcs-services-slider .slick-slide > div + div .wdcs-services-card {
-	margin-top: 20px;
+/* ---------------------------------------------------------
+   CSS Grid – equal-height cards, 3 columns × 2 rows
+   --------------------------------------------------------- */
+.wdcs-services-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 20px;
+	align-items: stretch;
 }
 
+/* ---------------------------------------------------------
+   Card
+   --------------------------------------------------------- */
 .wdcs-services-card {
 	display: flex;
 	flex-direction: column;
+	height: 100%;
 	border: 1px solid #e0e0e0;
 	border-radius: 8px;
 	padding: 24px;
 	box-sizing: border-box;
 	background: #fff;
+	box-shadow: 0px 0px 10px 0px rgba(73, 73, 73, 0.31);
 }
 
 /* ---------------------------------------------------------
@@ -566,18 +575,31 @@
 	line-height: 1.2;
 }
 
+/* Subtitle + animated SVG wave separator */
 .wdcs-services-subtitle {
 	font-family: "Metropolis", Sans-serif;
 	font-size: 15px;
 	font-style: italic;
 	color: var(--e-global-color-text);
 	display: block;
-	padding-bottom: 10px;
-	/* Teal SVG wave line beneath subtitle */
-	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='8' viewBox='0 0 160 8'%3E%3Cpath d='M0,4 Q40,0 80,4 Q120,8 160,4' stroke='%231ab5b6' stroke-width='2' fill='none'/%3E%3C/svg%3E");
-	background-repeat: no-repeat;
-	background-position: left bottom;
-	background-size: 120px 8px;
+}
+
+.wdcs-services-subtitle::after {
+	content: '';
+	display: block;
+	width: 100%;
+	height: 10px;
+	margin-top: 6px;
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='247' height='22' fill='none'%3E%3Cmask id='a' width='246' height='23' x='0' y='1' maskUnits='userSpaceOnUse' style='mask-type:alpha'%3E%3Cpath fill='%23D9D9D9' d='M0 1h246v23H0z'/%3E%3C/mask%3E%3Cg mask='url(%23a)'%3E%3Cpath fill='%23017791' d='M.225 13.987c40.77-3.247 81.218-6.304 122.486-5.61 40.217.68 80.07 3.493 119.823 8.284 4.828.577 4.966-4.727.193-5.301-40.597-4.886-82.029-7.082-123.059-6.436-39.896.627-80.713 2.548-119.53 8.822-.233.04-.132.263.087.25v-.009z'/%3E%3C/g%3E%3C/svg%3E") repeat-x;
+	background-size: cover;
+	transform: scaleX(0);
+	transform-origin: left;
+	transition: transform 0.8s ease;
+}
+
+/* Animate separator in on card hover */
+.wdcs-services-card:hover .wdcs-services-subtitle::after {
+	transform: scaleX(1);
 }
 
 /* ---------------------------------------------------------
@@ -626,25 +648,19 @@
 	transform-origin: var(--e-transform-origin-y) var(--e-transform-origin-x);
 }
 
-/* Services – Tablet */
+/* Services – Tablet → 2-col grid */
 @media (max-width: 1024px) {
+	.wdcs-services-grid { grid-template-columns: repeat(2, 1fr); }
 	.wdcs-services-slider .slick-prev { left: -36px; }
 	.wdcs-services-slider .slick-next { right: -36px; }
 	.wdcs-services-title { font-size: 18px; }
 }
 
-/* Services – Mobile landscape */
-@media (max-width: 768px) {
+/* Services – Mobile landscape → 1-col grid */
+@media (max-width: 640px) {
+	.wdcs-services-grid { grid-template-columns: 1fr; }
 	.wdcs-services-slider .slick-prev { left: -28px; }
 	.wdcs-services-slider .slick-next { right: -28px; }
 	.wdcs-services-slider .wdcs-arrow-chevron { font-size: 26px; }
 	.wdcs-services-slider .wdcs-arrow-label { font-size: 9px; }
-}
-
-/* Services – Mobile portrait */
-@media (max-width: 480px) {
-	.wdcs-services-slide { padding: 0 6px; }
-	.wdcs-services-slider .slick-prev { left: -24px; }
-	.wdcs-services-slider .slick-next { right: -24px; }
-	.wdcs-services-slider .slick-slide > div + div .wdcs-services-card { margin-top: 12px; }
 }
