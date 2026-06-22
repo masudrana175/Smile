@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'WDCS_VERSION', '1.1.9' );
+define( 'WDCS_VERSION', '1.2.0' );
 define( 'WDCS_PLUGIN_FILE', __FILE__ );
 define( 'WDCS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WDCS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -58,6 +58,9 @@ if ( ! class_exists( 'Smile' ) ) {
 			new WDCS_Staff_Shortcode();
 
 			if ( is_admin() ) {
+				require_once WDCS_PLUGIN_DIR . 'includes/class-wdcs-options-page.php';
+				new WDCS_Options_Page();
+
 				require_once WDCS_PLUGIN_DIR . 'includes/class-wdcs-admin-sections.php';
 				new WDCS_Admin_Sections();
 			}

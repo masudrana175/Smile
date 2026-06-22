@@ -5,58 +5,53 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class WDCS_Admin_Sections {
 
-	const META_KEY    = '_wdcs_active_sections';
+	const META_KEY     = '_wdcs_active_sections';
 	const NONCE_ACTION = 'wdcs_save_sections';
 	const NONCE_FIELD  = 'wdcs_sections_nonce';
 
 	/**
-	 * Registry of all shortcode sections.
-	 * Fill in 'jetengine_id' with the HTML id of the JetEngine meta box
-	 * div on the edit screen (inspect with browser DevTools).
+	 * Base section definitions (label only).
+	 * Image URLs and JetEngine IDs come from the options page settings.
 	 */
-	private function get_sections() {
+	public static function get_section_defaults() {
 		return apply_filters( 'wdcs_sections_registry', array(
-			'doctors_carousel' => array(
-				'label'        => 'Doctors Carousel',
-				'shortcode'    => '[wdcs_doctors]',
-				'preview'      => 'doctors-carousel.svg',
-				'jetengine_id' => '',
-			),
-			'doctors_list' => array(
-				'label'        => 'Doctors List',
-				'shortcode'    => '[wdcs_doctors_list]',
-				'preview'      => 'doctors-list.svg',
-				'jetengine_id' => '',
-			),
-			'looking_for' => array(
-				'label'        => 'What Are You Looking For',
-				'shortcode'    => '[wdcs_looking_for]',
-				'preview'      => 'looking-for.svg',
-				'jetengine_id' => '',
-			),
-			'services' => array(
-				'label'        => 'Dentistry Services',
-				'shortcode'    => '[wdcs_services]',
-				'preview'      => 'services.svg',
-				'jetengine_id' => '',
-			),
-			'gallery' => array(
-				'label'        => 'Gallery Carousel',
-				'shortcode'    => '[wdcs_gallery]',
-				'preview'      => 'gallery.svg',
-				'jetengine_id' => '',
-			),
-			'staff' => array(
-				'label'        => 'Our Staff',
-				'shortcode'    => '[wdcs_staff]',
-				'preview'      => 'staff.svg',
-				'jetengine_id' => '',
-			),
+			'doctors_carousel' => array( 'label' => 'Doctors Carousel' ),
+			'doctors_list'     => array( 'label' => 'Doctors List' ),
+			'looking_for'      => array( 'label' => 'What Are You Looking For' ),
+			'services'         => array( 'label' => 'Dentistry Services' ),
+			'gallery'          => array( 'label' => 'Gallery Carousel' ),
+			'staff'            => array( 'label' => 'Our Staff' ),
 		) );
 	}
 
+	/**
+	 * Merges base definitions with saved options (image_url, jetengine_id).
+	 */
+	public static function get_all_sections() {
+		$defaults = self::get_section_defaults();
+		$settings = WDCS_Options_Page::get_settings();
+		$merged   = array();
+
+		foreach ( $defaults as $slug => $def ) {
+			$saved           = isset( $settings[ $slug ] ) ? $settings[ $slug ] : array();
+			$merged[ $slug ] = array(
+				'label'        => $def['label'],
+				'image_url'    => ! empty( $saved['image_url'] )    ? $saved['image_url']    : '',
+				'jetengine_id' => ! empty( $saved['jetengine_id'] ) ? $saved['jetengine_id'] : '',
+			);
+		}
+
+		return $merged;
+	}
+
+	/**
+	 * Post types that show the Smile Sections side panel.
+	 * Defaults to all post types with a UI + patient-services.
+	 */
 	private function get_post_types() {
-		return apply_filters( 'wdcs_sections_post_types', array( 'page' ) );
+		$all = array_keys( get_post_types( array( 'show_ui' => true ) ) );
+		$all[] = 'patient-services';
+		return apply_filters( 'wdcs_sections_post_types', array_unique( $all ) );
 	}
 
 	public function __construct() {
@@ -79,7 +74,7 @@ class WDCS_Admin_Sections {
 	}
 
 	public function render_meta_box( $post ) {
-		$sections = $this->get_sections();
+		$sections = self::get_all_sections();
 		$saved    = get_post_meta( $post->ID, self::META_KEY, true );
 		$active   = is_array( $saved ) ? $saved : array();
 
@@ -87,8 +82,7 @@ class WDCS_Admin_Sections {
 		?>
 		<div class="wdcs-sections-picker">
 			<?php foreach ( $sections as $slug => $section ) :
-				$checked   = in_array( $slug, $active, true );
-				$image_url = WDCS_PLUGIN_URL . 'assets/images/sections/' . $section['preview'];
+				$checked = in_array( $slug, $active, true );
 			?>
 			<label class="wdcs-section-item<?php echo $checked ? ' is-checked' : ''; ?>"
 			       for="wdcs_section_<?php echo esc_attr( $slug ); ?>">
@@ -103,15 +97,32 @@ class WDCS_Admin_Sections {
 					<span class="wdcs-section-label"><?php echo esc_html( $section['label'] ); ?></span>
 				</div>
 
+				<?php if ( $section['image_url'] ) : ?>
 				<div class="wdcs-section-preview">
-					<img src="<?php echo esc_url( $image_url ); ?>"
-					     alt="<?php echo esc_attr( $section['label'] ); ?>">
+					<img src="<?php echo esc_url( $section['image_url'] ); ?>"
+					     alt="<?php echo esc_attr( $section['label'] ); ?>"
+					     class="wdcs-section-thumb wdcs-js-enlarge"
+					     data-full="<?php echo esc_url( $section['image_url'] ); ?>"
+					     title="Click to enlarge">
 				</div>
-
-				<code class="wdcs-section-shortcode"><?php echo esc_html( $section['shortcode'] ); ?></code>
+				<?php else : ?>
+				<div class="wdcs-section-preview wdcs-section-no-image">
+					<span class="dashicons dashicons-format-image"></span>
+					<span>No preview — set one in <a href="<?php echo esc_url( admin_url( 'admin.php?page=wdcs-smile-sections' ) ); ?>">Smile Sections</a></span>
+				</div>
+				<?php endif; ?>
 
 			</label>
 			<?php endforeach; ?>
+		</div>
+
+		<!-- Inline lightbox for preview enlargement -->
+		<div class="wdcs-lightbox" id="wdcs-lightbox" style="display:none;">
+			<div class="wdcs-lightbox-overlay wdcs-js-close-lightbox"></div>
+			<div class="wdcs-lightbox-inner">
+				<button type="button" class="wdcs-lightbox-close wdcs-js-close-lightbox">&times;</button>
+				<img src="" alt="" id="wdcs-lightbox-img">
+			</div>
 		</div>
 		<?php
 	}
@@ -128,14 +139,11 @@ class WDCS_Admin_Sections {
 			return;
 		}
 		$post_type_object = get_post_type_object( $post->post_type );
-		if ( ! current_user_can( $post_type_object->cap->edit_post, $post_id ) ) {
-			return;
-		}
-		if ( ! in_array( $post->post_type, $this->get_post_types(), true ) ) {
+		if ( ! $post_type_object || ! current_user_can( $post_type_object->cap->edit_post, $post_id ) ) {
 			return;
 		}
 
-		$valid_slugs = array_keys( $this->get_sections() );
+		$valid_slugs = array_keys( self::get_section_defaults() );
 		$submitted   = isset( $_POST['wdcs_active_sections'] ) ? (array) $_POST['wdcs_active_sections'] : array();
 		$sanitized   = array_values( array_intersect( array_map( 'sanitize_key', $submitted ), $valid_slugs ) );
 
@@ -144,10 +152,6 @@ class WDCS_Admin_Sections {
 
 	public function enqueue_assets( $hook ) {
 		if ( ! in_array( $hook, array( 'post.php', 'post-new.php' ), true ) ) {
-			return;
-		}
-		$screen = get_current_screen();
-		if ( ! $screen || ! in_array( $screen->post_type, $this->get_post_types(), true ) ) {
 			return;
 		}
 
@@ -167,7 +171,7 @@ class WDCS_Admin_Sections {
 		);
 
 		$sections_js = array();
-		foreach ( $this->get_sections() as $slug => $section ) {
+		foreach ( self::get_all_sections() as $slug => $section ) {
 			$sections_js[ $slug ] = array( 'jetengineId' => $section['jetengine_id'] );
 		}
 
