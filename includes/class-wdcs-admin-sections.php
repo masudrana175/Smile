@@ -36,9 +36,7 @@ class WDCS_Admin_Sections {
 	 * Defaults to all post types with a UI + patient-services.
 	 */
 	private function get_post_types() {
-		$all = array_keys( get_post_types( array( 'show_ui' => true ) ) );
-		$all[] = 'patient-services';
-		return apply_filters( 'wdcs_sections_post_types', array_unique( $all ) );
+		return apply_filters( 'wdcs_sections_post_types', array( 'patient-services' ) );
 	}
 
 	public function __construct() {
