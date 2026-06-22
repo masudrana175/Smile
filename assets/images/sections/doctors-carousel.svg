@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="200" viewBox="0 0 360 200">
+  <rect width="360" height="200" fill="#e6f8f8" rx="4"/>
+  <rect x="1" y="1" width="358" height="198" fill="none" stroke="#1ab5b6" stroke-width="2" rx="4"/>
+  <rect x="16" y="20" width="328" height="110" fill="#b2e4e4" rx="3"/>
+  <circle cx="90" cy="75" r="32" fill="#1ab5b6" opacity=".4"/>
+  <circle cx="180" cy="75" r="32" fill="#1ab5b6" opacity=".4"/>
+  <circle cx="270" cy="75" r="32" fill="#1ab5b6" opacity=".4"/>
+  <rect x="60" y="108" width="240" height="14" fill="#1ab5b6" opacity=".25" rx="2"/>
+  <text x="180" y="158" font-family="Arial,sans-serif" font-size="13" font-weight="bold" fill="#0c7a7b" text-anchor="middle">Doctors Carousel</text>
+  <text x="180" y="178" font-family="'Courier New',monospace" font-size="11" fill="#666" text-anchor="middle">[wdcs_doctors]</text>
+</svg>
