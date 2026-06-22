@@ -1,5 +1,5 @@
 /* =========================================================
-   Smile – Admin Styles (options page + side panel)
+   Smile – Admin Styles
    ========================================================= */
 
 
@@ -52,17 +52,13 @@
 	opacity: .85;
 }
 
-.wdcs-lightbox-close:hover {
-	opacity: 1;
-}
+.wdcs-lightbox-close:hover { opacity: 1; }
 
-body.wdcs-lightbox-open {
-	overflow: hidden;
-}
+body.wdcs-lightbox-open { overflow: hidden; }
 
 
 /* =========================================================
-   Options page  [Smile Sections menu]
+   Options page – Smile Sections menu
    ========================================================= */
 
 .wdcs-options-wrap h1 {
@@ -70,127 +66,142 @@ body.wdcs-lightbox-open {
 	align-items: center;
 }
 
-/* Grid of section cards */
-.wdcs-options-grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-	gap: 24px;
-	margin-top: 8px;
-}
-
-.wdcs-option-card {
-	background: #fff;
+/* Section rows list */
+#wdcs-sections-list {
+	display: flex;
+	flex-direction: column;
+	gap: 0;
 	border: 1px solid #ddd;
 	border-radius: 6px;
 	overflow: hidden;
-	box-shadow: 0 1px 4px rgba(0,0,0,.06);
-	display: flex;
-	flex-direction: column;
+	background: #fff;
+	max-width: 900px;
 }
 
-/* Preview area */
-.wdcs-option-preview-wrap {
-	width: 100%;
+.wdcs-section-row {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	padding: 12px 16px;
+	border-bottom: 1px solid #f0f0f1;
+	background: #fff;
+	transition: background .15s;
+}
+
+.wdcs-section-row:last-child { border-bottom: none; }
+.wdcs-section-row:hover { background: #fafafa; }
+
+/* Thumbnail */
+.wdcs-row-thumb {
+	flex-shrink: 0;
+	width: 100px;
+	height: 64px;
+	border-radius: 4px;
+	overflow: hidden;
+	border: 1px solid #e0e0e0;
 	background: #f0f0f1;
-	min-height: 140px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	overflow: hidden;
 }
 
-.wdcs-option-thumb {
+.wdcs-row-thumb-img {
 	display: block;
 	width: 100%;
-	height: 160px;
+	height: 100%;
 	object-fit: cover;
 	cursor: zoom-in;
 	transition: opacity .2s;
 }
 
-.wdcs-option-thumb:hover {
-	opacity: .88;
+.wdcs-row-thumb-img:hover { opacity: .85; }
+
+.wdcs-row-thumb-placeholder {
+	color: #bbb;
+	text-align: center;
 }
 
-.wdcs-option-placeholder {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 6px;
-	color: #aaa;
-	padding: 24px;
+.wdcs-row-thumb-placeholder .dashicons {
+	font-size: 28px;
+	width: 28px;
+	height: 28px;
 }
 
-.wdcs-option-placeholder .dashicons {
-	font-size: 36px;
-	width: 36px;
-	height: 36px;
-}
-
-.wdcs-option-placeholder span:last-child {
-	font-size: 13px;
-}
-
-/* Card body */
-.wdcs-option-body {
-	padding: 16px 20px 20px;
-	display: flex;
-	flex-direction: column;
-	gap: 14px;
+/* Fields */
+.wdcs-row-fields {
 	flex: 1;
-}
-
-.wdcs-option-title {
-	font-size: 15px;
-	font-weight: 700;
-	color: #1d2327;
-	margin: 0;
-	padding: 0;
-	border: none;
-}
-
-.wdcs-option-field {
 	display: flex;
 	flex-direction: column;
-	gap: 5px;
-}
-
-.wdcs-option-field label {
-	font-size: 12px;
-	font-weight: 600;
-	text-transform: uppercase;
-	letter-spacing: .04em;
-	color: #555;
-}
-
-.wdcs-media-row {
-	display: flex;
-	align-items: center;
 	gap: 6px;
-	flex-wrap: wrap;
-}
-
-.wdcs-media-row .wdcs-image-url {
-	flex: 1;
 	min-width: 0;
 }
 
-.wdcs-option-field .description {
-	font-size: 12px;
-	color: #777;
-	margin: 0;
+.wdcs-row-fields input[type="text"] {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+/* Actions */
+.wdcs-row-actions {
+	flex-shrink: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 6px;
+}
+
+.wdcs-remove-section {
+	color: #a00 !important;
+	border-color: #a00 !important;
+	padding: 3px 6px !important;
+}
+
+.wdcs-remove-section:hover {
+	background: #a00 !important;
+	color: #fff !important;
+}
+
+.wdcs-remove-section .dashicons {
+	font-size: 14px;
+	width: 14px;
+	height: 14px;
+	vertical-align: middle;
+}
+
+/* Add section button */
+.wdcs-add-row {
+	margin-top: 14px;
+	max-width: 900px;
 }
 
 
 /* =========================================================
-   Side panel – Smile Sections meta box
+   Side panel – Select section(s) meta box
    ========================================================= */
 
+/* Scrollable picker */
 .wdcs-sections-picker {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
-	padding: 4px 0;
+	gap: 8px;
+	padding: 2px 0;
+	max-height: 420px;
+	overflow-y: auto;
+	padding-right: 4px;
+}
+
+.wdcs-sections-picker::-webkit-scrollbar {
+	width: 5px;
+}
+
+.wdcs-sections-picker::-webkit-scrollbar-track {
+	background: #f0f0f1;
+	border-radius: 3px;
+}
+
+.wdcs-sections-picker::-webkit-scrollbar-thumb {
+	background: #1ab5b6;
+	border-radius: 3px;
 }
 
 /* Section card */
@@ -206,15 +217,8 @@ body.wdcs-lightbox-open {
 	transition: border-color 0.15s, background 0.15s;
 }
 
-.wdcs-section-item:hover {
-	border-color: #1ab5b6;
-	background: #f0fbfb;
-}
-
-.wdcs-section-item.is-checked {
-	border-color: #1ab5b6;
-	background: #e6f8f8;
-}
+.wdcs-section-item:hover { border-color: #1ab5b6; background: #f0fbfb; }
+.wdcs-section-item.is-checked { border-color: #1ab5b6; background: #e6f8f8; }
 
 /* Top row: checkbox + label */
 .wdcs-section-top {
@@ -239,14 +243,10 @@ body.wdcs-lightbox-open {
 	line-height: 1.3;
 }
 
-.wdcs-section-item.is-checked .wdcs-section-label {
-	color: #0c7a7b;
-}
+.wdcs-section-item.is-checked .wdcs-section-label { color: #0c7a7b; }
 
-/* Preview image */
-.wdcs-section-preview {
-	width: 100%;
-}
+/* Preview image in side panel */
+.wdcs-section-preview { width: 100%; }
 
 .wdcs-section-thumb {
 	display: block;
@@ -258,26 +258,22 @@ body.wdcs-lightbox-open {
 	transition: opacity .2s;
 }
 
-.wdcs-section-thumb:hover {
-	opacity: .85;
-}
+.wdcs-section-thumb:hover { opacity: .85; }
 
-/* No-image placeholder in side panel */
+/* No-image placeholder */
 .wdcs-section-no-image {
 	display: flex;
 	align-items: center;
 	gap: 6px;
-	padding: 8px 4px;
+	padding: 6px 4px;
 	color: #999;
 	font-size: 12px;
 }
 
 .wdcs-section-no-image .dashicons {
-	font-size: 18px;
-	width: 18px;
-	height: 18px;
+	font-size: 16px;
+	width: 16px;
+	height: 16px;
 }
 
-.wdcs-section-no-image a {
-	color: #1ab5b6;
-}
+.wdcs-section-no-image a { color: #1ab5b6; }

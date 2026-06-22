@@ -2,13 +2,11 @@
 	'use strict';
 
 	/* =========================================================
-	   Lightbox – shared between options page and side panel
+	   Lightbox
 	   ========================================================= */
 	function openLightbox( src ) {
 		var $lb = $( '#wdcs-lightbox' );
-		if ( ! $lb.length ) {
-			return;
-		}
+		if ( ! $lb.length ) return;
 		$lb.find( '#wdcs-lightbox-img' ).attr( 'src', src );
 		$lb.fadeIn( 180 );
 		$( 'body' ).addClass( 'wdcs-lightbox-open' );
@@ -22,76 +20,79 @@
 	$( document ).on( 'click', '.wdcs-js-enlarge', function () {
 		openLightbox( $( this ).data( 'full' ) || $( this ).attr( 'src' ) );
 	} );
-
 	$( document ).on( 'click', '.wdcs-js-close-lightbox', closeLightbox );
-
 	$( document ).on( 'keydown', function ( e ) {
-		if ( e.key === 'Escape' ) {
-			closeLightbox();
-		}
+		if ( e.key === 'Escape' ) closeLightbox();
 	} );
 
+
 	/* =========================================================
-	   Options page – WordPress media uploader
+	   Options page – Add / Remove unlimited sections
+	   ========================================================= */
+	var sectionCount = config.sectionCount || 0;
+
+	$( '#wdcs-add-section' ).on( 'click', function () {
+		var template = $( '#wdcs-row-template' ).html();
+		if ( ! template ) return;
+
+		var html = template.replace( /__IDX__/g, sectionCount );
+		var $row = $( '<div class="wdcs-section-row" data-index="' + sectionCount + '">' + html + '</div>' );
+		$( '#wdcs-sections-list' ).append( $row );
+		$row.find( 'input[type="text"]' ).first().focus();
+		sectionCount++;
+	} );
+
+	$( document ).on( 'click', '.wdcs-remove-section', function () {
+		$( this ).closest( '.wdcs-section-row' ).fadeOut( 180, function () {
+			$( this ).remove();
+		} );
+	} );
+
+
+	/* =========================================================
+	   Options page – WordPress media uploader per row
 	   ========================================================= */
 	$( document ).on( 'click', '.wdcs-upload-btn', function ( e ) {
 		e.preventDefault();
-		var $btn        = $( this );
-		var targetName  = $btn.data( 'target' );
-		var $input      = $( '[name="' + targetName + '"]' );
-		var $card       = $btn.closest( '.wdcs-option-card' );
+		var $btn  = $( this );
+		var $row  = $btn.closest( '.wdcs-section-row' );
 
 		var frame = wp.media( {
-			title  : 'Select Section Preview Image',
-			button : { text: 'Use this image' },
+			title   : 'Select Section Preview Image',
+			button  : { text: 'Use this image' },
 			multiple: false,
 		} );
 
 		frame.on( 'select', function () {
 			var attachment = frame.state().get( 'selection' ).first().toJSON();
-			var url = attachment.url;
-			$input.val( url );
+			var url        = attachment.url;
 
-			// Update the preview in the card.
-			var $preview = $card.find( '.wdcs-option-preview-wrap' );
-			var $thumb   = $preview.find( '.wdcs-option-thumb' );
-			if ( $thumb.length ) {
-				$thumb.attr( 'src', url ).data( 'full', url );
+			// Update hidden URL input.
+			$row.find( '.wdcs-image-url' ).val( url );
+
+			// Update thumb.
+			var $thumbWrap = $row.find( '.wdcs-row-thumb' );
+			var $img       = $thumbWrap.find( '.wdcs-row-thumb-img' );
+			if ( $img.length ) {
+				$img.attr( 'src', url ).data( 'full', url );
 			} else {
-				$preview.html(
-					'<img src="' + url + '" class="wdcs-option-thumb wdcs-js-enlarge" data-full="' + url + '" title="Click to enlarge">'
+				$thumbWrap.html(
+					'<img src="' + url + '" class="wdcs-row-thumb-img wdcs-js-enlarge" data-full="' + url + '" alt="Preview">'
 				);
-			}
-
-			// Show remove button if not already there.
-			if ( ! $btn.siblings( '.wdcs-remove-btn' ).length ) {
-				$btn.after( '<button type="button" class="button wdcs-remove-btn">Remove</button>' );
 			}
 		} );
 
 		frame.open();
 	} );
 
-	$( document ).on( 'click', '.wdcs-remove-btn', function () {
-		var $card = $( this ).closest( '.wdcs-option-card' );
-		$card.find( '.wdcs-image-url' ).val( '' );
-		$card.find( '.wdcs-option-preview-wrap' ).html(
-			'<div class="wdcs-option-placeholder"><span class="dashicons dashicons-format-image"></span><span>No image</span></div>'
-		);
-		$( this ).remove();
-	} );
 
 	/* =========================================================
 	   Post edit side panel – show / hide JetEngine meta boxes
 	   ========================================================= */
 	function toggleMetaBox( jetengineId, visible ) {
-		if ( ! jetengineId ) {
-			return;
-		}
+		if ( ! jetengineId ) return;
 		var $box = $( '#' + jetengineId );
-		if ( ! $box.length ) {
-			return;
-		}
+		if ( ! $box.length ) return;
 		$box.toggle( visible );
 	}
 
@@ -111,12 +112,7 @@
 	$( function () {
 		syncAll();
 		setTimeout( syncAll, 600 );
-
-		$( document ).on(
-			'change',
-			'.wdcs-sections-picker input[type="checkbox"]',
-			syncAll
-		);
+		$( document ).on( 'change', '.wdcs-sections-picker input[type="checkbox"]', syncAll );
 	} );
 
-} )( jQuery, window.wdcsSections || { sections: {} } );
+} )( jQuery, window.wdcsSections || { sections: {}, sectionCount: 0 } );

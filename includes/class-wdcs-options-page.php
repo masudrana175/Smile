@@ -7,6 +7,20 @@ class WDCS_Options_Page {
 
 	const OPTION_KEY = 'wdcs_sections_settings';
 
+	/**
+	 * Default sections seeded on first use.
+	 */
+	private static function get_defaults() {
+		return array(
+			array( 'label' => 'Doctors Carousel',        'image_url' => '', 'jetengine_id' => '' ),
+			array( 'label' => 'Doctors List',             'image_url' => '', 'jetengine_id' => '' ),
+			array( 'label' => 'What Are You Looking For', 'image_url' => '', 'jetengine_id' => '' ),
+			array( 'label' => 'Dentistry Services',       'image_url' => '', 'jetengine_id' => '' ),
+			array( 'label' => 'Gallery Carousel',         'image_url' => '', 'jetengine_id' => '' ),
+			array( 'label' => 'Our Staff',                'image_url' => '', 'jetengine_id' => '' ),
+		);
+	}
+
 	public function __construct() {
 		add_action( 'admin_menu',            array( $this, 'register_menu' ) );
 		add_action( 'admin_post_wdcs_save_options', array( $this, 'handle_save' ) );
@@ -34,18 +48,31 @@ class WDCS_Options_Page {
 			wp_die( 'Permission denied.' );
 		}
 
-		$defaults = WDCS_Admin_Sections::get_section_defaults();
-		$existing = self::get_settings();
-		$saved    = array();
+		$rows   = isset( $_POST['wdcs_sections'] ) ? (array) $_POST['wdcs_sections'] : array();
+		$saved  = array();
 
-		foreach ( array_keys( $defaults ) as $slug ) {
+		foreach ( $rows as $row ) {
+			if ( ! is_array( $row ) ) {
+				continue;
+			}
+			$label = sanitize_text_field( isset( $row['label'] ) ? $row['label'] : '' );
+			if ( '' === $label ) {
+				continue; // Skip blank rows.
+			}
+			$slug = str_replace( '-', '_', sanitize_title( $label ) );
+			if ( '' === $slug ) {
+				continue;
+			}
+			// If slug already exists (duplicate label), append a counter.
+			$base = $slug;
+			$i    = 2;
+			while ( isset( $saved[ $slug ] ) ) {
+				$slug = $base . '_' . $i++;
+			}
 			$saved[ $slug ] = array(
-				'image_url'    => isset( $_POST['wdcs_image'][ $slug ] )
-				                  ? esc_url_raw( $_POST['wdcs_image'][ $slug ] )
-				                  : ( isset( $existing[ $slug ]['image_url'] ) ? $existing[ $slug ]['image_url'] : '' ),
-				'jetengine_id' => isset( $_POST['wdcs_jeid'][ $slug ] )
-				                  ? sanitize_text_field( $_POST['wdcs_jeid'][ $slug ] )
-				                  : '',
+				'label'        => $label,
+				'image_url'    => isset( $row['image_url'] )    ? esc_url_raw( $row['image_url'] )            : '',
+				'jetengine_id' => isset( $row['jetengine_id'] ) ? sanitize_text_field( $row['jetengine_id'] ) : '',
 			);
 		}
 
@@ -63,12 +90,14 @@ class WDCS_Options_Page {
 			return;
 		}
 
-		$sections = WDCS_Admin_Sections::get_all_sections();
+		$sections = self::get_settings();
 		$updated  = isset( $_GET['updated'] ) && '1' === $_GET['updated'];
+		$index    = 0;
 		?>
 		<div class="wrap wdcs-options-wrap">
-			<h1 class="wp-heading-inline">
-				<span class="dashicons dashicons-layout" style="font-size:28px;margin-right:8px;vertical-align:middle;color:#1ab5b6;"></span>
+
+			<h1>
+				<span class="dashicons dashicons-layout" style="font-size:26px;vertical-align:middle;margin-right:8px;color:#1ab5b6;"></span>
 				Smile Sections
 			</h1>
 
@@ -78,75 +107,31 @@ class WDCS_Options_Page {
 			</div>
 			<?php endif; ?>
 
-			<p class="description" style="margin:12px 0 24px;">
-				Upload a preview image and enter the JetEngine meta box ID for each section.
-				The preview helps editors identify which section to enable on their page.
+			<p class="description" style="margin:10px 0 24px;font-size:14px;">
+				Add unlimited sections, upload a preview image, and set the JetEngine meta box ID for each.
+				Editors can enable sections per post from the <strong>Select section(s)</strong> side panel.
 			</p>
 
 			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 				<input type="hidden" name="action" value="wdcs_save_options">
 				<?php wp_nonce_field( 'wdcs_save_options', 'wdcs_options_nonce' ); ?>
 
-				<div class="wdcs-options-grid">
+				<div id="wdcs-sections-list">
 					<?php foreach ( $sections as $slug => $section ) :
-						$image_url = ! empty( $section['image_url'] ) ? $section['image_url'] : '';
-						$jeid      = ! empty( $section['jetengine_id'] ) ? $section['jetengine_id'] : '';
+						$img  = ! empty( $section['image_url'] )    ? $section['image_url']    : '';
+						$jeid = ! empty( $section['jetengine_id'] ) ? $section['jetengine_id'] : '';
 					?>
-					<div class="wdcs-option-card">
-
-						<div class="wdcs-option-preview-wrap">
-							<?php if ( $image_url ) : ?>
-							<img src="<?php echo esc_url( $image_url ); ?>"
-							     alt="<?php echo esc_attr( $section['label'] ); ?>"
-							     class="wdcs-option-thumb wdcs-js-enlarge"
-							     data-full="<?php echo esc_url( $image_url ); ?>"
-							     title="Click to enlarge">
-							<?php else : ?>
-							<div class="wdcs-option-placeholder">
-								<span class="dashicons dashicons-format-image"></span>
-								<span>No image</span>
-							</div>
-							<?php endif; ?>
-						</div>
-
-						<div class="wdcs-option-body">
-							<h3 class="wdcs-option-title"><?php echo esc_html( $section['label'] ); ?></h3>
-
-							<div class="wdcs-option-field">
-								<label>Section Preview Image</label>
-								<div class="wdcs-media-row">
-									<input type="text"
-									       name="wdcs_image[<?php echo esc_attr( $slug ); ?>]"
-									       value="<?php echo esc_attr( $image_url ); ?>"
-									       class="wdcs-image-url regular-text"
-									       placeholder="https://">
-									<button type="button"
-									        class="button wdcs-upload-btn"
-									        data-target="wdcs_image[<?php echo esc_attr( $slug ); ?>]">
-										Upload / Select
-									</button>
-									<?php if ( $image_url ) : ?>
-									<button type="button" class="button wdcs-remove-btn">Remove</button>
-									<?php endif; ?>
-								</div>
-							</div>
-
-							<div class="wdcs-option-field">
-								<label for="wdcs_jeid_<?php echo esc_attr( $slug ); ?>">JetEngine Meta Box ID</label>
-								<input type="text"
-								       id="wdcs_jeid_<?php echo esc_attr( $slug ); ?>"
-								       name="wdcs_jeid[<?php echo esc_attr( $slug ); ?>]"
-								       value="<?php echo esc_attr( $jeid ); ?>"
-								       class="regular-text"
-								       placeholder="e.g. jet-engine-meta-box-doctors">
-								<p class="description">
-									Inspect the meta box <code>&lt;div id="..."&gt;</code> on the post edit screen to find this ID.
-								</p>
-							</div>
-						</div>
-
+					<div class="wdcs-section-row" data-index="<?php echo esc_attr( $index ); ?>">
+						<?php echo $this->row_html( $index, $section['label'], $img, $jeid ); ?>
 					</div>
-					<?php endforeach; ?>
+					<?php $index++; endforeach; ?>
+				</div>
+
+				<div class="wdcs-add-row">
+					<button type="button" id="wdcs-add-section" class="button button-secondary">
+						<span class="dashicons dashicons-plus-alt2" style="vertical-align:middle;margin-right:4px;"></span>
+						Add Section
+					</button>
 				</div>
 
 				<p class="submit" style="margin-top:24px;">
@@ -155,7 +140,12 @@ class WDCS_Options_Page {
 			</form>
 		</div>
 
-		<!-- Lightbox modal -->
+		<!-- Row template for JS cloning -->
+		<script type="text/html" id="wdcs-row-template">
+			<?php echo $this->row_html( '__IDX__', '', '', '' ); ?>
+		</script>
+
+		<!-- Lightbox -->
 		<div class="wdcs-lightbox" id="wdcs-lightbox" style="display:none;">
 			<div class="wdcs-lightbox-overlay wdcs-js-close-lightbox"></div>
 			<div class="wdcs-lightbox-inner">
@@ -166,6 +156,61 @@ class WDCS_Options_Page {
 		<?php
 	}
 
+	/**
+	 * Generates the inner HTML for a single section row.
+	 * Used both on render and as a JS clone template.
+	 */
+	private function row_html( $index, $label, $image_url, $jetengine_id ) {
+		$idx = esc_attr( $index );
+		$img = esc_url( $image_url );
+		ob_start();
+		?>
+		<div class="wdcs-row-thumb">
+			<?php if ( $image_url ) : ?>
+			<img src="<?php echo $img; ?>"
+			     class="wdcs-row-thumb-img wdcs-js-enlarge"
+			     data-full="<?php echo $img; ?>"
+			     alt="Preview">
+			<?php else : ?>
+			<div class="wdcs-row-thumb-placeholder">
+				<span class="dashicons dashicons-format-image"></span>
+			</div>
+			<?php endif; ?>
+		</div>
+
+		<div class="wdcs-row-fields">
+			<input type="text"
+			       name="wdcs_sections[<?php echo $idx; ?>][label]"
+			       value="<?php echo esc_attr( $label ); ?>"
+			       placeholder="Section Name"
+			       class="regular-text">
+			<input type="text"
+			       name="wdcs_sections[<?php echo $idx; ?>][jetengine_id]"
+			       value="<?php echo esc_attr( $jetengine_id ); ?>"
+			       placeholder="JetEngine Meta Box ID  e.g. jet-engine-meta-box-doctors"
+			       class="regular-text">
+		</div>
+
+		<div class="wdcs-row-actions">
+			<input type="hidden"
+			       name="wdcs_sections[<?php echo $idx; ?>][image_url]"
+			       value="<?php echo $img; ?>"
+			       class="wdcs-image-url">
+			<button type="button"
+			        class="button wdcs-upload-btn"
+			        data-index="<?php echo $idx; ?>">
+				Upload Image
+			</button>
+			<button type="button"
+			        class="button wdcs-remove-section"
+			        title="Remove this section">
+				<span class="dashicons dashicons-trash"></span>
+			</button>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
 	public function enqueue_assets( $hook ) {
 		if ( 'toplevel_page_wdcs-smile-sections' !== $hook ) {
 			return;
@@ -173,10 +218,30 @@ class WDCS_Options_Page {
 		wp_enqueue_media();
 		wp_enqueue_style(  'wdcs-admin', WDCS_PLUGIN_URL . 'assets/css/wdcs-admin.css', array(), WDCS_VERSION );
 		wp_enqueue_script( 'wdcs-admin', WDCS_PLUGIN_URL . 'assets/js/wdcs-admin.js',  array( 'jquery' ), WDCS_VERSION, true );
-		wp_localize_script( 'wdcs-admin', 'wdcsSections', array( 'sections' => array() ) );
+		wp_localize_script( 'wdcs-admin', 'wdcsSections', array(
+			'sections'     => array(),
+			'sectionCount' => count( self::get_settings() ),
+		) );
 	}
 
+	/**
+	 * Returns all saved sections as an associative array keyed by slug.
+	 * Seeds defaults on first call if options are empty.
+	 */
 	public static function get_settings() {
-		return (array) get_option( self::OPTION_KEY, array() );
+		$saved = get_option( self::OPTION_KEY, null );
+
+		if ( null === $saved ) {
+			// First time: seed defaults and save.
+			$seeded = array();
+			foreach ( self::get_defaults() as $def ) {
+				$slug           = str_replace( '-', '_', sanitize_title( $def['label'] ) );
+				$seeded[ $slug ] = $def;
+			}
+			update_option( self::OPTION_KEY, $seeded );
+			return $seeded;
+		}
+
+		return is_array( $saved ) ? $saved : array();
 	}
 }

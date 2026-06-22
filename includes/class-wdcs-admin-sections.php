@@ -28,20 +28,7 @@ class WDCS_Admin_Sections {
 	 * Merges base definitions with saved options (image_url, jetengine_id).
 	 */
 	public static function get_all_sections() {
-		$defaults = self::get_section_defaults();
-		$settings = WDCS_Options_Page::get_settings();
-		$merged   = array();
-
-		foreach ( $defaults as $slug => $def ) {
-			$saved           = isset( $settings[ $slug ] ) ? $settings[ $slug ] : array();
-			$merged[ $slug ] = array(
-				'label'        => $def['label'],
-				'image_url'    => ! empty( $saved['image_url'] )    ? $saved['image_url']    : '',
-				'jetengine_id' => ! empty( $saved['jetengine_id'] ) ? $saved['jetengine_id'] : '',
-			);
-		}
-
-		return $merged;
+		return WDCS_Options_Page::get_settings();
 	}
 
 	/**
@@ -64,7 +51,7 @@ class WDCS_Admin_Sections {
 		foreach ( $this->get_post_types() as $post_type ) {
 			add_meta_box(
 				'wdcs-smile-sections',
-				'Smile Sections',
+				'Select section(s)',
 				array( $this, 'render_meta_box' ),
 				$post_type,
 				'side',
