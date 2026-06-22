@@ -130,7 +130,7 @@ class WDCS_Admin_Sections {
 			return;
 		}
 
-		$valid_slugs = array_keys( self::get_section_defaults() );
+		$valid_slugs = array_keys( self::get_all_sections() );
 		$submitted   = isset( $_POST['wdcs_active_sections'] ) ? (array) $_POST['wdcs_active_sections'] : array();
 		$sanitized   = array_values( array_intersect( array_map( 'sanitize_key', $submitted ), $valid_slugs ) );
 
