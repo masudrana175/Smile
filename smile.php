@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'WDCS_VERSION', '1.2.7' );
+define( 'WDCS_VERSION', '1.2.8' );
 define( 'WDCS_PLUGIN_FILE', __FILE__ );
 define( 'WDCS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WDCS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -57,15 +57,12 @@ if ( ! class_exists( 'Smile' ) ) {
 			require_once WDCS_PLUGIN_DIR . 'includes/class-wdcs-staff-shortcode.php';
 			new WDCS_Staff_Shortcode();
 
-			// Always load these — their static methods are needed on the frontend.
-			require_once WDCS_PLUGIN_DIR . 'includes/class-wdcs-options-page.php';
-			require_once WDCS_PLUGIN_DIR . 'includes/class-wdcs-admin-sections.php';
-
 			require_once WDCS_PLUGIN_DIR . 'includes/class-wdcs-sections-shortcode.php';
 			new WDCS_Sections_Shortcode();
 
-			// Only register admin UI hooks in the admin context.
 			if ( is_admin() ) {
+				require_once WDCS_PLUGIN_DIR . 'includes/class-wdcs-options-page.php';
+				require_once WDCS_PLUGIN_DIR . 'includes/class-wdcs-admin-sections.php';
 				new WDCS_Options_Page();
 				new WDCS_Admin_Sections();
 			}

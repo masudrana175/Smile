@@ -136,24 +136,8 @@ body.wdcs-lightbox-open { overflow: hidden; }
 	min-width: 0;
 }
 
-.wdcs-row-fields input[type="text"],
-.wdcs-row-fields input[type="number"] {
+.wdcs-row-fields input[type="text"] {
 	box-sizing: border-box;
-}
-
-.wdcs-field-label {
-	width: 100%;
-}
-
-.wdcs-row-fields-inline {
-	display: flex;
-	gap: 6px;
-	flex-wrap: wrap;
-}
-
-.wdcs-row-fields-inline input[type="number"] {
-	width: 130px;
-	flex-shrink: 0;
 }
 
 /* Actions */
