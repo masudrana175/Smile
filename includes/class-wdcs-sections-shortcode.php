@@ -13,6 +13,8 @@ class WDCS_Sections_Shortcode {
 		'section_order_2'            => 7965,
 		'section_order_seinformaion' => 7963,
 		'section_order_3'            => 7972,
+		'section_order_4'            => 7977,
+		'section_order_5'            => 7981,
 	);
 
 	public function __construct() {
