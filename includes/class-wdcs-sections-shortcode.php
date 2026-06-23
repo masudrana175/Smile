@@ -12,6 +12,7 @@ class WDCS_Sections_Shortcode {
 	private static $section_map = array(
 		'section_order_2'            => 7965,
 		'section_order_seinformaion' => 7963,
+		'section_order_3'            => 7972,
 	);
 
 	public function __construct() {
