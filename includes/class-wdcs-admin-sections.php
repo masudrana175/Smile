@@ -9,32 +9,10 @@ class WDCS_Admin_Sections {
 	const NONCE_ACTION = 'wdcs_save_sections';
 	const NONCE_FIELD  = 'wdcs_sections_nonce';
 
-	/**
-	 * Base section definitions (label only).
-	 * Image URLs and JetEngine IDs come from the options page settings.
-	 */
-	public static function get_section_defaults() {
-		return apply_filters( 'wdcs_sections_registry', array(
-			'doctors_carousel' => array( 'label' => 'Doctors Carousel' ),
-			'doctors_list'     => array( 'label' => 'Doctors List' ),
-			'looking_for'      => array( 'label' => 'What Are You Looking For' ),
-			'services'         => array( 'label' => 'Dentistry Services' ),
-			'gallery'          => array( 'label' => 'Gallery Carousel' ),
-			'staff'            => array( 'label' => 'Our Staff' ),
-		) );
-	}
-
-	/**
-	 * Merges base definitions with saved options (image_url, jetengine_id).
-	 */
 	public static function get_all_sections() {
 		return WDCS_Options_Page::get_settings();
 	}
 
-	/**
-	 * Post types that show the Smile Sections side panel.
-	 * Defaults to all post types with a UI + patient-services.
-	 */
 	private function get_post_types() {
 		return apply_filters( 'wdcs_sections_post_types', array( 'patient-services' ) );
 	}
@@ -82,7 +60,7 @@ class WDCS_Admin_Sections {
 					<span class="wdcs-section-label"><?php echo esc_html( $section['label'] ); ?></span>
 				</div>
 
-				<?php if ( $section['image_url'] ) : ?>
+				<?php if ( ! empty( $section['image_url'] ) ) : ?>
 				<div class="wdcs-section-preview">
 					<img src="<?php echo esc_url( $section['image_url'] ); ?>"
 					     alt="<?php echo esc_attr( $section['label'] ); ?>"
@@ -101,7 +79,6 @@ class WDCS_Admin_Sections {
 			<?php endforeach; ?>
 		</div>
 
-		<!-- Inline lightbox for preview enlargement -->
 		<div class="wdcs-lightbox" id="wdcs-lightbox" style="display:none;">
 			<div class="wdcs-lightbox-overlay wdcs-js-close-lightbox"></div>
 			<div class="wdcs-lightbox-inner">
@@ -140,28 +117,14 @@ class WDCS_Admin_Sections {
 			return;
 		}
 
-		wp_enqueue_style(
-			'wdcs-admin',
-			WDCS_PLUGIN_URL . 'assets/css/wdcs-admin.css',
-			array(),
-			WDCS_VERSION
-		);
-
-		wp_enqueue_script(
-			'wdcs-admin',
-			WDCS_PLUGIN_URL . 'assets/js/wdcs-admin.js',
-			array( 'jquery' ),
-			WDCS_VERSION,
-			true
-		);
+		wp_enqueue_style(  'wdcs-admin', WDCS_PLUGIN_URL . 'assets/css/wdcs-admin.css', array(), WDCS_VERSION );
+		wp_enqueue_script( 'wdcs-admin', WDCS_PLUGIN_URL . 'assets/js/wdcs-admin.js',  array( 'jquery' ), WDCS_VERSION, true );
 
 		$sections_js = array();
 		foreach ( self::get_all_sections() as $slug => $section ) {
 			$sections_js[ $slug ] = array( 'jetengineId' => $section['jetengine_id'] );
 		}
 
-		wp_localize_script( 'wdcs-admin', 'wdcsSections', array(
-			'sections' => $sections_js,
-		) );
+		wp_localize_script( 'wdcs-admin', 'wdcsSections', array( 'sections' => $sections_js ) );
 	}
 }
