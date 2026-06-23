@@ -32,12 +32,9 @@ class WDCS_Sections_Shortcode {
 		// Build list of [ order_value => elementor_id ] and sort ascending.
 		$ordered = array();
 		foreach ( self::$section_map as $meta_key => $elementor_id ) {
-			$value = get_post_meta( $post_id, $meta_key, true );
-			if ( '' !== $value && false !== $value ) {
-				$ordered[ (int) $value ] = $elementor_id;
-			} else {
-				// No order value set — append at the end using a high key.
-				$ordered[ 9999 + $elementor_id ] = $elementor_id;
+			$value = (int) get_post_meta( $post_id, $meta_key, true );
+			if ( $value > 0 ) {
+				$ordered[ $value ] = $elementor_id;
 			}
 		}
 
