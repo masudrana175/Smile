@@ -70,9 +70,11 @@ class WDCS_Options_Page {
 				$slug = $base . '_' . $i++;
 			}
 			$saved[ $slug ] = array(
-				'label'        => $label,
-				'image_url'    => isset( $row['image_url'] )    ? esc_url_raw( $row['image_url'] )            : '',
-				'jetengine_id' => isset( $row['jetengine_id'] ) ? sanitize_text_field( $row['jetengine_id'] ) : '',
+				'label'          => $label,
+				'image_url'      => isset( $row['image_url'] )      ? esc_url_raw( $row['image_url'] )            : '',
+				'elementor_id'   => isset( $row['elementor_id'] )   ? absint( $row['elementor_id'] )              : 0,
+				'order_meta_key' => isset( $row['order_meta_key'] ) ? sanitize_text_field( $row['order_meta_key'] ) : '',
+				'jetengine_id'   => isset( $row['jetengine_id'] )   ? sanitize_text_field( $row['jetengine_id'] ) : '',
 			);
 		}
 
@@ -118,11 +120,13 @@ class WDCS_Options_Page {
 
 				<div id="wdcs-sections-list">
 					<?php foreach ( $sections as $slug => $section ) :
-						$img  = ! empty( $section['image_url'] )    ? $section['image_url']    : '';
-						$jeid = ! empty( $section['jetengine_id'] ) ? $section['jetengine_id'] : '';
+						$img  = ! empty( $section['image_url'] )      ? $section['image_url']      : '';
+						$eid  = ! empty( $section['elementor_id'] )   ? $section['elementor_id']   : '';
+						$omk  = ! empty( $section['order_meta_key'] ) ? $section['order_meta_key'] : '';
+						$jeid = ! empty( $section['jetengine_id'] )   ? $section['jetengine_id']   : '';
 					?>
 					<div class="wdcs-section-row" data-index="<?php echo esc_attr( $index ); ?>">
-						<?php echo $this->row_html( $index, $section['label'], $img, $jeid ); ?>
+						<?php echo $this->row_html( $index, $section['label'], $img, $eid, $omk, $jeid ); ?>
 					</div>
 					<?php $index++; endforeach; ?>
 				</div>
@@ -142,7 +146,7 @@ class WDCS_Options_Page {
 
 		<!-- Row template for JS cloning -->
 		<script type="text/html" id="wdcs-row-template">
-			<?php echo $this->row_html( '__IDX__', '', '', '' ); ?>
+			<?php echo $this->row_html( '__IDX__', '', '', '', '', '' ); ?>
 		</script>
 
 		<!-- Lightbox -->
@@ -160,9 +164,9 @@ class WDCS_Options_Page {
 	 * Generates the inner HTML for a single section row.
 	 * Used both on render and as a JS clone template.
 	 */
-	private function row_html( $index, $label, $image_url, $jetengine_id ) {
-		$idx = esc_attr( $index );
-		$img = esc_url( $image_url );
+	private function row_html( $index, $label, $image_url, $elementor_id, $order_meta_key, $jetengine_id ) {
+		$idx  = esc_attr( $index );
+		$img  = esc_url( $image_url );
 		ob_start();
 		?>
 		<div class="wdcs-row-thumb">
@@ -183,12 +187,24 @@ class WDCS_Options_Page {
 			       name="wdcs_sections[<?php echo $idx; ?>][label]"
 			       value="<?php echo esc_attr( $label ); ?>"
 			       placeholder="Section Name"
-			       class="regular-text">
-			<input type="text"
-			       name="wdcs_sections[<?php echo $idx; ?>][jetengine_id]"
-			       value="<?php echo esc_attr( $jetengine_id ); ?>"
-			       placeholder="JetEngine Meta Box ID  e.g. jet-engine-meta-box-doctors"
-			       class="regular-text">
+			       class="regular-text wdcs-field-label">
+			<div class="wdcs-row-fields-inline">
+				<input type="number"
+				       name="wdcs_sections[<?php echo $idx; ?>][elementor_id]"
+				       value="<?php echo esc_attr( $elementor_id ); ?>"
+				       placeholder="Elementor Section ID"
+				       class="small-text">
+				<input type="text"
+				       name="wdcs_sections[<?php echo $idx; ?>][order_meta_key]"
+				       value="<?php echo esc_attr( $order_meta_key ); ?>"
+				       placeholder="Order Meta Key  e.g. section_order_2"
+				       class="regular-text">
+				<input type="text"
+				       name="wdcs_sections[<?php echo $idx; ?>][jetengine_id]"
+				       value="<?php echo esc_attr( $jetengine_id ); ?>"
+				       placeholder="JetEngine Meta Box ID"
+				       class="regular-text">
+			</div>
 		</div>
 
 		<div class="wdcs-row-actions">
