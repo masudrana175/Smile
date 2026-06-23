@@ -57,6 +57,9 @@ if ( ! class_exists( 'Smile' ) ) {
 			require_once WDCS_PLUGIN_DIR . 'includes/class-wdcs-staff-shortcode.php';
 			new WDCS_Staff_Shortcode();
 
+			require_once WDCS_PLUGIN_DIR . 'includes/class-wdcs-elementor-sections-shortcode.php';
+			new WDCS_Elementor_Sections_Shortcode();
+
 			if ( is_admin() ) {
 				require_once WDCS_PLUGIN_DIR . 'includes/class-wdcs-options-page.php';
 				new WDCS_Options_Page();
