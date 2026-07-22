@@ -67,10 +67,8 @@
 			var attachment = frame.state().get( 'selection' ).first().toJSON();
 			var url        = attachment.url;
 
-			// Update hidden URL input.
 			$row.find( '.wdcs-image-url' ).val( url );
 
-			// Update thumb.
 			var $thumbWrap = $row.find( '.wdcs-row-thumb' );
 			var $img       = $thumbWrap.find( '.wdcs-row-thumb-img' );
 			if ( $img.length ) {
@@ -87,32 +85,73 @@
 
 
 	/* =========================================================
-	   Post edit side panel – show / hide JetEngine meta boxes
+	   Post edit side panel – drag-and-drop sections builder
 	   ========================================================= */
-	function toggleMetaBox( jetengineId, visible ) {
-		if ( ! jetengineId ) return;
-		var $box = $( '#' + jetengineId );
-		if ( ! $box.length ) return;
-		$box.toggle( visible );
-	}
-
-	function syncAll() {
-		$( '.wdcs-sections-picker input[type="checkbox"]' ).each( function () {
-			var $cb     = $( this );
-			var slug    = $cb.val();
-			var checked = $cb.is( ':checked' );
-			var section = config.sections[ slug ];
-			var id      = section ? section.jetengineId : '';
-
-			toggleMetaBox( id, checked );
-			$cb.closest( '.wdcs-section-item' ).toggleClass( 'is-checked', checked );
-		} );
-	}
-
 	$( function () {
-		syncAll();
-		setTimeout( syncAll, 600 );
-		$( document ).on( 'change', '.wdcs-sections-picker input[type="checkbox"]', syncAll );
+		var $list = $( '#wdcs-active-list' );
+		if ( ! $list.length ) return;
+
+		// Init jQuery UI Sortable.
+		$list.sortable( {
+			handle     : '.wdcs-drag-handle',
+			placeholder: 'wdcs-sortable-placeholder',
+			axis       : 'y',
+			update     : syncJetEngine,
+		} );
+
+		function buildItem( slug, label, jetengineId ) {
+			return $( '<li class="wdcs-active-item"></li>' )
+				.attr( 'data-slug', slug )
+				.attr( 'data-jetengine', jetengineId || '' )
+				.append( $( '<span class="wdcs-drag-handle dashicons dashicons-menu"></span>' ) )
+				.append( $( '<span class="wdcs-active-label"></span>' ).text( label ) )
+				.append( $( '<button type="button" class="wdcs-remove-active">&times;</button>' ) )
+				.append( $( '<input type="hidden" name="wdcs_active_sections[]">' ).val( slug ) );
+		}
+
+		function updateEmpty() {
+			var empty = $list.children( '.wdcs-active-item' ).length === 0;
+			$( '.wdcs-active-empty' ).toggle( empty );
+		}
+
+		function syncJetEngine() {
+			// Collect unique jetengine IDs currently in the active list.
+			var activeIds = {};
+			$list.children( '.wdcs-active-item' ).each( function () {
+				var id = $( this ).data( 'jetengine' );
+				if ( id ) activeIds[ id ] = true;
+			} );
+			// Show meta box if its ID is in the active list, hide otherwise.
+			$( '.wdcs-avail-item' ).each( function () {
+				var id = $( this ).data( 'jetengine' );
+				if ( ! id ) return;
+				$( '#' + id ).toggle( !! activeIds[ id ] );
+			} );
+		}
+
+		// Add section to active list.
+		$( document ).on( 'click', '.wdcs-add-to-active', function () {
+			var $avail = $( this ).closest( '.wdcs-avail-item' );
+			$list.append( buildItem(
+				$avail.data( 'slug' ),
+				$avail.data( 'label' ),
+				$avail.data( 'jetengine' )
+			) );
+			updateEmpty();
+			syncJetEngine();
+		} );
+
+		// Remove section from active list.
+		$( document ).on( 'click', '.wdcs-remove-active', function () {
+			$( this ).closest( '.wdcs-active-item' ).remove();
+			updateEmpty();
+			syncJetEngine();
+		} );
+
+		// Initial state.
+		syncJetEngine();
+		updateEmpty();
+		setTimeout( syncJetEngine, 600 );
 	} );
 
 } )( jQuery, window.wdcsSections || { sections: {}, sectionCount: 0 } );

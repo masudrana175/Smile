@@ -43,40 +43,53 @@ class WDCS_Admin_Sections {
 
 		wp_nonce_field( self::NONCE_ACTION, self::NONCE_FIELD );
 		?>
-		<div class="wdcs-sections-picker">
-			<?php foreach ( $sections as $slug => $section ) :
-				$checked = in_array( $slug, $active, true );
-			?>
-			<label class="wdcs-section-item<?php echo $checked ? ' is-checked' : ''; ?>"
-			       for="wdcs_section_<?php echo esc_attr( $slug ); ?>">
+		<div class="wdcs-builder">
 
-				<div class="wdcs-section-top">
-					<input type="checkbox"
-					       id="wdcs_section_<?php echo esc_attr( $slug ); ?>"
-					       name="wdcs_active_sections[]"
-					       value="<?php echo esc_attr( $slug ); ?>"
-					       data-jetengine-id="<?php echo esc_attr( $section['jetengine_id'] ); ?>"
-					       <?php checked( $checked ); ?>>
-					<span class="wdcs-section-label"><?php echo esc_html( $section['label'] ); ?></span>
-				</div>
-
-				<?php if ( ! empty( $section['image_url'] ) ) : ?>
-				<div class="wdcs-section-preview">
+			<div class="wdcs-builder-available">
+				<p class="wdcs-builder-heading">Sections</p>
+				<?php foreach ( $sections as $slug => $section ) : ?>
+				<div class="wdcs-avail-item"
+				     data-slug="<?php echo esc_attr( $slug ); ?>"
+				     data-label="<?php echo esc_attr( $section['label'] ); ?>"
+				     data-jetengine="<?php echo esc_attr( $section['jetengine_id'] ); ?>">
+					<?php if ( ! empty( $section['image_url'] ) ) : ?>
 					<img src="<?php echo esc_url( $section['image_url'] ); ?>"
-					     alt="<?php echo esc_attr( $section['label'] ); ?>"
-					     class="wdcs-section-thumb wdcs-js-enlarge"
-					     data-full="<?php echo esc_url( $section['image_url'] ); ?>"
-					     title="Click to enlarge">
+					     alt=""
+					     class="wdcs-avail-thumb wdcs-js-enlarge"
+					     data-full="<?php echo esc_url( $section['image_url'] ); ?>">
+					<?php else : ?>
+					<span class="wdcs-avail-no-thumb dashicons dashicons-format-image"></span>
+					<?php endif; ?>
+					<span class="wdcs-avail-label"><?php echo esc_html( $section['label'] ); ?></span>
+					<button type="button" class="wdcs-add-to-active button button-small">+</button>
 				</div>
-				<?php else : ?>
-				<div class="wdcs-section-preview wdcs-section-no-image">
-					<span class="dashicons dashicons-format-image"></span>
-					<span>No preview — set one in <a href="<?php echo esc_url( admin_url( 'admin.php?page=wdcs-smile-sections' ) ); ?>">Smile Sections</a></span>
-				</div>
-				<?php endif; ?>
+				<?php endforeach; ?>
+			</div>
 
-			</label>
-			<?php endforeach; ?>
+			<div class="wdcs-builder-active">
+				<p class="wdcs-builder-heading">
+					Active <span class="wdcs-builder-hint">— drag to reorder</span>
+				</p>
+				<ul class="wdcs-active-list" id="wdcs-active-list">
+					<?php foreach ( $active as $slug ) :
+						if ( ! isset( $sections[ $slug ] ) ) continue;
+						$section = $sections[ $slug ];
+					?>
+					<li class="wdcs-active-item"
+					    data-slug="<?php echo esc_attr( $slug ); ?>"
+					    data-jetengine="<?php echo esc_attr( $section['jetengine_id'] ); ?>">
+						<span class="wdcs-drag-handle dashicons dashicons-menu"></span>
+						<span class="wdcs-active-label"><?php echo esc_html( $section['label'] ); ?></span>
+						<button type="button" class="wdcs-remove-active">&times;</button>
+						<input type="hidden" name="wdcs_active_sections[]" value="<?php echo esc_attr( $slug ); ?>">
+					</li>
+					<?php endforeach; ?>
+				</ul>
+				<p class="wdcs-active-empty"<?php echo ! empty( $active ) ? ' style="display:none"' : ''; ?>>
+					Click <strong>+</strong> above to add a section.
+				</p>
+			</div>
+
 		</div>
 
 		<div class="wdcs-lightbox" id="wdcs-lightbox" style="display:none;">
@@ -107,7 +120,15 @@ class WDCS_Admin_Sections {
 
 		$valid_slugs = array_keys( self::get_all_sections() );
 		$submitted   = isset( $_POST['wdcs_active_sections'] ) ? (array) $_POST['wdcs_active_sections'] : array();
-		$sanitized   = array_values( array_intersect( array_map( 'sanitize_key', $submitted ), $valid_slugs ) );
+
+		// Preserve order and allow duplicates; only reject unknown slugs.
+		$sanitized = array();
+		foreach ( $submitted as $slug ) {
+			$slug = sanitize_key( $slug );
+			if ( in_array( $slug, $valid_slugs, true ) ) {
+				$sanitized[] = $slug;
+			}
+		}
 
 		update_post_meta( $post_id, self::META_KEY, $sanitized );
 	}
@@ -117,14 +138,10 @@ class WDCS_Admin_Sections {
 			return;
 		}
 
+		wp_enqueue_script( 'jquery-ui-sortable' );
 		wp_enqueue_style(  'wdcs-admin', WDCS_PLUGIN_URL . 'assets/css/wdcs-admin.css', array(), WDCS_VERSION );
-		wp_enqueue_script( 'wdcs-admin', WDCS_PLUGIN_URL . 'assets/js/wdcs-admin.js',  array( 'jquery' ), WDCS_VERSION, true );
+		wp_enqueue_script( 'wdcs-admin', WDCS_PLUGIN_URL . 'assets/js/wdcs-admin.js',  array( 'jquery', 'jquery-ui-sortable' ), WDCS_VERSION, true );
 
-		$sections_js = array();
-		foreach ( self::get_all_sections() as $slug => $section ) {
-			$sections_js[ $slug ] = array( 'jetengineId' => $section['jetengine_id'] );
-		}
-
-		wp_localize_script( 'wdcs-admin', 'wdcsSections', array( 'sections' => $sections_js ) );
+		wp_localize_script( 'wdcs-admin', 'wdcsSections', array( 'sections' => array() ) );
 	}
 }

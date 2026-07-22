@@ -12,12 +12,12 @@ class WDCS_Options_Page {
 	 */
 	private static function get_defaults() {
 		return array(
-			array( 'label' => 'Doctors Carousel',        'image_url' => '', 'jetengine_id' => '' ),
-			array( 'label' => 'Doctors List',             'image_url' => '', 'jetengine_id' => '' ),
-			array( 'label' => 'What Are You Looking For', 'image_url' => '', 'jetengine_id' => '' ),
-			array( 'label' => 'Dentistry Services',       'image_url' => '', 'jetengine_id' => '' ),
-			array( 'label' => 'Gallery Carousel',         'image_url' => '', 'jetengine_id' => '' ),
-			array( 'label' => 'Our Staff',                'image_url' => '', 'jetengine_id' => '' ),
+			array( 'label' => 'Doctors Carousel',        'image_url' => '', 'jetengine_id' => '', 'elementor_id' => '' ),
+			array( 'label' => 'Doctors List',             'image_url' => '', 'jetengine_id' => '', 'elementor_id' => '' ),
+			array( 'label' => 'What Are You Looking For', 'image_url' => '', 'jetengine_id' => '', 'elementor_id' => '' ),
+			array( 'label' => 'Dentistry Services',       'image_url' => '', 'jetengine_id' => '', 'elementor_id' => '' ),
+			array( 'label' => 'Gallery Carousel',         'image_url' => '', 'jetengine_id' => '', 'elementor_id' => '' ),
+			array( 'label' => 'Our Staff',                'image_url' => '', 'jetengine_id' => '', 'elementor_id' => '' ),
 		);
 	}
 
@@ -73,6 +73,7 @@ class WDCS_Options_Page {
 				'label'        => $label,
 				'image_url'    => isset( $row['image_url'] )    ? esc_url_raw( $row['image_url'] )            : '',
 				'jetengine_id' => isset( $row['jetengine_id'] ) ? sanitize_text_field( $row['jetengine_id'] ) : '',
+				'elementor_id' => isset( $row['elementor_id'] ) ? absint( $row['elementor_id'] )              : 0,
 			);
 		}
 
@@ -120,9 +121,10 @@ class WDCS_Options_Page {
 					<?php foreach ( $sections as $slug => $section ) :
 						$img  = ! empty( $section['image_url'] )    ? $section['image_url']    : '';
 						$jeid = ! empty( $section['jetengine_id'] ) ? $section['jetengine_id'] : '';
+						$eid  = ! empty( $section['elementor_id'] ) ? $section['elementor_id'] : '';
 					?>
 					<div class="wdcs-section-row" data-index="<?php echo esc_attr( $index ); ?>">
-						<?php echo $this->row_html( $index, $section['label'], $img, $jeid ); ?>
+						<?php echo $this->row_html( $index, $section['label'], $img, $jeid, $eid ); ?>
 					</div>
 					<?php $index++; endforeach; ?>
 				</div>
@@ -142,7 +144,7 @@ class WDCS_Options_Page {
 
 		<!-- Row template for JS cloning -->
 		<script type="text/html" id="wdcs-row-template">
-			<?php echo $this->row_html( '__IDX__', '', '', '' ); ?>
+			<?php echo $this->row_html( '__IDX__', '', '', '', '' ); ?>
 		</script>
 
 		<!-- Lightbox -->
@@ -160,7 +162,7 @@ class WDCS_Options_Page {
 	 * Generates the inner HTML for a single section row.
 	 * Used both on render and as a JS clone template.
 	 */
-	private function row_html( $index, $label, $image_url, $jetengine_id ) {
+	private function row_html( $index, $label, $image_url, $jetengine_id, $elementor_id = '' ) {
 		$idx = esc_attr( $index );
 		$img = esc_url( $image_url );
 		ob_start();
@@ -184,11 +186,18 @@ class WDCS_Options_Page {
 			       value="<?php echo esc_attr( $label ); ?>"
 			       placeholder="Section Name"
 			       class="regular-text">
-			<input type="text"
-			       name="wdcs_sections[<?php echo $idx; ?>][jetengine_id]"
-			       value="<?php echo esc_attr( $jetengine_id ); ?>"
-			       placeholder="JetEngine Meta Box ID"
-			       class="regular-text">
+			<div class="wdcs-row-fields-inline">
+				<input type="number"
+				       name="wdcs_sections[<?php echo $idx; ?>][elementor_id]"
+				       value="<?php echo esc_attr( $elementor_id ); ?>"
+				       placeholder="Elementor Template ID"
+				       class="small-text">
+				<input type="text"
+				       name="wdcs_sections[<?php echo $idx; ?>][jetengine_id]"
+				       value="<?php echo esc_attr( $jetengine_id ); ?>"
+				       placeholder="JetEngine Meta Box ID"
+				       class="regular-text">
+			</div>
 		</div>
 
 		<div class="wdcs-row-actions">

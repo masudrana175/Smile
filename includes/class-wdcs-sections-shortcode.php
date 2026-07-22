@@ -5,18 +5,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class WDCS_Sections_Shortcode {
 
-	/**
-	 * Maps order meta key → Elementor template ID.
-	 * The numeric value stored in each meta key determines render order.
-	 */
-	private static $section_map = array(
-		'section_order_2'            => 7965,
-		'section_order_seinformaion' => 7963,
-		'section_order_3'            => 7972,
-		'section_order_4'            => 7977,
-		'section_order_5'            => 7981,
-	);
-
 	public function __construct() {
 		add_shortcode( 'wdcs_sections', array( $this, 'render' ) );
 	}
@@ -31,19 +19,25 @@ class WDCS_Sections_Shortcode {
 			return '';
 		}
 
-		// Build list of [ order_value => elementor_id ] and sort ascending.
-		$ordered = array();
-		foreach ( self::$section_map as $meta_key => $elementor_id ) {
-			$value = (int) get_post_meta( $post_id, $meta_key, true );
-			if ( $value > 0 ) {
-				$ordered[ $value ] = $elementor_id;
-			}
+		$active = get_post_meta( $post_id, '_wdcs_active_sections', true );
+		if ( ! is_array( $active ) || empty( $active ) ) {
+			return '';
 		}
 
-		ksort( $ordered );
+		$all_sections = get_option( 'wdcs_sections_settings', array() );
+		if ( ! is_array( $all_sections ) ) {
+			return '';
+		}
 
 		ob_start();
-		foreach ( $ordered as $elementor_id ) {
+		foreach ( $active as $slug ) {
+			if ( ! isset( $all_sections[ $slug ] ) ) {
+				continue;
+			}
+			$elementor_id = (int) ( isset( $all_sections[ $slug ]['elementor_id'] ) ? $all_sections[ $slug ]['elementor_id'] : 0 );
+			if ( $elementor_id <= 0 ) {
+				continue;
+			}
 			echo \Elementor\Plugin::$instance->frontend->get_builder_content_for_display( $elementor_id );
 		}
 		return ob_get_clean();
