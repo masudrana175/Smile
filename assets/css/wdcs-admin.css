@@ -300,13 +300,20 @@ body.wdcs-lightbox-open { overflow: hidden; }
 
 .wdcs-active-item {
 	display: flex;
-	align-items: center;
-	gap: 6px;
+	flex-direction: column;
+	gap: 0;
 	padding: 6px 8px;
 	background: #fff;
 	border: 1px solid #1ab5b6;
 	border-radius: 4px;
 	cursor: default;
+}
+
+.wdcs-active-top {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	width: 100%;
 }
 
 .wdcs-drag-handle {
@@ -331,6 +338,25 @@ body.wdcs-lightbox-open { overflow: hidden; }
 	white-space: nowrap;
 }
 
+.wdcs-toggle-after {
+	flex-shrink: 0;
+	background: none;
+	border: 1px solid #1ab5b6;
+	border-radius: 3px;
+	color: #1ab5b6;
+	font-size: 11px;
+	font-weight: 600;
+	line-height: 1;
+	cursor: pointer;
+	padding: 2px 5px;
+	white-space: nowrap;
+}
+
+.wdcs-toggle-after:hover {
+	background: #1ab5b6;
+	color: #fff;
+}
+
 .wdcs-remove-active {
 	flex-shrink: 0;
 	background: none;
@@ -344,6 +370,23 @@ body.wdcs-lightbox-open { overflow: hidden; }
 }
 
 .wdcs-remove-active:hover { opacity: 1; }
+
+.wdcs-after-wrap {
+	width: 100%;
+	padding-top: 6px;
+}
+
+.wdcs-after-content {
+	width: 100%;
+	box-sizing: border-box;
+	font-size: 12px;
+	font-family: monospace;
+	resize: vertical;
+	border: 1px solid #1ab5b6;
+	border-radius: 3px;
+	padding: 5px 7px;
+	color: #1d2327;
+}
 
 .wdcs-sortable-placeholder {
 	background: #f0fbfb;

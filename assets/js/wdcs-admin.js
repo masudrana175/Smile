@@ -54,8 +54,8 @@
 	   ========================================================= */
 	$( document ).on( 'click', '.wdcs-upload-btn', function ( e ) {
 		e.preventDefault();
-		var $btn  = $( this );
-		var $row  = $btn.closest( '.wdcs-section-row' );
+		var $btn = $( this );
+		var $row = $btn.closest( '.wdcs-section-row' );
 
 		var frame = wp.media( {
 			title   : 'Select Section Preview Image',
@@ -91,7 +91,6 @@
 		var $list = $( '#wdcs-active-list' );
 		if ( ! $list.length ) return;
 
-		// Init jQuery UI Sortable.
 		$list.sortable( {
 			handle     : '.wdcs-drag-handle',
 			placeholder: 'wdcs-sortable-placeholder',
@@ -99,14 +98,30 @@
 			update     : syncJetEngine,
 		} );
 
-		function buildItem( slug, label, jetengineId ) {
+		function buildItem( slug, label, jetengineId, afterContent ) {
+			var $top = $( '<div class="wdcs-active-top"></div>' )
+				.append( $( '<span class="wdcs-drag-handle dashicons dashicons-menu"></span>' ) )
+				.append( $( '<span class="wdcs-active-label"></span>' ).text( label ) )
+				.append( $( '<button type="button" class="wdcs-toggle-after">+ content</button>' ) )
+				.append( $( '<button type="button" class="wdcs-remove-active">&times;</button>' ) );
+
+			var $textarea = $( '<textarea class="wdcs-after-content" name="wdcs_active_sections_after[]" rows="3"></textarea>' )
+				.attr( 'placeholder', 'Content after this section (HTML allowed)...' )
+				.val( afterContent || '' );
+
+			var $afterWrap = $( '<div class="wdcs-after-wrap"></div>' )
+				.append( $textarea );
+
+			if ( ! afterContent ) {
+				$afterWrap.hide();
+			}
+
 			return $( '<li class="wdcs-active-item"></li>' )
 				.attr( 'data-slug', slug )
 				.attr( 'data-jetengine', jetengineId || '' )
-				.append( $( '<span class="wdcs-drag-handle dashicons dashicons-menu"></span>' ) )
-				.append( $( '<span class="wdcs-active-label"></span>' ).text( label ) )
-				.append( $( '<button type="button" class="wdcs-remove-active">&times;</button>' ) )
-				.append( $( '<input type="hidden" name="wdcs_active_sections[]">' ).val( slug ) );
+				.append( $top )
+				.append( $afterWrap )
+				.append( $( '<input type="hidden" name="wdcs_active_sections_slug[]">' ).val( slug ) );
 		}
 
 		function updateEmpty() {
@@ -115,13 +130,11 @@
 		}
 
 		function syncJetEngine() {
-			// Collect unique jetengine IDs currently in the active list.
 			var activeIds = {};
 			$list.children( '.wdcs-active-item' ).each( function () {
 				var id = $( this ).data( 'jetengine' );
 				if ( id ) activeIds[ id ] = true;
 			} );
-			// Show meta box if its ID is in the active list, hide otherwise.
 			$( '.wdcs-avail-item' ).each( function () {
 				var id = $( this ).data( 'jetengine' );
 				if ( ! id ) return;
@@ -135,7 +148,8 @@
 			$list.append( buildItem(
 				$avail.data( 'slug' ),
 				$avail.data( 'label' ),
-				$avail.data( 'jetengine' )
+				$avail.data( 'jetengine' ),
+				''
 			) );
 			updateEmpty();
 			syncJetEngine();
@@ -146,6 +160,16 @@
 			$( this ).closest( '.wdcs-active-item' ).remove();
 			updateEmpty();
 			syncJetEngine();
+		} );
+
+		// Toggle after-content textarea.
+		$( document ).on( 'click', '.wdcs-toggle-after', function () {
+			var $wrap = $( this ).closest( '.wdcs-active-item' ).find( '.wdcs-after-wrap' );
+			$wrap.slideToggle( 180, function () {
+				if ( $wrap.is( ':visible' ) ) {
+					$wrap.find( 'textarea' ).focus();
+				}
+			} );
 		} );
 
 		// Initial state.

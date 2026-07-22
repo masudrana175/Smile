@@ -36,6 +36,20 @@ class WDCS_Admin_Sections {
 		}
 	}
 
+	/**
+	 * Normalise a single saved item to {slug, after}.
+	 * Handles both the old flat-string format and the new array format.
+	 */
+	private static function normalise_item( $item ) {
+		if ( is_string( $item ) ) {
+			return array( 'slug' => $item, 'after' => '' );
+		}
+		return array(
+			'slug'  => isset( $item['slug'] )  ? (string) $item['slug']  : '',
+			'after' => isset( $item['after'] ) ? (string) $item['after'] : '',
+		);
+	}
+
 	public function render_meta_box( $post ) {
 		$sections = self::get_all_sections();
 		$saved    = get_post_meta( $post->ID, self::META_KEY, true );
@@ -71,17 +85,29 @@ class WDCS_Admin_Sections {
 					Active <span class="wdcs-builder-hint">— drag to reorder</span>
 				</p>
 				<ul class="wdcs-active-list" id="wdcs-active-list">
-					<?php foreach ( $active as $slug ) :
+					<?php foreach ( $active as $raw ) :
+						$item    = self::normalise_item( $raw );
+						$slug    = $item['slug'];
+						$after   = $item['after'];
 						if ( ! isset( $sections[ $slug ] ) ) continue;
 						$section = $sections[ $slug ];
 					?>
 					<li class="wdcs-active-item"
 					    data-slug="<?php echo esc_attr( $slug ); ?>"
 					    data-jetengine="<?php echo esc_attr( $section['jetengine_id'] ); ?>">
-						<span class="wdcs-drag-handle dashicons dashicons-menu"></span>
-						<span class="wdcs-active-label"><?php echo esc_html( $section['label'] ); ?></span>
-						<button type="button" class="wdcs-remove-active">&times;</button>
-						<input type="hidden" name="wdcs_active_sections[]" value="<?php echo esc_attr( $slug ); ?>">
+						<div class="wdcs-active-top">
+							<span class="wdcs-drag-handle dashicons dashicons-menu"></span>
+							<span class="wdcs-active-label"><?php echo esc_html( $section['label'] ); ?></span>
+							<button type="button" class="wdcs-toggle-after" title="Add content after this section">+&nbsp;content</button>
+							<button type="button" class="wdcs-remove-active">&times;</button>
+						</div>
+						<div class="wdcs-after-wrap"<?php echo $after ? '' : ' style="display:none"'; ?>>
+							<textarea name="wdcs_active_sections_after[]"
+							          class="wdcs-after-content"
+							          placeholder="Content after this section (HTML allowed)..."
+							          rows="3"><?php echo esc_textarea( $after ); ?></textarea>
+						</div>
+						<input type="hidden" name="wdcs_active_sections_slug[]" value="<?php echo esc_attr( $slug ); ?>">
 					</li>
 					<?php endforeach; ?>
 				</ul>
@@ -118,16 +144,20 @@ class WDCS_Admin_Sections {
 			return;
 		}
 
-		$valid_slugs = array_keys( self::get_all_sections() );
-		$submitted   = isset( $_POST['wdcs_active_sections'] ) ? (array) $_POST['wdcs_active_sections'] : array();
+		$valid_slugs  = array_keys( self::get_all_sections() );
+		$slugs        = isset( $_POST['wdcs_active_sections_slug'] )  ? (array) $_POST['wdcs_active_sections_slug']  : array();
+		$after_values = isset( $_POST['wdcs_active_sections_after'] ) ? (array) $_POST['wdcs_active_sections_after'] : array();
 
-		// Preserve order and allow duplicates; only reject unknown slugs.
 		$sanitized = array();
-		foreach ( $submitted as $slug ) {
+		foreach ( $slugs as $i => $slug ) {
 			$slug = sanitize_key( $slug );
-			if ( in_array( $slug, $valid_slugs, true ) ) {
-				$sanitized[] = $slug;
+			if ( ! in_array( $slug, $valid_slugs, true ) ) {
+				continue;
 			}
+			$sanitized[] = array(
+				'slug'  => $slug,
+				'after' => isset( $after_values[ $i ] ) ? wp_kses_post( $after_values[ $i ] ) : '',
+			);
 		}
 
 		update_post_meta( $post_id, self::META_KEY, $sanitized );

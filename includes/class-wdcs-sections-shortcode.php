@@ -30,15 +30,30 @@ class WDCS_Sections_Shortcode {
 		}
 
 		ob_start();
-		foreach ( $active as $slug ) {
+		foreach ( $active as $raw ) {
+			// Support both old flat-string format and new {slug, after} format.
+			if ( is_string( $raw ) ) {
+				$slug  = $raw;
+				$after = '';
+			} else {
+				$slug  = isset( $raw['slug'] )  ? (string) $raw['slug']  : '';
+				$after = isset( $raw['after'] ) ? (string) $raw['after'] : '';
+			}
+
 			if ( ! isset( $all_sections[ $slug ] ) ) {
 				continue;
 			}
+
 			$elementor_id = (int) ( isset( $all_sections[ $slug ]['elementor_id'] ) ? $all_sections[ $slug ]['elementor_id'] : 0 );
 			if ( $elementor_id <= 0 ) {
 				continue;
 			}
+
 			echo \Elementor\Plugin::$instance->frontend->get_builder_content_for_display( $elementor_id );
+
+			if ( '' !== $after ) {
+				echo $after;
+			}
 		}
 		return ob_get_clean();
 	}
