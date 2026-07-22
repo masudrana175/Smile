@@ -142,11 +142,13 @@ class WDCS_Admin_Sections {
 		$name_values = isset( $_POST['wdcs_active_sections_name'] ) ? (array) $_POST['wdcs_active_sections_name'] : array();
 
 		$sanitized = array();
+		$seen      = array();
 		foreach ( $slugs as $i => $slug ) {
 			$slug = sanitize_key( $slug );
-			if ( ! in_array( $slug, $valid_slugs, true ) ) {
+			if ( ! in_array( $slug, $valid_slugs, true ) || isset( $seen[ $slug ] ) ) {
 				continue;
 			}
+			$seen[ $slug ] = true;
 			$sanitized[] = array(
 				'slug' => $slug,
 				'name' => isset( $name_values[ $i ] ) ? sanitize_text_field( $name_values[ $i ] ) : '',

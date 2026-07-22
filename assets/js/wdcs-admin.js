@@ -119,6 +119,18 @@
 			$( '.wdcs-active-empty' ).toggle( empty );
 		}
 
+		function updateAvailButtons() {
+			var active = {};
+			$list.children( '.wdcs-active-item' ).each( function () {
+				active[ $( this ).data( 'slug' ) ] = true;
+			} );
+			$( '.wdcs-avail-item' ).each( function () {
+				var added = !! active[ $( this ).data( 'slug' ) ];
+				$( this ).find( '.wdcs-add-to-active' ).prop( 'disabled', added );
+				$( this ).toggleClass( 'wdcs-avail-added', added );
+			} );
+		}
+
 		function syncJetEngine() {
 			var activeIds = {};
 			$list.children( '.wdcs-active-item' ).each( function () {
@@ -132,15 +144,16 @@
 			} );
 		}
 
-		// Add section to active list.
+		// Add section to active list (one instance per section only).
 		$( document ).on( 'click', '.wdcs-add-to-active', function () {
 			var $avail = $( this ).closest( '.wdcs-avail-item' );
-			$list.append( buildItem(
-				$avail.data( 'slug' ),
-				$avail.data( 'label' ),
-				$avail.data( 'jetengine' )
-			) );
+			var slug   = $avail.data( 'slug' );
+			if ( $list.find( '.wdcs-active-item[data-slug="' + slug + '"]' ).length ) {
+				return;
+			}
+			$list.append( buildItem( slug, $avail.data( 'label' ), $avail.data( 'jetengine' ) ) );
 			updateEmpty();
+			updateAvailButtons();
 			syncJetEngine();
 		} );
 
@@ -162,12 +175,14 @@
 		$( document ).on( 'click', '.wdcs-remove-active', function () {
 			$( this ).closest( '.wdcs-active-item' ).remove();
 			updateEmpty();
+			updateAvailButtons();
 			syncJetEngine();
 		} );
 
 		// Initial state.
 		syncJetEngine();
 		updateEmpty();
+		updateAvailButtons();
 		setTimeout( syncJetEngine, 600 );
 	} );
 

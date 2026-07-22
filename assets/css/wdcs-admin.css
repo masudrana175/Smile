@@ -280,6 +280,9 @@ body.wdcs-lightbox-open { overflow: hidden; }
 	color: #fff !important;
 }
 
+.wdcs-avail-added { opacity: .5; }
+.wdcs-avail-added .wdcs-add-to-active { cursor: not-allowed !important; }
+
 /* Active sortable list */
 .wdcs-builder-active {
 	display: flex;
