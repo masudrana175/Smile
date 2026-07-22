@@ -329,19 +329,19 @@ body.wdcs-lightbox-open { overflow: hidden; }
 
 .wdcs-active-name {
 	flex: 1;
+	height: 28px;
 	font-size: 12px;
 	font-weight: 600;
 	color: #0c7a7b;
 	min-width: 0;
-	border: 1px solid transparent;
+	border: 1px solid #1ab5b6;
 	background: transparent;
-	padding: 2px 4px;
+	padding: 2px 6px;
 	border-radius: 3px;
 	box-sizing: border-box;
 }
 
-.wdcs-active-name:hover { border-color: #c3c4c7; }
-.wdcs-active-name:focus { border-color: #1ab5b6; background: #fff; outline: none; box-shadow: none; }
+.wdcs-active-name:focus { background: #fff; outline: none; box-shadow: none; }
 
 .wdcs-toggle-after {
 	flex-shrink: 0;
