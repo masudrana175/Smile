@@ -327,16 +327,21 @@ body.wdcs-lightbox-open { overflow: hidden; }
 
 .wdcs-drag-handle:active { cursor: grabbing; }
 
-.wdcs-active-label {
+.wdcs-active-name {
 	flex: 1;
 	font-size: 12px;
 	font-weight: 600;
 	color: #0c7a7b;
 	min-width: 0;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+	border: 1px solid transparent;
+	background: transparent;
+	padding: 2px 4px;
+	border-radius: 3px;
+	box-sizing: border-box;
 }
+
+.wdcs-active-name:hover { border-color: #c3c4c7; }
+.wdcs-active-name:focus { border-color: #1ab5b6; background: #fff; outline: none; box-shadow: none; }
 
 .wdcs-toggle-after {
 	flex-shrink: 0;

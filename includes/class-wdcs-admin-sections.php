@@ -42,10 +42,11 @@ class WDCS_Admin_Sections {
 	 */
 	private static function normalise_item( $item ) {
 		if ( is_string( $item ) ) {
-			return array( 'slug' => $item, 'after' => '' );
+			return array( 'slug' => $item, 'name' => '', 'after' => '' );
 		}
 		return array(
 			'slug'  => isset( $item['slug'] )  ? (string) $item['slug']  : '',
+			'name'  => isset( $item['name'] )  ? (string) $item['name']  : '',
 			'after' => isset( $item['after'] ) ? (string) $item['after'] : '',
 		);
 	}
@@ -88,6 +89,7 @@ class WDCS_Admin_Sections {
 					<?php foreach ( $active as $raw ) :
 						$item    = self::normalise_item( $raw );
 						$slug    = $item['slug'];
+						$name    = $item['name'];
 						$after   = $item['after'];
 						if ( ! isset( $sections[ $slug ] ) ) continue;
 						$section = $sections[ $slug ];
@@ -97,7 +99,11 @@ class WDCS_Admin_Sections {
 					    data-jetengine="<?php echo esc_attr( $section['jetengine_id'] ); ?>">
 						<div class="wdcs-active-top">
 							<span class="wdcs-drag-handle dashicons dashicons-menu"></span>
-							<span class="wdcs-active-label"><?php echo esc_html( $section['label'] ); ?></span>
+							<input type="text"
+							       name="wdcs_active_sections_name[]"
+							       class="wdcs-active-name"
+							       value="<?php echo esc_attr( $name ); ?>"
+							       placeholder="<?php echo esc_attr( $section['label'] ); ?>">
 							<button type="button" class="wdcs-toggle-after" title="Add content after this section">+&nbsp;content</button>
 							<button type="button" class="wdcs-remove-active">&times;</button>
 						</div>
@@ -146,6 +152,7 @@ class WDCS_Admin_Sections {
 
 		$valid_slugs  = array_keys( self::get_all_sections() );
 		$slugs        = isset( $_POST['wdcs_active_sections_slug'] )  ? (array) $_POST['wdcs_active_sections_slug']  : array();
+		$name_values  = isset( $_POST['wdcs_active_sections_name'] )  ? (array) $_POST['wdcs_active_sections_name']  : array();
 		$after_values = isset( $_POST['wdcs_active_sections_after'] ) ? (array) $_POST['wdcs_active_sections_after'] : array();
 
 		$sanitized = array();
@@ -156,6 +163,7 @@ class WDCS_Admin_Sections {
 			}
 			$sanitized[] = array(
 				'slug'  => $slug,
+				'name'  => isset( $name_values[ $i ] )  ? sanitize_text_field( $name_values[ $i ] )  : '',
 				'after' => isset( $after_values[ $i ] ) ? wp_kses_post( $after_values[ $i ] ) : '',
 			);
 		}

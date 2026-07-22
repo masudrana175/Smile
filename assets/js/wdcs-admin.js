@@ -98,10 +98,14 @@
 			update     : syncJetEngine,
 		} );
 
-		function buildItem( slug, label, jetengineId, afterContent ) {
+		function buildItem( slug, label, jetengineId, afterContent, customName ) {
+			var $nameInput = $( '<input type="text" class="wdcs-active-name" name="wdcs_active_sections_name[]">' )
+				.attr( 'placeholder', label )
+				.val( customName || '' );
+
 			var $top = $( '<div class="wdcs-active-top"></div>' )
 				.append( $( '<span class="wdcs-drag-handle dashicons dashicons-menu"></span>' ) )
-				.append( $( '<span class="wdcs-active-label"></span>' ).text( label ) )
+				.append( $nameInput )
 				.append( $( '<button type="button" class="wdcs-toggle-after">+ content</button>' ) )
 				.append( $( '<button type="button" class="wdcs-remove-active">&times;</button>' ) );
 
@@ -149,6 +153,7 @@
 				$avail.data( 'slug' ),
 				$avail.data( 'label' ),
 				$avail.data( 'jetengine' ),
+				'',
 				''
 			) );
 			updateEmpty();
