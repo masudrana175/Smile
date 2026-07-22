@@ -329,7 +329,8 @@ body.wdcs-lightbox-open { overflow: hidden; }
 
 .wdcs-active-name {
 	flex: 1;
-	height: 28px;
+	height: 28px !important;
+	min-height: 28px !important;
 	font-size: 12px;
 	font-weight: 600;
 	color: #0c7a7b;
