@@ -144,6 +144,20 @@
 			syncJetEngine();
 		} );
 
+		// Click active item → scroll to its JetEngine meta box.
+		$( document ).on( 'click', '.wdcs-active-item', function ( e ) {
+			if ( $( e.target ).closest( '.wdcs-remove-active, .wdcs-active-name, .wdcs-drag-handle' ).length ) {
+				return;
+			}
+			var id = $( this ).data( 'jetengine' );
+			if ( ! id ) return;
+			var $target = $( '#' + id );
+			if ( ! $target.length ) return;
+			$( 'html, body' ).animate( { scrollTop: $target.offset().top - 50 }, 300 );
+			$target.addClass( 'wdcs-metabox-highlight' );
+			setTimeout( function () { $target.removeClass( 'wdcs-metabox-highlight' ); }, 1500 );
+		} );
+
 		// Remove section from active list.
 		$( document ).on( 'click', '.wdcs-remove-active', function () {
 			$( this ).closest( '.wdcs-active-item' ).remove();

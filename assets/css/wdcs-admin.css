@@ -306,7 +306,20 @@ body.wdcs-lightbox-open { overflow: hidden; }
 	background: #fff;
 	border: 1px solid #1ab5b6;
 	border-radius: 4px;
-	cursor: default;
+	cursor: pointer;
+}
+
+.wdcs-active-item:hover { background: #f0fbfb; }
+
+@keyframes wdcs-pulse {
+	0%   { box-shadow: 0 0 0 0 rgba(26,181,182,.5); }
+	70%  { box-shadow: 0 0 0 6px rgba(26,181,182,0); }
+	100% { box-shadow: 0 0 0 0 rgba(26,181,182,0); }
+}
+
+.wdcs-metabox-highlight {
+	animation: wdcs-pulse .6s ease 2;
+	border-radius: 4px;
 }
 
 .wdcs-active-top {
