@@ -31,14 +31,7 @@ class WDCS_Sections_Shortcode {
 
 		ob_start();
 		foreach ( $active as $raw ) {
-			// Support both old flat-string format and new {slug, after} format.
-			if ( is_string( $raw ) ) {
-				$slug  = $raw;
-				$after = '';
-			} else {
-				$slug  = isset( $raw['slug'] )  ? (string) $raw['slug']  : '';
-				$after = isset( $raw['after'] ) ? (string) $raw['after'] : '';
-			}
+			$slug = is_string( $raw ) ? $raw : ( isset( $raw['slug'] ) ? (string) $raw['slug'] : '' );
 
 			if ( ! isset( $all_sections[ $slug ] ) ) {
 				continue;
@@ -50,10 +43,6 @@ class WDCS_Sections_Shortcode {
 			}
 
 			echo \Elementor\Plugin::$instance->frontend->get_builder_content_for_display( $elementor_id );
-
-			if ( '' !== $after ) {
-				echo $after;
-			}
 		}
 		return ob_get_clean();
 	}

@@ -98,33 +98,19 @@
 			update     : syncJetEngine,
 		} );
 
-		function buildItem( slug, label, jetengineId, afterContent, customName ) {
+		function buildItem( slug, label, jetengineId ) {
 			var $nameInput = $( '<input type="text" class="wdcs-active-name" name="wdcs_active_sections_name[]">' )
-				.attr( 'placeholder', label )
-				.val( customName || '' );
+				.attr( 'placeholder', label );
 
 			var $top = $( '<div class="wdcs-active-top"></div>' )
 				.append( $( '<span class="wdcs-drag-handle dashicons dashicons-menu"></span>' ) )
 				.append( $nameInput )
-				.append( $( '<button type="button" class="wdcs-toggle-after">+ content</button>' ) )
 				.append( $( '<button type="button" class="wdcs-remove-active">&times;</button>' ) );
-
-			var $textarea = $( '<textarea class="wdcs-after-content" name="wdcs_active_sections_after[]" rows="3"></textarea>' )
-				.attr( 'placeholder', 'Content after this section (HTML allowed)...' )
-				.val( afterContent || '' );
-
-			var $afterWrap = $( '<div class="wdcs-after-wrap"></div>' )
-				.append( $textarea );
-
-			if ( ! afterContent ) {
-				$afterWrap.hide();
-			}
 
 			return $( '<li class="wdcs-active-item"></li>' )
 				.attr( 'data-slug', slug )
 				.attr( 'data-jetengine', jetengineId || '' )
 				.append( $top )
-				.append( $afterWrap )
 				.append( $( '<input type="hidden" name="wdcs_active_sections_slug[]">' ).val( slug ) );
 		}
 
@@ -152,9 +138,7 @@
 			$list.append( buildItem(
 				$avail.data( 'slug' ),
 				$avail.data( 'label' ),
-				$avail.data( 'jetengine' ),
-				'',
-				''
+				$avail.data( 'jetengine' )
 			) );
 			updateEmpty();
 			syncJetEngine();
@@ -165,16 +149,6 @@
 			$( this ).closest( '.wdcs-active-item' ).remove();
 			updateEmpty();
 			syncJetEngine();
-		} );
-
-		// Toggle after-content textarea.
-		$( document ).on( 'click', '.wdcs-toggle-after', function () {
-			var $wrap = $( this ).closest( '.wdcs-active-item' ).find( '.wdcs-after-wrap' );
-			$wrap.slideToggle( 180, function () {
-				if ( $wrap.is( ':visible' ) ) {
-					$wrap.find( 'textarea' ).focus();
-				}
-			} );
 		} );
 
 		// Initial state.
