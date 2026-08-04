@@ -10,10 +10,6 @@ class WDCS_Sections_Shortcode {
 	}
 
 	public function render( $atts ) {
-		if ( ! class_exists( '\Elementor\Plugin' ) ) {
-			return '';
-		}
-
 		$post_id = get_the_ID();
 		if ( ! $post_id ) {
 			return '';
@@ -26,14 +22,24 @@ class WDCS_Sections_Shortcode {
 
 		$all_sections = get_option( 'wdcs_sections_settings', array() );
 		if ( ! is_array( $all_sections ) ) {
-			return '';
+			$all_sections = array();
 		}
 
 		ob_start();
 		foreach ( $active as $raw ) {
 			$slug = is_string( $raw ) ? $raw : ( isset( $raw['slug'] ) ? (string) $raw['slug'] : '' );
 
+			// Custom content builder sections.
+			if ( WDCS_Admin_Sections::CB_SLUG === $slug ) {
+				echo WDCS_CB_Renderer::render( $post_id );
+				continue;
+			}
+
+			// Elementor template sections.
 			if ( ! isset( $all_sections[ $slug ] ) ) {
+				continue;
+			}
+			if ( ! class_exists( '\Elementor\Plugin' ) ) {
 				continue;
 			}
 

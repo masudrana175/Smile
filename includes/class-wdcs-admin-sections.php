@@ -8,6 +8,7 @@ class WDCS_Admin_Sections {
 	const META_KEY     = '_wdcs_active_sections';
 	const NONCE_ACTION = 'wdcs_save_sections';
 	const NONCE_FIELD  = 'wdcs_sections_nonce';
+	const CB_SLUG      = 'wdcs_cb_block';
 
 	public static function get_all_sections() {
 		return WDCS_Options_Page::get_settings();
@@ -57,6 +58,16 @@ class WDCS_Admin_Sections {
 
 			<div class="wdcs-builder-available">
 				<p class="wdcs-builder-heading">Sections</p>
+
+				<div class="wdcs-avail-item wdcs-avail-cb"
+				     data-slug="<?php echo esc_attr( self::CB_SLUG ); ?>"
+				     data-label="Content Builder"
+				     data-jetengine="">
+					<span class="wdcs-avail-no-thumb dashicons dashicons-editor-table"></span>
+					<span class="wdcs-avail-label">Content Builder</span>
+					<button type="button" class="wdcs-add-to-active button button-small">+</button>
+				</div>
+
 				<?php foreach ( $sections as $slug => $section ) : ?>
 				<div class="wdcs-avail-item"
 				     data-slug="<?php echo esc_attr( $slug ); ?>"
@@ -82,9 +93,30 @@ class WDCS_Admin_Sections {
 				</p>
 				<ul class="wdcs-active-list" id="wdcs-active-list">
 					<?php foreach ( $active as $raw ) :
-						$item    = self::normalise_item( $raw );
-						$slug    = $item['slug'];
-						$name    = $item['name'];
+						$item = self::normalise_item( $raw );
+						$slug = $item['slug'];
+						$name = $item['name'];
+
+						if ( self::CB_SLUG === $slug ) :
+					?>
+					<li class="wdcs-active-item"
+					    data-slug="<?php echo esc_attr( self::CB_SLUG ); ?>"
+					    data-jetengine="">
+						<div class="wdcs-active-top">
+							<span class="wdcs-drag-handle dashicons dashicons-menu"></span>
+							<input type="text"
+							       name="wdcs_active_sections_name[]"
+							       class="wdcs-active-name"
+							       value="<?php echo esc_attr( $name ); ?>"
+							       placeholder="Content Builder">
+							<button type="button" class="wdcs-remove-active">&times;</button>
+						</div>
+						<input type="hidden" name="wdcs_active_sections_slug[]" value="<?php echo esc_attr( self::CB_SLUG ); ?>">
+					</li>
+					<?php
+						continue;
+						endif;
+
 						if ( ! isset( $sections[ $slug ] ) ) continue;
 						$section = $sections[ $slug ];
 					?>
@@ -137,7 +169,7 @@ class WDCS_Admin_Sections {
 			return;
 		}
 
-		$valid_slugs = array_keys( self::get_all_sections() );
+		$valid_slugs = array_merge( array( self::CB_SLUG ), array_keys( self::get_all_sections() ) );
 		$slugs       = isset( $_POST['wdcs_active_sections_slug'] ) ? (array) $_POST['wdcs_active_sections_slug'] : array();
 		$name_values = isset( $_POST['wdcs_active_sections_name'] ) ? (array) $_POST['wdcs_active_sections_name'] : array();
 
