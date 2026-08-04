@@ -79,6 +79,18 @@ class WDCS_Options_Page {
 
 		update_option( self::OPTION_KEY, $saved );
 
+		// Save Content Builder post types.
+		$raw_types    = isset( $_POST['wdcs_cb_post_types'] ) ? (array) $_POST['wdcs_cb_post_types'] : array();
+		$clean_types  = array();
+		$all_pt_slugs = array_keys( get_post_types( array( 'public' => true ) ) );
+		foreach ( $raw_types as $pt ) {
+			$pt = sanitize_key( $pt );
+			if ( in_array( $pt, $all_pt_slugs, true ) ) {
+				$clean_types[] = $pt;
+			}
+		}
+		update_option( WDCS_CB_Meta_Box::POST_TYPES_OPTION, $clean_types );
+
 		wp_safe_redirect( add_query_arg( array(
 			'page'    => 'wdcs-smile-sections',
 			'updated' => '1',
@@ -134,6 +146,34 @@ class WDCS_Options_Page {
 						<span class="dashicons dashicons-plus-alt2" style="vertical-align:middle;margin-right:4px;"></span>
 						Add Section
 					</button>
+				</div>
+
+				<hr style="margin:32px 0 24px;">
+
+				<h2 style="margin-bottom:8px;">
+					<span class="dashicons dashicons-editor-table" style="vertical-align:middle;margin-right:6px;color:#1ab5b6;"></span>
+					Content Builder — Post Types
+				</h2>
+				<p class="description" style="margin-bottom:16px;font-size:13px;">
+					Choose which post types show the <strong>Content Builder</strong> meta box in the editor.
+				</p>
+
+				<?php
+				$enabled_types = WDCS_CB_Meta_Box::get_enabled_post_types();
+				$all_post_types = get_post_types( array( 'public' => true ), 'objects' );
+				unset( $all_post_types['attachment'] );
+				?>
+				<div style="display:flex;flex-wrap:wrap;gap:10px 24px;">
+				<?php foreach ( $all_post_types as $pt_slug => $pt_obj ) : ?>
+					<label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
+						<input type="checkbox"
+						       name="wdcs_cb_post_types[]"
+						       value="<?php echo esc_attr( $pt_slug ); ?>"
+						       <?php checked( in_array( $pt_slug, $enabled_types, true ) ); ?>>
+						<?php echo esc_html( $pt_obj->labels->singular_name ); ?>
+						<span style="color:#999;font-size:11px;">(<?php echo esc_html( $pt_slug ); ?>)</span>
+					</label>
+				<?php endforeach; ?>
 				</div>
 
 				<p class="submit" style="margin-top:24px;">

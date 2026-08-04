@@ -3,7 +3,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class WDCS_CB_Meta_Box {
 
-	const META_KEY = '_wdcs_cb_sections';
+	const META_KEY          = '_wdcs_cb_sections';
+	const POST_TYPES_OPTION = 'wdcs_cb_post_types';
 
 	public function __construct() {
 		add_action( 'add_meta_boxes',        array( $this, 'register' ) );
@@ -11,9 +12,16 @@ class WDCS_CB_Meta_Box {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue' ) );
 	}
 
+	public static function get_enabled_post_types(): array {
+		$saved = get_option( self::POST_TYPES_OPTION, null );
+		if ( ! is_array( $saved ) ) {
+			return array( 'patient-services' );
+		}
+		return $saved;
+	}
+
 	public function register() {
-		$post_types = array( 'page', 'post', 'patient-services' );
-		foreach ( $post_types as $pt ) {
+		foreach ( self::get_enabled_post_types() as $pt ) {
 			add_meta_box(
 				'wdcs-cb-meta-box',
 				'Content Builder',
