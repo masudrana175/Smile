@@ -83,13 +83,13 @@ class WDCS_CB_Admin_UI {
 			<div class="wdcs-cb-section-body" style="<?php echo esc_attr( $body_style ); ?>">
 
 				<div class="wdcs-cb-tabs">
-					<button class="wdcs-cb-tab active" data-tab="background">Background</button>
-					<button class="wdcs-cb-tab" data-tab="layout">Layout</button>
-					<button class="wdcs-cb-tab" data-tab="spacing">Spacing</button>
-					<button class="wdcs-cb-tab" data-tab="title">Title</button>
-					<button class="wdcs-cb-tab" data-tab="subtitle">Subtitle</button>
-					<button class="wdcs-cb-tab" data-tab="description">Description</button>
-					<button class="wdcs-cb-tab" data-tab="columns">Columns</button>
+					<button type="button" class="wdcs-cb-tab active" data-tab="background">Background</button>
+					<button type="button" class="wdcs-cb-tab" data-tab="layout">Layout</button>
+					<button type="button" class="wdcs-cb-tab" data-tab="spacing">Spacing</button>
+					<button type="button" class="wdcs-cb-tab" data-tab="title">Title</button>
+					<button type="button" class="wdcs-cb-tab" data-tab="subtitle">Subtitle</button>
+					<button type="button" class="wdcs-cb-tab" data-tab="description">Description</button>
+					<button type="button" class="wdcs-cb-tab" data-tab="columns">Columns</button>
 				</div>
 
 				<div class="wdcs-cb-tab-pane active" data-pane="background">

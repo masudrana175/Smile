@@ -8,7 +8,7 @@ class WDCS_Admin_Sections {
 	const META_KEY     = '_wdcs_active_sections';
 	const NONCE_ACTION = 'wdcs_save_sections';
 	const NONCE_FIELD  = 'wdcs_sections_nonce';
-	const CB_SLUG      = 'wdcs_cb_block';
+	const CB_PREFIX    = 'wdcs_cb_';
 
 	public static function get_all_sections() {
 		return WDCS_Options_Page::get_settings();
@@ -47,10 +47,25 @@ class WDCS_Admin_Sections {
 		);
 	}
 
+	private static function get_cb_sections_map( int $post_id ): array {
+		$raw = get_post_meta( $post_id, WDCS_CB_Meta_Box::META_KEY, true );
+		$map = array();
+		if ( ! is_array( $raw ) ) {
+			return $map;
+		}
+		foreach ( $raw as $s ) {
+			if ( ! empty( $s['id'] ) ) {
+				$map[ $s['id'] ] = ! empty( $s['label'] ) ? $s['label'] : 'Content Section';
+			}
+		}
+		return $map;
+	}
+
 	public function render_meta_box( $post ) {
-		$sections = self::get_all_sections();
-		$saved    = get_post_meta( $post->ID, self::META_KEY, true );
-		$active   = is_array( $saved ) ? $saved : array();
+		$sections   = self::get_all_sections();
+		$cb_map     = self::get_cb_sections_map( $post->ID );
+		$saved      = get_post_meta( $post->ID, self::META_KEY, true );
+		$active     = is_array( $saved ) ? $saved : array();
 
 		wp_nonce_field( self::NONCE_ACTION, self::NONCE_FIELD );
 		?>
@@ -59,14 +74,16 @@ class WDCS_Admin_Sections {
 			<div class="wdcs-builder-available">
 				<p class="wdcs-builder-heading">Sections</p>
 
+				<?php foreach ( $cb_map as $cb_id => $cb_label ) : ?>
 				<div class="wdcs-avail-item wdcs-avail-cb"
-				     data-slug="<?php echo esc_attr( self::CB_SLUG ); ?>"
-				     data-label="Content Builder"
+				     data-slug="<?php echo esc_attr( self::CB_PREFIX . $cb_id ); ?>"
+				     data-label="<?php echo esc_attr( $cb_label ); ?>"
 				     data-jetengine="">
 					<span class="wdcs-avail-no-thumb dashicons dashicons-editor-table"></span>
-					<span class="wdcs-avail-label">Content Builder</span>
+					<span class="wdcs-avail-label"><?php echo esc_html( $cb_label ); ?></span>
 					<button type="button" class="wdcs-add-to-active button button-small">+</button>
 				</div>
+				<?php endforeach; ?>
 
 				<?php foreach ( $sections as $slug => $section ) : ?>
 				<div class="wdcs-avail-item"
@@ -97,10 +114,12 @@ class WDCS_Admin_Sections {
 						$slug = $item['slug'];
 						$name = $item['name'];
 
-						if ( self::CB_SLUG === $slug ) :
+						if ( strpos( $slug, self::CB_PREFIX ) === 0 ) :
+							$cb_id    = substr( $slug, strlen( self::CB_PREFIX ) );
+							$cb_label = $cb_map[ $cb_id ] ?? 'Content Section';
 					?>
 					<li class="wdcs-active-item"
-					    data-slug="<?php echo esc_attr( self::CB_SLUG ); ?>"
+					    data-slug="<?php echo esc_attr( $slug ); ?>"
 					    data-jetengine="">
 						<div class="wdcs-active-top">
 							<span class="wdcs-drag-handle dashicons dashicons-menu"></span>
@@ -108,10 +127,10 @@ class WDCS_Admin_Sections {
 							       name="wdcs_active_sections_name[]"
 							       class="wdcs-active-name"
 							       value="<?php echo esc_attr( $name ); ?>"
-							       placeholder="Content Builder">
+							       placeholder="<?php echo esc_attr( $cb_label ); ?>">
 							<button type="button" class="wdcs-remove-active">&times;</button>
 						</div>
-						<input type="hidden" name="wdcs_active_sections_slug[]" value="<?php echo esc_attr( self::CB_SLUG ); ?>">
+						<input type="hidden" name="wdcs_active_sections_slug[]" value="<?php echo esc_attr( $slug ); ?>">
 					</li>
 					<?php
 						continue;
@@ -169,15 +188,17 @@ class WDCS_Admin_Sections {
 			return;
 		}
 
-		$valid_slugs = array_merge( array( self::CB_SLUG ), array_keys( self::get_all_sections() ) );
+		$valid_slugs = array_keys( self::get_all_sections() );
 		$slugs       = isset( $_POST['wdcs_active_sections_slug'] ) ? (array) $_POST['wdcs_active_sections_slug'] : array();
 		$name_values = isset( $_POST['wdcs_active_sections_name'] ) ? (array) $_POST['wdcs_active_sections_name'] : array();
 
 		$sanitized = array();
 		$seen      = array();
 		foreach ( $slugs as $i => $slug ) {
-			$slug = sanitize_key( $slug );
-			if ( ! in_array( $slug, $valid_slugs, true ) || isset( $seen[ $slug ] ) ) {
+			$slug      = sanitize_key( $slug );
+			$is_cb     = strpos( $slug, self::CB_PREFIX ) === 0;
+			$is_valid  = $is_cb || in_array( $slug, $valid_slugs, true );
+			if ( ! $is_valid || isset( $seen[ $slug ] ) ) {
 				continue;
 			}
 			$seen[ $slug ] = true;

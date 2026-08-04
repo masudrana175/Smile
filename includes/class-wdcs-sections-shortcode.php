@@ -29,9 +29,10 @@ class WDCS_Sections_Shortcode {
 		foreach ( $active as $raw ) {
 			$slug = is_string( $raw ) ? $raw : ( isset( $raw['slug'] ) ? (string) $raw['slug'] : '' );
 
-			// Custom content builder sections.
-			if ( WDCS_Admin_Sections::CB_SLUG === $slug ) {
-				echo WDCS_CB_Renderer::render( $post_id );
+			// Individual custom builder section.
+			if ( strpos( $slug, WDCS_Admin_Sections::CB_PREFIX ) === 0 ) {
+				$section_id = substr( $slug, strlen( WDCS_Admin_Sections::CB_PREFIX ) );
+				echo WDCS_CB_Renderer::render_by_section_id( $post_id, $section_id );
 				continue;
 			}
 

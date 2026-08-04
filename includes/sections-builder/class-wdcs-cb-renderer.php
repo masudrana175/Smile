@@ -9,15 +9,33 @@ class WDCS_CB_Renderer {
 			return '';
 		}
 
-		// Enqueue frontend styles.
-		wp_enqueue_style( 'wdcs-cb-front', WDCS_PLUGIN_URL . 'assets/css/wdcs-sections-frontend.css', array(), WDCS_VERSION );
-		wp_enqueue_script( 'wdcs-cb-front', WDCS_PLUGIN_URL . 'assets/js/wdcs-sections-frontend.js', array(), WDCS_VERSION, true );
+		self::enqueue_frontend_assets();
 
 		$out = '';
 		foreach ( $sections as $section ) {
 			$out .= self::render_section( $section );
 		}
 		return $out;
+	}
+
+	public static function render_by_section_id( int $post_id, string $section_id ): string {
+		$sections = get_post_meta( $post_id, WDCS_CB_Meta_Box::META_KEY, true );
+		if ( ! is_array( $sections ) || empty( $sections ) ) {
+			return '';
+		}
+
+		foreach ( $sections as $section ) {
+			if ( ( $section['id'] ?? '' ) === $section_id ) {
+				self::enqueue_frontend_assets();
+				return self::render_section( $section );
+			}
+		}
+		return '';
+	}
+
+	private static function enqueue_frontend_assets(): void {
+		wp_enqueue_style( 'wdcs-cb-front', WDCS_PLUGIN_URL . 'assets/css/wdcs-sections-frontend.css', array(), WDCS_VERSION );
+		wp_enqueue_script( 'wdcs-cb-front', WDCS_PLUGIN_URL . 'assets/js/wdcs-sections-frontend.js', array(), WDCS_VERSION, true );
 	}
 
 	/* ------------------------------------------------------------------ */
