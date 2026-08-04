@@ -1,0 +1,86 @@
+/* ==========================================================================
+   WDCS Content Builder — Frontend Styles
+   ========================================================================== */
+
+.wdcs-cb-section {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.wdcs-cb-container {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.wdcs-cb-boxed {
+	max-width: 1200px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.wdcs-cb-inner {
+	box-sizing: border-box;
+}
+
+/* Header group */
+.wdcs-cb-header-group {
+	margin-bottom: 24px;
+}
+
+.wdcs-cb-title,
+.wdcs-cb-subtitle {
+	margin: 0 0 12px;
+	line-height: 1.3;
+}
+
+.wdcs-cb-description {
+	box-sizing: border-box;
+}
+
+/* Two-column layout */
+.wdcs-cb-columns {
+	display: flex;
+	flex-wrap: wrap;
+	box-sizing: border-box;
+}
+
+.wdcs-cb-col {
+	box-sizing: border-box;
+}
+
+/* Blocks */
+.wdcs-cb-block {
+	box-sizing: border-box;
+}
+
+.wdcs-cb-text,
+.wdcs-cb-image,
+.wdcs-cb-button {
+	box-sizing: border-box;
+}
+
+.wdcs-cb-image img {
+	display: inline-block;
+	max-width: 100%;
+	height: auto;
+}
+
+/* Button */
+.wdcs-cb-btn {
+	display: inline-block;
+	text-decoration: none;
+	cursor: pointer;
+	transition: background-color 0.2s ease, color 0.2s ease;
+	box-sizing: border-box;
+}
+
+/* Responsive: stack columns on small screens */
+@media ( max-width: 768px ) {
+	.wdcs-cb-columns {
+		flex-direction: column;
+	}
+	.wdcs-cb-col {
+		flex: 0 0 100% !important;
+		max-width: 100% !important;
+	}
+}

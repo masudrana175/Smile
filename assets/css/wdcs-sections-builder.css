@@ -1,0 +1,355 @@
+/* ==========================================================================
+   WDCS Content Builder — Admin Meta Box Styles
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Toolbar
+   -------------------------------------------------------------------------- */
+#wdcs-cb-toolbar {
+	margin-bottom: 12px;
+}
+
+/* --------------------------------------------------------------------------
+   Section card
+   -------------------------------------------------------------------------- */
+.wdcs-cb-section {
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	margin-bottom: 10px;
+	background: #fff;
+}
+
+.wdcs-cb-section-header {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 10px 12px;
+	background: #f6f7f7;
+	border-bottom: 1px solid #c3c4c7;
+	border-radius: 4px 4px 0 0;
+	cursor: default;
+}
+
+.wdcs-cb-section-header .wdcs-cb-drag {
+	cursor: grab;
+	color: #999;
+	flex-shrink: 0;
+}
+
+.wdcs-cb-section-toggle {
+	cursor: pointer;
+	color: #555;
+	flex-shrink: 0;
+}
+
+.wdcs-cb-section-label {
+	flex: 1;
+	height: 28px;
+	border: 1px solid #c3c4c7;
+	border-radius: 3px;
+	padding: 0 6px;
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.wdcs-cb-section-actions {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	flex-shrink: 0;
+}
+
+.wdcs-cb-delete-section {
+	background: none;
+	border: none;
+	color: #a00;
+	cursor: pointer;
+	font-size: 18px;
+	line-height: 1;
+	padding: 2px 6px;
+}
+.wdcs-cb-delete-section:hover { color: #f00; }
+
+/* --------------------------------------------------------------------------
+   Tabs
+   -------------------------------------------------------------------------- */
+.wdcs-cb-section-body {
+	padding: 0;
+}
+
+.wdcs-cb-tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 2px;
+	padding: 8px 12px 0;
+	border-bottom: 1px solid #ddd;
+	background: #fafafa;
+}
+
+.wdcs-cb-tab {
+	background: none;
+	border: 1px solid transparent;
+	border-bottom: none;
+	border-radius: 3px 3px 0 0;
+	padding: 5px 10px;
+	font-size: 12px;
+	cursor: pointer;
+	color: #555;
+	margin-bottom: -1px;
+}
+.wdcs-cb-tab:hover { background: #f0f0f1; }
+.wdcs-cb-tab.active {
+	background: #fff;
+	border-color: #ddd;
+	border-bottom-color: #fff;
+	color: #1d2327;
+	font-weight: 600;
+}
+
+.wdcs-cb-tab-pane {
+	padding: 14px 14px 10px;
+	display: none;
+}
+.wdcs-cb-tab-pane.active { display: block; }
+
+/* --------------------------------------------------------------------------
+   Field rows
+   -------------------------------------------------------------------------- */
+.wdcs-cb-field-row {
+	display: flex;
+	align-items: flex-start;
+	gap: 8px;
+	margin-bottom: 10px;
+	flex-wrap: wrap;
+}
+
+.wdcs-cb-field-row > label:first-child {
+	width: 120px;
+	flex-shrink: 0;
+	line-height: 30px;
+	font-size: 12px;
+	color: #3c434a;
+}
+
+.wdcs-cb-field-row input[type="text"],
+.wdcs-cb-field-row input[type="url"],
+.wdcs-cb-field-row input[type="number"],
+.wdcs-cb-field-row select,
+.wdcs-cb-field-row textarea {
+	flex: 1;
+	min-width: 0;
+}
+
+.wdcs-cb-field-row label {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	font-size: 12px;
+}
+
+/* Spacing group */
+.wdcs-cb-spacing-group {
+	margin-bottom: 10px;
+}
+
+.wdcs-cb-spacing-label {
+	display: block;
+	font-size: 12px;
+	font-weight: 600;
+	color: #3c434a;
+	margin-bottom: 6px;
+}
+
+.wdcs-cb-spacing-inputs {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	flex-wrap: wrap;
+}
+
+.wdcs-cb-spacing-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 2px;
+}
+
+.wdcs-cb-spacing-item input[type="number"] {
+	width: 54px;
+	text-align: center;
+}
+
+.wdcs-cb-spacing-item span {
+	font-size: 10px;
+	color: #777;
+}
+
+.wdcs-cb-spacing-inputs select {
+	width: 64px;
+}
+
+/* Media row */
+.wdcs-cb-media-row {
+	display: flex;
+	gap: 6px;
+	align-items: center;
+	flex-wrap: wrap;
+	flex: 1;
+}
+
+.wdcs-cb-media-row input[type="text"] {
+	flex: 1;
+}
+
+.wdcs-cb-bg-preview,
+.wdcs-cb-image-preview {
+	margin-top: 6px;
+}
+
+.wdcs-cb-bg-preview img,
+.wdcs-cb-image-preview img {
+	max-width: 100%;
+	max-height: 120px;
+	border: 1px solid #ddd;
+	border-radius: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   Column layout picker
+   -------------------------------------------------------------------------- */
+.wdcs-cb-col-layout-picker {
+	margin-bottom: 14px;
+}
+
+.wdcs-cb-col-layout-picker > label {
+	display: block;
+	font-size: 12px;
+	font-weight: 600;
+	margin-bottom: 6px;
+	color: #3c434a;
+}
+
+.wdcs-cb-col-layouts {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+}
+
+.wdcs-cb-col-option {
+	background: #f0f0f1;
+	border: 1px solid #c3c4c7;
+	border-radius: 3px;
+	padding: 4px 10px;
+	font-size: 12px;
+	cursor: pointer;
+}
+.wdcs-cb-col-option:hover { background: #e0e0e0; }
+.wdcs-cb-col-option.active {
+	background: #1ab5b6;
+	border-color: #1ab5b6;
+	color: #fff;
+}
+
+/* Two-column builder area */
+.wdcs-cb-two-cols {
+	display: flex;
+	gap: 12px;
+}
+
+.wdcs-cb-col-builder {
+	flex: 1;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	padding: 10px;
+	min-width: 0;
+	box-sizing: border-box;
+}
+
+.wdcs-cb-col-header {
+	font-size: 12px;
+	font-weight: 600;
+	color: #555;
+	margin-bottom: 8px;
+	padding-bottom: 6px;
+	border-bottom: 1px solid #eee;
+}
+
+.wdcs-cb-add-block-bar {
+	display: flex;
+	gap: 4px;
+	margin-top: 8px;
+	flex-wrap: wrap;
+}
+
+/* --------------------------------------------------------------------------
+   Block card
+   -------------------------------------------------------------------------- */
+.wdcs-cb-block {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	margin-bottom: 6px;
+	background: #fafafa;
+}
+
+.wdcs-cb-block-header {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 6px 8px;
+	background: #f0f0f1;
+	border-bottom: 1px solid #ddd;
+	border-radius: 3px 3px 0 0;
+}
+
+.wdcs-cb-block-header .wdcs-cb-drag {
+	cursor: grab;
+	color: #999;
+	font-size: 16px;
+	flex-shrink: 0;
+}
+
+.wdcs-cb-block-toggle {
+	cursor: pointer;
+	color: #666;
+	font-size: 14px;
+	flex-shrink: 0;
+}
+
+.wdcs-cb-block-type-label {
+	flex: 1;
+	font-size: 12px;
+	font-weight: 600;
+	color: #3c434a;
+}
+
+.wdcs-cb-delete-block {
+	background: none;
+	border: none;
+	color: #a00;
+	cursor: pointer;
+	font-size: 16px;
+	line-height: 1;
+	padding: 2px 4px;
+	flex-shrink: 0;
+}
+.wdcs-cb-delete-block:hover { color: #f00; }
+
+.wdcs-cb-block-body {
+	padding: 10px 10px 6px;
+}
+
+/* --------------------------------------------------------------------------
+   Sortable placeholder
+   -------------------------------------------------------------------------- */
+.wdcs-cb-sortable-placeholder {
+	border: 2px dashed #1ab5b6;
+	border-radius: 4px;
+	background: rgba(26, 181, 182, 0.05);
+	margin-bottom: 10px;
+	min-height: 40px;
+}
+
+/* Color picker fix */
+.wp-picker-container .wp-color-result {
+	margin: 0;
+}

@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'WDCS_VERSION', '1.3.7' );
+define( 'WDCS_VERSION', '1.4.0' );
 define( 'WDCS_PLUGIN_FILE', __FILE__ );
 define( 'WDCS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WDCS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -60,11 +60,22 @@ if ( ! class_exists( 'Smile' ) ) {
 			require_once WDCS_PLUGIN_DIR . 'includes/class-wdcs-sections-shortcode.php';
 			new WDCS_Sections_Shortcode();
 
+			// Content builder — renderer and shortcode loaded on all requests.
+			require_once WDCS_PLUGIN_DIR . 'includes/sections-builder/class-wdcs-cb-save.php';
+			require_once WDCS_PLUGIN_DIR . 'includes/sections-builder/class-wdcs-cb-renderer.php';
+			require_once WDCS_PLUGIN_DIR . 'includes/class-wdcs-cb-shortcode.php';
+			new WDCS_CB_Shortcode();
+
 			if ( is_admin() ) {
 				require_once WDCS_PLUGIN_DIR . 'includes/class-wdcs-options-page.php';
 				require_once WDCS_PLUGIN_DIR . 'includes/class-wdcs-admin-sections.php';
 				new WDCS_Options_Page();
 				new WDCS_Admin_Sections();
+
+				// Content builder — admin UI and meta box only in admin.
+				require_once WDCS_PLUGIN_DIR . 'includes/sections-builder/class-wdcs-cb-admin-ui.php';
+				require_once WDCS_PLUGIN_DIR . 'includes/sections-builder/class-wdcs-cb-meta-box.php';
+				new WDCS_CB_Meta_Box();
 			}
 		}
 
