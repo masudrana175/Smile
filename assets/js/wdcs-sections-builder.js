@@ -167,7 +167,7 @@
             var $section = $(this);
             if ($section.data('collapsed') === 1 || $section.data('collapsed') === '1') {
                 $section.find('.wdcs-cb-section-body').hide();
-                $section.find('.wdcs-cb-section-toggle .dashicons')
+                $section.find('.wdcs-cb-section-toggle')
                     .removeClass('dashicons-arrow-up-alt2')
                     .addClass('dashicons-arrow-down-alt2');
             }
@@ -175,7 +175,7 @@
                 var $block = $(this);
                 if ($block.data('collapsed') === 1 || $block.data('collapsed') === '1') {
                     $block.find('.wdcs-cb-block-body').hide();
-                    $block.find('.wdcs-cb-block-toggle .dashicons')
+                    $block.find('.wdcs-cb-block-toggle')
                         .removeClass('dashicons-arrow-up-alt2')
                         .addClass('dashicons-arrow-down-alt2');
                 }
@@ -460,14 +460,13 @@
             var $btn     = $(this);
             var $section = $btn.closest('.wdcs-cb-section');
             var $body    = $section.find('.wdcs-cb-section-body');
-            var $icon    = $btn.find('.dashicons');
 
             $body.toggle();
 
             if ($body.is(':visible')) {
-                $icon.removeClass('dashicons-arrow-down-alt2').addClass('dashicons-arrow-up-alt2');
+                $btn.removeClass('dashicons-arrow-down-alt2').addClass('dashicons-arrow-up-alt2');
             } else {
-                $icon.removeClass('dashicons-arrow-up-alt2').addClass('dashicons-arrow-down-alt2');
+                $btn.removeClass('dashicons-arrow-up-alt2').addClass('dashicons-arrow-down-alt2');
             }
         });
 
@@ -533,14 +532,13 @@
             var $btn   = $(this);
             var $block = $btn.closest('.wdcs-cb-block');
             var $body  = $block.find('.wdcs-cb-block-body');
-            var $icon  = $btn.find('.dashicons');
 
             $body.toggle();
 
             if ($body.is(':visible')) {
-                $icon.removeClass('dashicons-arrow-down-alt2').addClass('dashicons-arrow-up-alt2');
+                $btn.removeClass('dashicons-arrow-down-alt2').addClass('dashicons-arrow-up-alt2');
             } else {
-                $icon.removeClass('dashicons-arrow-up-alt2').addClass('dashicons-arrow-down-alt2');
+                $btn.removeClass('dashicons-arrow-up-alt2').addClass('dashicons-arrow-down-alt2');
             }
         });
 

@@ -68,7 +68,7 @@ class WDCS_CB_Admin_UI {
 
 			<div class="wdcs-cb-section-header">
 				<span class="wdcs-cb-drag dashicons dashicons-menu"></span>
-				<span class="wdcs-cb-section-toggle dashicons dashicons-arrow-down-alt2"></span>
+				<span class="wdcs-cb-section-toggle dashicons <?php echo $collapsed ? 'dashicons-arrow-down-alt2' : 'dashicons-arrow-up-alt2'; ?>"></span>
 				<input type="text"
 					class="wdcs-cb-section-label"
 					data-field="label"

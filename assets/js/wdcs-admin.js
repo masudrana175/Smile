@@ -85,6 +85,89 @@
 
 
 	/* =========================================================
+	   Post edit – Add new Content Builder section from sidebar.
+	   Registered at the top level so it always works regardless
+	   of whether #wdcs-active-list exists at DOM-ready time.
+	   ========================================================= */
+	$( document ).on( 'click', '.wdcs-add-cb-section', function ( e ) {
+		e.stopPropagation();
+
+		var $activeList = $( '#wdcs-active-list' );
+		if ( ! $activeList.length ) return;
+
+		// Prevent double-fire from rapid clicks.
+		var $btn = $( this );
+		if ( $btn.prop( 'disabled' ) ) return;
+		$btn.prop( 'disabled', true );
+		setTimeout( function () { $btn.prop( 'disabled', false ); }, 600 );
+
+		var sectionId = 'sec_' + Date.now() + '_' + Math.floor( Math.random() * 1000 );
+		var slug      = 'wdcs_cb_' + sectionId;
+
+		// Build the active list item inline (buildItem is scoped inside the guarded block below).
+		var $nameInput = $( '<input type="text" class="wdcs-active-name" name="wdcs_active_sections_name[]">' )
+			.attr( 'placeholder', 'Content Section' );
+		var $top = $( '<div class="wdcs-active-top"></div>' )
+			.append( $( '<span class="wdcs-drag-handle dashicons dashicons-menu"></span>' ) )
+			.append( $nameInput )
+			.append( $( '<button type="button" class="wdcs-remove-active">&times;</button>' ) );
+		var $item = $( '<li class="wdcs-active-item"></li>' )
+			.attr( 'data-slug', slug )
+			.attr( 'data-jetengine', '' )
+			.append( $top )
+			.append( $( '<input type="hidden" name="wdcs_active_sections_slug[]">' ).val( slug ) );
+
+		$activeList.append( $item );
+		$( '.wdcs-active-empty' ).hide();
+
+		// Tell the Content Builder meta box to add a matching section panel.
+		$( document ).trigger( 'wdcs:cb:new-section', [ sectionId ] );
+	} );
+
+
+	/* =========================================================
+	   Post edit – Click active item → scroll to its target.
+	   Also at the top level for the same reason.
+	   ========================================================= */
+	$( document ).on( 'click', '.wdcs-active-item', function ( e ) {
+		if ( $( e.target ).closest( '.wdcs-remove-active, .wdcs-active-name, .wdcs-drag-handle' ).length ) {
+			return;
+		}
+
+		var slug = $( this ).data( 'slug' ) || '';
+
+		// Content Builder section → scroll to its panel in the builder meta box.
+		if ( slug.indexOf( 'wdcs_cb_' ) === 0 ) {
+			var sectionId  = slug.replace( 'wdcs_cb_', '' );
+			var $cbSection = $( '.wdcs-cb-section[data-id="' + sectionId + '"]' );
+			if ( ! $cbSection.length ) return;
+
+			// Expand if collapsed.
+			var $body = $cbSection.find( '.wdcs-cb-section-body' );
+			if ( $body.is( ':hidden' ) ) {
+				$body.show();
+				$cbSection.find( '.wdcs-cb-section-toggle' )
+					.removeClass( 'dashicons-arrow-down-alt2' )
+					.addClass( 'dashicons-arrow-up-alt2' );
+			}
+			$( 'html, body' ).animate( { scrollTop: $cbSection.offset().top - 50 }, 300 );
+			$cbSection.addClass( 'wdcs-metabox-highlight' );
+			setTimeout( function () { $cbSection.removeClass( 'wdcs-metabox-highlight' ); }, 1500 );
+			return;
+		}
+
+		// Elementor section → scroll to its JetEngine meta box.
+		var id = $( this ).data( 'jetengine' );
+		if ( ! id ) return;
+		var $target = $( '#' + id );
+		if ( ! $target.length ) return;
+		$( 'html, body' ).animate( { scrollTop: $target.offset().top - 50 }, 300 );
+		$target.addClass( 'wdcs-metabox-highlight' );
+		setTimeout( function () { $target.removeClass( 'wdcs-metabox-highlight' ); }, 1500 );
+	} );
+
+
+	/* =========================================================
 	   Post edit side panel – drag-and-drop sections builder
 	   ========================================================= */
 	$( function () {
@@ -144,10 +227,11 @@
 			} );
 		}
 
-		// Add section to active list (one instance per section only).
+		// Add Elementor section to active list (one instance per section only).
 		$( document ).on( 'click', '.wdcs-add-to-active', function () {
 			var $avail = $( this ).closest( '.wdcs-avail-item' );
 			var slug   = $avail.data( 'slug' );
+			if ( ! slug ) return;
 			if ( $list.find( '.wdcs-active-item[data-slug="' + slug + '"]' ).length ) {
 				return;
 			}
@@ -155,59 +239,6 @@
 			updateEmpty();
 			updateAvailButtons();
 			syncJetEngine();
-		} );
-
-		// Add a new independent Content Builder section.
-		$( document ).on( 'click', '.wdcs-add-cb-section', function ( e ) {
-			e.stopPropagation();
-			var $btn = $( this );
-			if ( $btn.prop( 'disabled' ) ) return;
-			$btn.prop( 'disabled', true );
-			setTimeout( function () { $btn.prop( 'disabled', false ); }, 600 );
-
-			var sectionId = 'sec_' + Date.now() + '_' + Math.floor( Math.random() * 1000 );
-			var slug      = 'wdcs_cb_' + sectionId;
-			$list.append( buildItem( slug, 'Content Section', '' ) );
-			updateEmpty();
-			// Notify the Content Builder meta box to add a matching section panel.
-			$( document ).trigger( 'wdcs:cb:new-section', [ sectionId ] );
-		} );
-
-		// Click active item → scroll to its section or JetEngine meta box.
-		$( document ).on( 'click', '.wdcs-active-item', function ( e ) {
-			if ( $( e.target ).closest( '.wdcs-remove-active, .wdcs-active-name, .wdcs-drag-handle' ).length ) {
-				return;
-			}
-
-			var slug = $( this ).data( 'slug' ) || '';
-
-			// Content Builder section → scroll to its panel in the builder meta box.
-			if ( slug.indexOf( 'wdcs_cb_' ) === 0 ) {
-				var sectionId = slug.replace( 'wdcs_cb_', '' );
-				var $cbSection = $( '.wdcs-cb-section[data-id="' + sectionId + '"]' );
-				if ( ! $cbSection.length ) return;
-				// Expand if collapsed.
-				var $body = $cbSection.find( '.wdcs-cb-section-body' );
-				if ( $body.is( ':hidden' ) ) {
-					$body.show();
-					$cbSection.find( '.wdcs-cb-section-toggle .dashicons' )
-						.removeClass( 'dashicons-arrow-down-alt2' )
-						.addClass( 'dashicons-arrow-up-alt2' );
-				}
-				$( 'html, body' ).animate( { scrollTop: $cbSection.offset().top - 50 }, 300 );
-				$cbSection.addClass( 'wdcs-metabox-highlight' );
-				setTimeout( function () { $cbSection.removeClass( 'wdcs-metabox-highlight' ); }, 1500 );
-				return;
-			}
-
-			// Elementor section → scroll to its JetEngine meta box.
-			var id = $( this ).data( 'jetengine' );
-			if ( ! id ) return;
-			var $target = $( '#' + id );
-			if ( ! $target.length ) return;
-			$( 'html, body' ).animate( { scrollTop: $target.offset().top - 50 }, 300 );
-			$target.addClass( 'wdcs-metabox-highlight' );
-			setTimeout( function () { $target.removeClass( 'wdcs-metabox-highlight' ); }, 1500 );
 		} );
 
 		// Remove section from active list.
