@@ -158,7 +158,13 @@
 		} );
 
 		// Add a new independent Content Builder section.
-		$( document ).on( 'click', '.wdcs-add-cb-section', function () {
+		$( document ).on( 'click', '.wdcs-add-cb-section', function ( e ) {
+			e.stopPropagation();
+			var $btn = $( this );
+			if ( $btn.prop( 'disabled' ) ) return;
+			$btn.prop( 'disabled', true );
+			setTimeout( function () { $btn.prop( 'disabled', false ); }, 600 );
+
 			var sectionId = 'sec_' + Date.now() + '_' + Math.floor( Math.random() * 1000 );
 			var slug      = 'wdcs_cb_' + sectionId;
 			$list.append( buildItem( slug, 'Content Section', '' ) );
@@ -167,11 +173,34 @@
 			$( document ).trigger( 'wdcs:cb:new-section', [ sectionId ] );
 		} );
 
-		// Click active item → scroll to its JetEngine meta box.
+		// Click active item → scroll to its section or JetEngine meta box.
 		$( document ).on( 'click', '.wdcs-active-item', function ( e ) {
 			if ( $( e.target ).closest( '.wdcs-remove-active, .wdcs-active-name, .wdcs-drag-handle' ).length ) {
 				return;
 			}
+
+			var slug = $( this ).data( 'slug' ) || '';
+
+			// Content Builder section → scroll to its panel in the builder meta box.
+			if ( slug.indexOf( 'wdcs_cb_' ) === 0 ) {
+				var sectionId = slug.replace( 'wdcs_cb_', '' );
+				var $cbSection = $( '.wdcs-cb-section[data-id="' + sectionId + '"]' );
+				if ( ! $cbSection.length ) return;
+				// Expand if collapsed.
+				var $body = $cbSection.find( '.wdcs-cb-section-body' );
+				if ( $body.is( ':hidden' ) ) {
+					$body.show();
+					$cbSection.find( '.wdcs-cb-section-toggle .dashicons' )
+						.removeClass( 'dashicons-arrow-down-alt2' )
+						.addClass( 'dashicons-arrow-up-alt2' );
+				}
+				$( 'html, body' ).animate( { scrollTop: $cbSection.offset().top - 50 }, 300 );
+				$cbSection.addClass( 'wdcs-metabox-highlight' );
+				setTimeout( function () { $cbSection.removeClass( 'wdcs-metabox-highlight' ); }, 1500 );
+				return;
+			}
+
+			// Elementor section → scroll to its JetEngine meta box.
 			var id = $( this ).data( 'jetengine' );
 			if ( ! id ) return;
 			var $target = $( '#' + id );

@@ -431,17 +431,27 @@
         // New section triggered from the "Select section(s)" sidebar.
         $(document).on('wdcs:cb:new-section', function (e, sectionId) {
             if (typeof wdcsCBTemplates === 'undefined' || !wdcsCBTemplates.section) {
-                console.warn('wdcsCBTemplates.section is not defined.');
+                return;
+            }
+
+            // Re-query every time — the meta box may not have existed at DOM-ready.
+            var $list = $('#wdcs-cb-sections-list');
+            if (!$list.length) {
+                return;
+            }
+
+            // Guard against duplicate: don't add if this ID is already in the builder.
+            if ($list.find('.wdcs-cb-section[data-id="' + sectionId + '"]').length) {
                 return;
             }
 
             var html     = wdcsCBTemplates.section.replace(/__SECID__/g, sectionId);
             var $section = $(html);
-            $sectionsList.append($section);
+            $list.append($section);
             initSection($section);
-            initSortable($sectionsList);
+            initSortable($list);
 
-            // Scroll to the newly added section so the editor can start filling it in.
+            // Scroll to the newly added section.
             $('html, body').animate({ scrollTop: $section.offset().top - 60 }, 300);
         });
 
