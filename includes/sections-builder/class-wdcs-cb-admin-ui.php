@@ -28,9 +28,9 @@ class WDCS_CB_Admin_UI {
 		?>
 		<input type="hidden" id="wdcs-cb-data" name="wdcs_cb_data" value="<?php echo esc_attr( $json ); ?>">
 
-		<div id="wdcs-cb-toolbar">
-			<button type="button" id="wdcs-cb-add-section" class="button button-secondary">+ Add Section</button>
-		</div>
+		<p class="description" style="margin:8px 0 10px;font-size:12px;color:#666;">
+			Use the <strong>Select section(s)</strong> panel (right sidebar) to add content sections here.
+		</p>
 
 		<div id="wdcs-cb-sections-list">
 			<?php foreach ( $sections as $section ) : ?>

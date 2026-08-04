@@ -428,19 +428,21 @@
          * Section-level interactions (delegated to #wdcs-cb-sections-list)
          * ============================================================= */
 
-        // Add new section
-        $('#wdcs-cb-add-section').on('click', function () {
+        // New section triggered from the "Select section(s)" sidebar.
+        $(document).on('wdcs:cb:new-section', function (e, sectionId) {
             if (typeof wdcsCBTemplates === 'undefined' || !wdcsCBTemplates.section) {
                 console.warn('wdcsCBTemplates.section is not defined.');
                 return;
             }
 
-            var id  = newSectionId();
-            var html = wdcsCBTemplates.section.replace(/__SECID__/g, id);
+            var html     = wdcsCBTemplates.section.replace(/__SECID__/g, sectionId);
             var $section = $(html);
             $sectionsList.append($section);
             initSection($section);
             initSortable($sectionsList);
+
+            // Scroll to the newly added section so the editor can start filling it in.
+            $('html, body').animate({ scrollTop: $section.offset().top - 60 }, 300);
         });
 
         // Toggle section body

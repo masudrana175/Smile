@@ -74,16 +74,11 @@ class WDCS_Admin_Sections {
 			<div class="wdcs-builder-available">
 				<p class="wdcs-builder-heading">Sections</p>
 
-				<?php foreach ( $cb_map as $cb_id => $cb_label ) : ?>
-				<div class="wdcs-avail-item wdcs-avail-cb"
-				     data-slug="<?php echo esc_attr( self::CB_PREFIX . $cb_id ); ?>"
-				     data-label="<?php echo esc_attr( $cb_label ); ?>"
-				     data-jetengine="">
+				<div class="wdcs-avail-item wdcs-avail-cb" data-label="Content Section" data-jetengine="">
 					<span class="wdcs-avail-no-thumb dashicons dashicons-editor-table"></span>
-					<span class="wdcs-avail-label"><?php echo esc_html( $cb_label ); ?></span>
-					<button type="button" class="wdcs-add-to-active button button-small">+</button>
+					<span class="wdcs-avail-label">Content Section</span>
+					<button type="button" class="wdcs-add-cb-section button button-small">+ Add</button>
 				</div>
-				<?php endforeach; ?>
 
 				<?php foreach ( $sections as $slug => $section ) : ?>
 				<div class="wdcs-avail-item"

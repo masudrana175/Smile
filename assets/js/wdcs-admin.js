@@ -157,6 +157,16 @@
 			syncJetEngine();
 		} );
 
+		// Add a new independent Content Builder section.
+		$( document ).on( 'click', '.wdcs-add-cb-section', function () {
+			var sectionId = 'sec_' + Date.now() + '_' + Math.floor( Math.random() * 1000 );
+			var slug      = 'wdcs_cb_' + sectionId;
+			$list.append( buildItem( slug, 'Content Section', '' ) );
+			updateEmpty();
+			// Notify the Content Builder meta box to add a matching section panel.
+			$( document ).trigger( 'wdcs:cb:new-section', [ sectionId ] );
+		} );
+
 		// Click active item → scroll to its JetEngine meta box.
 		$( document ).on( 'click', '.wdcs-active-item', function ( e ) {
 			if ( $( e.target ).closest( '.wdcs-remove-active, .wdcs-active-name, .wdcs-drag-handle' ).length ) {
