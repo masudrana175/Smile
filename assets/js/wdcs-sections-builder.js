@@ -618,16 +618,25 @@
 
         /* =============================================================
          * Form submit — serialize to JSON
+         *
+         * WordPress's "Update" button can call form.submit() natively,
+         * bypassing jQuery's submit event. Bind to both the submit
+         * event AND the button click so we always capture the save.
          * ============================================================= */
 
-        $('#post').on('submit', function () {
+        function doSerialize() {
             try {
                 var data = serializeSections();
                 $('#wdcs-cb-data').val(JSON.stringify(data));
             } catch (err) {
                 console.error('WDCS Content Builder: failed to serialize sections.', err);
             }
-        });
+        }
+
+        $('#post').on('submit', doSerialize);
+
+        // Fallback: also fire on Publish / Update / Save Draft button clicks.
+        $(document).on('click', '#publish, #save-post', doSerialize);
 
     }); // end DOM ready
 

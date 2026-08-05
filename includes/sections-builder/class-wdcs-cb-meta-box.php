@@ -49,10 +49,18 @@ class WDCS_CB_Meta_Box {
 			return;
 		}
 
-		$json = isset( $_POST['wdcs_cb_data'] ) ? wp_unslash( $_POST['wdcs_cb_data'] ) : '[]';
+		// Only update if the field was actually submitted (guard against
+		// native form.submit() calls that skip jQuery serialization).
+		if ( ! isset( $_POST['wdcs_cb_data'] ) ) {
+			return;
+		}
+
+		$json = wp_unslash( $_POST['wdcs_cb_data'] );
 		$raw  = json_decode( $json, true );
-		if ( ! is_array( $raw ) ) {
-			$raw = array();
+
+		// Don't wipe existing data when JS serialisation produced nothing.
+		if ( ! is_array( $raw ) || empty( $raw ) ) {
+			return;
 		}
 
 		$sanitized = WDCS_CB_Save::sanitize_sections( $raw );
