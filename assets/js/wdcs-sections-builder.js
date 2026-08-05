@@ -413,6 +413,13 @@
 
         /* --- Initial setup ---------------------------------------- */
 
+        // Hide the entire Content Builder meta box when there are no sections.
+        // It will be revealed the first time a section is added from the sidebar.
+        var $postbox = $('#wdcs-cb-meta-box');
+        if ($sectionsList.children('.wdcs-cb-section').length === 0) {
+            $postbox.hide();
+        }
+
         // Sections sortable
         initSortable($sectionsList);
 
@@ -444,6 +451,9 @@
             if ($list.find('.wdcs-cb-section[data-id="' + sectionId + '"]').length) {
                 return;
             }
+
+            // Reveal the Content Builder meta box if it was hidden (no sections yet).
+            $('#wdcs-cb-meta-box').show();
 
             var html     = wdcsCBTemplates.section.replace(/__SECID__/g, sectionId);
             var $section = $(html);
