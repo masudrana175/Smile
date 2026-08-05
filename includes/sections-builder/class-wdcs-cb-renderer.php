@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class WDCS_CB_Renderer {
 
 	public static function render( int $post_id ): string {
-		$sections = get_post_meta( $post_id, WDCS_CB_Meta_Box::META_KEY, true );
+		$sections = get_post_meta( $post_id, '_wdcs_cb_sections', true );
 		if ( ! is_array( $sections ) || empty( $sections ) ) {
 			return '';
 		}
@@ -19,7 +19,7 @@ class WDCS_CB_Renderer {
 	}
 
 	public static function render_by_section_id( int $post_id, string $section_id ): string {
-		$sections = get_post_meta( $post_id, WDCS_CB_Meta_Box::META_KEY, true );
+		$sections = get_post_meta( $post_id, '_wdcs_cb_sections', true );
 		if ( ! is_array( $sections ) || empty( $sections ) ) {
 			return '';
 		}
