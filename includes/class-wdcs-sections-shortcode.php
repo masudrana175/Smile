@@ -30,8 +30,8 @@ class WDCS_Sections_Shortcode {
 			$slug = is_string( $raw ) ? $raw : ( isset( $raw['slug'] ) ? (string) $raw['slug'] : '' );
 
 			// Individual custom builder section.
-			if ( strpos( $slug, WDCS_Admin_Sections::CB_PREFIX ) === 0 ) {
-				$section_id = substr( $slug, strlen( WDCS_Admin_Sections::CB_PREFIX ) );
+			if ( strpos( $slug, 'wdcs_cb_' ) === 0 ) {
+				$section_id = substr( $slug, 8 );
 				echo WDCS_CB_Renderer::render_by_section_id( $post_id, $section_id );
 				continue;
 			}
