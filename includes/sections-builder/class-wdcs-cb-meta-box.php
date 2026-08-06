@@ -35,6 +35,22 @@ class WDCS_CB_Meta_Box {
 
 	public function render_meta_box( $post ) {
 		WDCS_CB_Admin_UI::render( $post );
+
+		// Inject JS templates here (at render time) so WDCS_CB_Admin_UI is
+		// guaranteed to be loaded — it was just used on the line above.
+		$templates = array(
+			'section' => WDCS_CB_Admin_UI::section_html( array( 'id' => '__SECID__' ) ),
+			'blocks'  => array(
+				'text'   => WDCS_CB_Admin_UI::block_html( array( 'id' => '__BLKID__', 'type' => 'text' ) ),
+				'image'  => WDCS_CB_Admin_UI::block_html( array( 'id' => '__BLKID__', 'type' => 'image' ) ),
+				'button' => WDCS_CB_Admin_UI::block_html( array( 'id' => '__BLKID__', 'type' => 'button' ) ),
+			),
+		);
+		wp_add_inline_script(
+			'wdcs-cb-builder',
+			'var wdcsCBTemplates = ' . wp_json_encode( $templates ) . ';',
+			'before'
+		);
 	}
 
 	public function save( $post_id, $post ) {
@@ -89,13 +105,5 @@ class WDCS_CB_Meta_Box {
 			true
 		);
 
-		wp_localize_script( 'wdcs-cb-builder', 'wdcsCBTemplates', array(
-			'section' => WDCS_CB_Admin_UI::section_html( array( 'id' => '__SECID__' ) ),
-			'blocks'  => array(
-				'text'   => WDCS_CB_Admin_UI::block_html( array( 'id' => '__BLKID__', 'type' => 'text' ) ),
-				'image'  => WDCS_CB_Admin_UI::block_html( array( 'id' => '__BLKID__', 'type' => 'image' ) ),
-				'button' => WDCS_CB_Admin_UI::block_html( array( 'id' => '__BLKID__', 'type' => 'button' ) ),
-			),
-		) );
 	}
 }
