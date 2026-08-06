@@ -73,7 +73,7 @@ if ( ! class_exists( 'Smile' ) ) {
 				new WDCS_Admin_Sections();
 
 				// Content builder — admin UI and meta box only in admin.
-				require_once WDCS_PLUGIN_DIR . 'includes/sections-builder/class-wdcs-cb-admin-ui.php';
+				require_once WDCS_PLUGIN_DIR . 'includes/sections-builder/class-wdcs-cb-admin.php';
 				require_once WDCS_PLUGIN_DIR . 'includes/sections-builder/class-wdcs-cb-meta-box.php';
 				new WDCS_CB_Meta_Box();
 			}
