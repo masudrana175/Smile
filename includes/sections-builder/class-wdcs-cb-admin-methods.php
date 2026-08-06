@@ -278,9 +278,8 @@ abstract class WDCS_CB_Admin_UI_Base {
 				placeholder="<?php esc_attr_e( 'Enter text...', 'smile' ); ?>">
 		</div>
 
-		<?php echo self::color_field( $key . '.color', self::v( $title, 'color' ), __( 'Color', 'smile' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
-
-		<?php echo self::typography_row( // phpcs:ignore WordPress.Security.EscapeOutput
+		<?php echo self::style_row( // phpcs:ignore WordPress.Security.EscapeOutput
+			$key . '.color',       self::v( $title, 'color' ),
 			$key . '.font_size',   self::v( $title, 'font_size' ),
 			$key . '.font_weight', self::v( $title, 'font_weight' ),
 			$key . '.line_height', self::v( $title, 'line_height' ),
@@ -309,9 +308,8 @@ abstract class WDCS_CB_Admin_UI_Base {
 				rows="5" class="large-text wdcs-wysiwyg"><?php echo esc_textarea( $content ); ?></textarea>
 		</div>
 
-		<?php echo self::color_field( 'description.color', self::v( $desc, 'color' ), __( 'Color', 'smile' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
-
-		<?php echo self::typography_row( // phpcs:ignore WordPress.Security.EscapeOutput
+		<?php echo self::style_row( // phpcs:ignore WordPress.Security.EscapeOutput
+			'description.color',       self::v( $desc, 'color' ),
 			'description.font_size',   self::v( $desc, 'font_size' ),
 			'description.font_weight', self::v( $desc, 'font_weight' ),
 			'description.line_height', self::v( $desc, 'line_height' ),
@@ -402,9 +400,8 @@ abstract class WDCS_CB_Admin_UI_Base {
 				rows="5" class="large-text wdcs-wysiwyg"><?php echo esc_textarea( $content ); ?></textarea>
 		</div>
 
-		<?php echo self::color_field( 'color', self::v( $b, 'color' ), __( 'Color', 'smile' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
-
-		<?php echo self::typography_row( // phpcs:ignore WordPress.Security.EscapeOutput
+		<?php echo self::style_row( // phpcs:ignore WordPress.Security.EscapeOutput
+			'color',       self::v( $b, 'color' ),
 			'font_size',   self::v( $b, 'font_size' ),
 			'font_weight', self::v( $b, 'font_weight' ),
 			'line_height', self::v( $b, 'line_height' ),
@@ -504,10 +501,10 @@ abstract class WDCS_CB_Admin_UI_Base {
 
 		<?php echo self::color_field( 'bg_color', self::v( $b, 'bg_color' ), __( 'Background Color', 'smile' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 		<?php echo self::color_field( 'hover_bg_color', self::v( $b, 'hover_bg_color' ), __( 'Hover Background Color', 'smile' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
-		<?php echo self::color_field( 'text_color', self::v( $b, 'text_color' ), __( 'Text Color', 'smile' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 		<?php echo self::color_field( 'hover_text_color', self::v( $b, 'hover_text_color' ), __( 'Hover Text Color', 'smile' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 
-		<?php echo self::typography_row( // phpcs:ignore WordPress.Security.EscapeOutput
+		<?php echo self::style_row( // phpcs:ignore WordPress.Security.EscapeOutput
+			'text_color',  self::v( $b, 'text_color' ),
 			'font_size',   self::v( $b, 'font_size' ),
 			'font_weight', self::v( $b, 'font_weight' ),
 			null, null,
@@ -531,6 +528,68 @@ abstract class WDCS_CB_Admin_UI_Base {
 	// -------------------------------------------------------------------------
 	// Shared UI helpers
 	// -------------------------------------------------------------------------
+
+	protected static function style_row( $color_field, $color_val, $fs_field, $fs_val, $fw_field, $fw_val, $lh_field, $lh_val, $align_field, $align_val, $align_name, $align_options = null ) {
+		if ( null === $align_options ) {
+			$align_options = array( 'left', 'center', 'right', 'justify' );
+		}
+		$weights = array(
+			''       => '— Default —', '100' => '100', '200' => '200',
+			'300'    => '300',         '400' => '400', '500' => '500',
+			'600'    => '600',         '700' => '700', '800' => '800',
+			'900'    => '900',         'normal' => 'Normal', 'bold' => 'Bold',
+		);
+		ob_start();
+		?>
+		<div class="wdcs-cb-style-row">
+			<span class="wdcs-cb-style-label"><?php esc_html_e( 'Style', 'smile' ); ?></span>
+			<div class="wdcs-cb-style-fields">
+				<div class="wdcs-cb-typo-item">
+					<span class="wdcs-cb-typo-label"><?php esc_html_e( 'Color', 'smile' ); ?></span>
+					<input type="text" class="wdcs-color-picker"
+						data-field="<?php echo esc_attr( $color_field ); ?>"
+						value="<?php echo esc_attr( $color_val ); ?>">
+				</div>
+				<div class="wdcs-cb-typo-item">
+					<span class="wdcs-cb-typo-label"><?php esc_html_e( 'Font Size', 'smile' ); ?></span>
+					<input type="text" data-field="<?php echo esc_attr( $fs_field ); ?>"
+						value="<?php echo esc_attr( $fs_val ); ?>"
+						placeholder="<?php esc_attr_e( 'e.g. 16px', 'smile' ); ?>">
+				</div>
+				<div class="wdcs-cb-typo-item">
+					<span class="wdcs-cb-typo-label"><?php esc_html_e( 'Weight', 'smile' ); ?></span>
+					<select data-field="<?php echo esc_attr( $fw_field ); ?>">
+						<?php foreach ( $weights as $wv => $wl ) : ?>
+							<option value="<?php echo esc_attr( $wv ); ?>" <?php selected( $fw_val, $wv ); ?>><?php echo esc_html( $wl ); ?></option>
+						<?php endforeach; ?>
+					</select>
+				</div>
+				<?php if ( null !== $lh_field ) : ?>
+				<div class="wdcs-cb-typo-item">
+					<span class="wdcs-cb-typo-label"><?php esc_html_e( 'Line Height', 'smile' ); ?></span>
+					<input type="text" data-field="<?php echo esc_attr( $lh_field ); ?>"
+						value="<?php echo esc_attr( $lh_val ); ?>"
+						placeholder="<?php esc_attr_e( 'e.g. 1.6', 'smile' ); ?>">
+				</div>
+				<?php endif; ?>
+				<div class="wdcs-cb-typo-item wdcs-cb-typo-align">
+					<span class="wdcs-cb-typo-label"><?php esc_html_e( 'Alignment', 'smile' ); ?></span>
+					<div class="wdcs-cb-typo-radios">
+						<?php foreach ( $align_options as $align ) : ?>
+							<label>
+								<input type="radio" data-field="<?php echo esc_attr( $align_field ); ?>"
+									name="<?php echo esc_attr( $align_name ); ?>"
+									value="<?php echo esc_attr( $align ); ?>" <?php checked( $align_val, $align ); ?>>
+								<?php echo esc_html( ucfirst( $align ) ); ?>
+							</label>
+						<?php endforeach; ?>
+					</div>
+				</div>
+			</div>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
 
 	protected static function typography_row( $fs_field, $fs_val, $fw_field, $fw_val, $lh_field, $lh_val, $align_field, $align_val, $align_name, $align_options = null ) {
 		if ( null === $align_options ) {
