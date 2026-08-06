@@ -38,15 +38,6 @@ class WDCS_CB_Admin_UI {
 			<?php endforeach; ?>
 		</div>
 
-		<?php
-		// Hidden dummy editor — loads TinyMCE scripts for dynamic WYSIWYG fields.
-		echo '<div style="display:none;">';
-		wp_editor( '', 'wdcs_cb_dummy_wysiwyg', array(
-			'media_buttons' => false,
-			'quicktags'     => false,
-			'tinymce'       => array( 'toolbar1' => '' ),
-		) );
-		echo '</div>';
 	}
 
 	/**

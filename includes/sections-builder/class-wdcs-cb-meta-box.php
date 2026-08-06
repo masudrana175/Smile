@@ -73,6 +73,7 @@ class WDCS_CB_Meta_Box {
 		}
 
 		wp_enqueue_media();
+		wp_enqueue_editor();
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_style(
 			'wdcs-cb-builder',

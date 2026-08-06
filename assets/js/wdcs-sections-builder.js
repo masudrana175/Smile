@@ -203,7 +203,7 @@
         });
         initBgTypeToggle($section);
         initColLayoutPicker($section);
-        initEditors($section);
+        // Editors are lazy-initialized when their tab pane is first revealed.
     }
 
     /**
@@ -524,6 +524,8 @@
 
             if ($body.is(':visible')) {
                 $btn.removeClass('dashicons-arrow-down-alt2').addClass('dashicons-arrow-up-alt2');
+                // Init editors in the currently active tab pane now that it's visible.
+                initEditors($body.find('[data-pane].active'));
             } else {
                 $btn.removeClass('dashicons-arrow-up-alt2').addClass('dashicons-arrow-down-alt2');
             }
@@ -599,6 +601,8 @@
 
             if ($body.is(':visible')) {
                 $btn.removeClass('dashicons-arrow-down-alt2').addClass('dashicons-arrow-up-alt2');
+                // Init any WYSIWYG editor inside this block now that it's visible.
+                initEditors($block);
             } else {
                 $btn.removeClass('dashicons-arrow-up-alt2').addClass('dashicons-arrow-down-alt2');
             }
@@ -625,10 +629,12 @@
             // Deactivate all panes in this section
             $section.find('[data-pane]').removeClass('active').hide();
 
-            // Activate clicked tab
+            // Activate clicked tab and pane
             $tab.addClass('active');
-            // Activate matching pane
-            $section.find('[data-pane="' + tabName + '"]').addClass('active').show();
+            var $pane = $section.find('[data-pane="' + tabName + '"]').addClass('active').show();
+
+            // Lazy-init any WYSIWYG editors now that the pane is visible.
+            initEditors($pane);
         });
 
         /* =============================================================
