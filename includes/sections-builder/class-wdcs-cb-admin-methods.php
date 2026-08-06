@@ -280,33 +280,13 @@ abstract class WDCS_CB_Admin_UI_Base {
 
 		<?php echo self::color_field( $key . '.color', self::v( $title, 'color' ), __( 'Color', 'smile' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 
-		<div class="wdcs-cb-field-row">
-			<label><?php esc_html_e( 'Font Size', 'smile' ); ?></label>
-			<input type="text" data-field="<?php echo esc_attr( $key . '.font_size' ); ?>"
-				value="<?php echo esc_attr( self::v( $title, 'font_size' ) ); ?>" class="regular-text"
-				placeholder="<?php esc_attr_e( 'e.g. 36px', 'smile' ); ?>">
-		</div>
-
-		<?php echo self::font_weight_field( $key . '.font_weight', self::v( $title, 'font_weight' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
-
-		<div class="wdcs-cb-field-row">
-			<label><?php esc_html_e( 'Line Height', 'smile' ); ?></label>
-			<input type="text" data-field="<?php echo esc_attr( $key . '.line_height' ); ?>"
-				value="<?php echo esc_attr( self::v( $title, 'line_height' ) ); ?>" class="regular-text"
-				placeholder="<?php esc_attr_e( 'e.g. 1.4', 'smile' ); ?>">
-		</div>
-
-		<div class="wdcs-cb-field-row">
-			<label><?php esc_html_e( 'Alignment', 'smile' ); ?></label>
-			<?php foreach ( array( 'left', 'center', 'right', 'justify' ) as $align ) : ?>
-				<label>
-					<input type="radio" data-field="<?php echo esc_attr( $key . '.alignment' ); ?>"
-						name="wdcs_<?php echo esc_attr( $key ); ?>_align_<?php echo esc_attr( $section_id ); ?>"
-						value="<?php echo esc_attr( $align ); ?>" <?php checked( $alignment, $align ); ?>>
-					<?php echo esc_html( ucfirst( $align ) ); ?>
-				</label>
-			<?php endforeach; ?>
-		</div>
+		<?php echo self::typography_row( // phpcs:ignore WordPress.Security.EscapeOutput
+			$key . '.font_size',   self::v( $title, 'font_size' ),
+			$key . '.font_weight', self::v( $title, 'font_weight' ),
+			$key . '.line_height', self::v( $title, 'line_height' ),
+			$key . '.alignment',   $alignment,
+			'wdcs_' . $key . '_align_' . $section_id
+		); ?>
 
 		<?php
 		echo self::spacing_row( $key . '.margin', $margin );   // phpcs:ignore WordPress.Security.EscapeOutput
@@ -323,7 +303,7 @@ abstract class WDCS_CB_Admin_UI_Base {
 
 		ob_start();
 		?>
-		<div class="wdcs-cb-field-row">
+		<div class="wdcs-cb-field-row wdcs-cb-wysiwyg-row">
 			<label><?php esc_html_e( 'Content', 'smile' ); ?></label>
 			<textarea id="<?php echo esc_attr( $editor_id ); ?>" data-field="description.content"
 				rows="5" class="large-text wdcs-wysiwyg"><?php echo esc_textarea( $content ); ?></textarea>
@@ -331,33 +311,13 @@ abstract class WDCS_CB_Admin_UI_Base {
 
 		<?php echo self::color_field( 'description.color', self::v( $desc, 'color' ), __( 'Color', 'smile' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 
-		<div class="wdcs-cb-field-row">
-			<label><?php esc_html_e( 'Font Size', 'smile' ); ?></label>
-			<input type="text" data-field="description.font_size"
-				value="<?php echo esc_attr( self::v( $desc, 'font_size' ) ); ?>" class="regular-text"
-				placeholder="<?php esc_attr_e( 'e.g. 16px', 'smile' ); ?>">
-		</div>
-
-		<?php echo self::font_weight_field( 'description.font_weight', self::v( $desc, 'font_weight' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
-
-		<div class="wdcs-cb-field-row">
-			<label><?php esc_html_e( 'Line Height', 'smile' ); ?></label>
-			<input type="text" data-field="description.line_height"
-				value="<?php echo esc_attr( self::v( $desc, 'line_height' ) ); ?>" class="regular-text"
-				placeholder="<?php esc_attr_e( 'e.g. 1.6', 'smile' ); ?>">
-		</div>
-
-		<div class="wdcs-cb-field-row">
-			<label><?php esc_html_e( 'Alignment', 'smile' ); ?></label>
-			<?php foreach ( array( 'left', 'center', 'right', 'justify' ) as $align ) : ?>
-				<label>
-					<input type="radio" data-field="description.alignment"
-						name="wdcs_desc_align_<?php echo esc_attr( $section_id ); ?>"
-						value="<?php echo esc_attr( $align ); ?>" <?php checked( $alignment, $align ); ?>>
-					<?php echo esc_html( ucfirst( $align ) ); ?>
-				</label>
-			<?php endforeach; ?>
-		</div>
+		<?php echo self::typography_row( // phpcs:ignore WordPress.Security.EscapeOutput
+			'description.font_size',   self::v( $desc, 'font_size' ),
+			'description.font_weight', self::v( $desc, 'font_weight' ),
+			'description.line_height', self::v( $desc, 'line_height' ),
+			'description.alignment',   $alignment,
+			'wdcs_desc_align_' . $section_id
+		); ?>
 
 		<?php
 		echo self::spacing_row( 'description.margin', $margin );   // phpcs:ignore WordPress.Security.EscapeOutput
@@ -436,7 +396,7 @@ abstract class WDCS_CB_Admin_UI_Base {
 
 		ob_start();
 		?>
-		<div class="wdcs-cb-field-row">
+		<div class="wdcs-cb-field-row wdcs-cb-wysiwyg-row">
 			<label><?php esc_html_e( 'Content', 'smile' ); ?></label>
 			<textarea id="<?php echo esc_attr( $editor_id ); ?>" data-field="content"
 				rows="5" class="large-text wdcs-wysiwyg"><?php echo esc_textarea( $content ); ?></textarea>
@@ -444,33 +404,13 @@ abstract class WDCS_CB_Admin_UI_Base {
 
 		<?php echo self::color_field( 'color', self::v( $b, 'color' ), __( 'Color', 'smile' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 
-		<div class="wdcs-cb-field-row">
-			<label><?php esc_html_e( 'Font Size', 'smile' ); ?></label>
-			<input type="text" data-field="font_size"
-				value="<?php echo esc_attr( self::v( $b, 'font_size' ) ); ?>" class="regular-text"
-				placeholder="<?php esc_attr_e( 'e.g. 16px', 'smile' ); ?>">
-		</div>
-
-		<?php echo self::font_weight_field( 'font_weight', self::v( $b, 'font_weight' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
-
-		<div class="wdcs-cb-field-row">
-			<label><?php esc_html_e( 'Line Height', 'smile' ); ?></label>
-			<input type="text" data-field="line_height"
-				value="<?php echo esc_attr( self::v( $b, 'line_height' ) ); ?>" class="regular-text"
-				placeholder="<?php esc_attr_e( 'e.g. 1.6', 'smile' ); ?>">
-		</div>
-
-		<div class="wdcs-cb-field-row">
-			<label><?php esc_html_e( 'Alignment', 'smile' ); ?></label>
-			<?php foreach ( array( 'left', 'center', 'right', 'justify' ) as $align ) : ?>
-				<label>
-					<input type="radio" data-field="alignment"
-						name="wdcs_txt_align_<?php echo esc_attr( self::v( $b, 'id' ) ); ?>"
-						value="<?php echo esc_attr( $align ); ?>" <?php checked( $alignment, $align ); ?>>
-					<?php echo esc_html( ucfirst( $align ) ); ?>
-				</label>
-			<?php endforeach; ?>
-		</div>
+		<?php echo self::typography_row( // phpcs:ignore WordPress.Security.EscapeOutput
+			'font_size',   self::v( $b, 'font_size' ),
+			'font_weight', self::v( $b, 'font_weight' ),
+			'line_height', self::v( $b, 'line_height' ),
+			'alignment',   $alignment,
+			'wdcs_txt_align_' . self::v( $b, 'id' )
+		); ?>
 
 		<?php
 		echo self::spacing_row( 'margin', $margin );   // phpcs:ignore WordPress.Security.EscapeOutput
@@ -567,31 +507,19 @@ abstract class WDCS_CB_Admin_UI_Base {
 		<?php echo self::color_field( 'text_color', self::v( $b, 'text_color' ), __( 'Text Color', 'smile' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 		<?php echo self::color_field( 'hover_text_color', self::v( $b, 'hover_text_color' ), __( 'Hover Text Color', 'smile' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 
-		<div class="wdcs-cb-field-row">
-			<label><?php esc_html_e( 'Font Size', 'smile' ); ?></label>
-			<input type="text" data-field="font_size"
-				value="<?php echo esc_attr( self::v( $b, 'font_size' ) ); ?>" class="regular-text"
-				placeholder="<?php esc_attr_e( 'e.g. 16px', 'smile' ); ?>">
-		</div>
-
-		<?php echo self::font_weight_field( 'font_weight', self::v( $b, 'font_weight' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+		<?php echo self::typography_row( // phpcs:ignore WordPress.Security.EscapeOutput
+			'font_size',   self::v( $b, 'font_size' ),
+			'font_weight', self::v( $b, 'font_weight' ),
+			null, null,
+			'alignment',   $alignment,
+			'wdcs_btn_align_' . self::v( $b, 'id' ),
+			array( 'left', 'center', 'right' )
+		); ?>
 
 		<div class="wdcs-cb-field-row">
 			<label><?php esc_html_e( 'Border Radius', 'smile' ); ?></label>
 			<input type="text" data-field="border_radius" value="<?php echo esc_attr( $border_radius ); ?>"
 				class="regular-text" placeholder="<?php esc_attr_e( 'e.g. 4px', 'smile' ); ?>">
-		</div>
-
-		<div class="wdcs-cb-field-row">
-			<label><?php esc_html_e( 'Alignment', 'smile' ); ?></label>
-			<?php foreach ( array( 'left', 'center', 'right' ) as $align ) : ?>
-				<label>
-					<input type="radio" data-field="alignment"
-						name="wdcs_btn_align_<?php echo esc_attr( self::v( $b, 'id' ) ); ?>"
-						value="<?php echo esc_attr( $align ); ?>" <?php checked( $alignment, $align ); ?>>
-					<?php echo esc_html( ucfirst( $align ) ); ?>
-				</label>
-			<?php endforeach; ?>
 		</div>
 
 		<?php
@@ -603,6 +531,59 @@ abstract class WDCS_CB_Admin_UI_Base {
 	// -------------------------------------------------------------------------
 	// Shared UI helpers
 	// -------------------------------------------------------------------------
+
+	protected static function typography_row( $fs_field, $fs_val, $fw_field, $fw_val, $lh_field, $lh_val, $align_field, $align_val, $align_name, $align_options = null ) {
+		if ( null === $align_options ) {
+			$align_options = array( 'left', 'center', 'right', 'justify' );
+		}
+		$weights = array(
+			''       => '— Default —', '100' => '100', '200' => '200',
+			'300'    => '300',         '400' => '400', '500' => '500',
+			'600'    => '600',         '700' => '700', '800' => '800',
+			'900'    => '900',         'normal' => 'Normal', 'bold' => 'Bold',
+		);
+		ob_start();
+		?>
+		<div class="wdcs-cb-typo-row">
+			<div class="wdcs-cb-typo-item">
+				<span class="wdcs-cb-typo-label"><?php esc_html_e( 'Font Size', 'smile' ); ?></span>
+				<input type="text" data-field="<?php echo esc_attr( $fs_field ); ?>"
+					value="<?php echo esc_attr( $fs_val ); ?>"
+					placeholder="<?php esc_attr_e( 'e.g. 16px', 'smile' ); ?>">
+			</div>
+			<div class="wdcs-cb-typo-item">
+				<span class="wdcs-cb-typo-label"><?php esc_html_e( 'Weight', 'smile' ); ?></span>
+				<select data-field="<?php echo esc_attr( $fw_field ); ?>">
+					<?php foreach ( $weights as $wv => $wl ) : ?>
+						<option value="<?php echo esc_attr( $wv ); ?>" <?php selected( $fw_val, $wv ); ?>><?php echo esc_html( $wl ); ?></option>
+					<?php endforeach; ?>
+				</select>
+			</div>
+			<?php if ( null !== $lh_field ) : ?>
+			<div class="wdcs-cb-typo-item">
+				<span class="wdcs-cb-typo-label"><?php esc_html_e( 'Line Height', 'smile' ); ?></span>
+				<input type="text" data-field="<?php echo esc_attr( $lh_field ); ?>"
+					value="<?php echo esc_attr( $lh_val ); ?>"
+					placeholder="<?php esc_attr_e( 'e.g. 1.6', 'smile' ); ?>">
+			</div>
+			<?php endif; ?>
+			<div class="wdcs-cb-typo-item wdcs-cb-typo-align">
+				<span class="wdcs-cb-typo-label"><?php esc_html_e( 'Alignment', 'smile' ); ?></span>
+				<div class="wdcs-cb-typo-radios">
+					<?php foreach ( $align_options as $align ) : ?>
+						<label>
+							<input type="radio" data-field="<?php echo esc_attr( $align_field ); ?>"
+								name="<?php echo esc_attr( $align_name ); ?>"
+								value="<?php echo esc_attr( $align ); ?>" <?php checked( $align_val, $align ); ?>>
+							<?php echo esc_html( ucfirst( $align ) ); ?>
+						</label>
+					<?php endforeach; ?>
+				</div>
+			</div>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
 
 	protected static function spacing_row( $prefix, $val ) {
 		$label  = ( false !== strpos( $prefix, 'padding' ) ) ? __( 'Padding', 'smile' ) : __( 'Margin', 'smile' );
