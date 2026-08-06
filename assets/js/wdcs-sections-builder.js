@@ -144,6 +144,54 @@
     }
 
     /**
+     * Initialize TinyMCE (wp.editor) on all .wdcs-wysiwyg textareas in a context.
+     *
+     * @param {jQuery} $context
+     */
+    function initEditors($context) {
+        if (typeof wp === 'undefined' || !wp.editor) {
+            return;
+        }
+        $context.find('.wdcs-wysiwyg').each(function () {
+            var id = this.id;
+            if (!id) {
+                return;
+            }
+            // Guard against double-init
+            if (typeof tinymce !== 'undefined' && tinymce.get(id)) {
+                return;
+            }
+            wp.editor.initialize(id, {
+                tinymce: {
+                    wpautop: true,
+                    toolbar1: 'bold italic underline | bullist numlist | link | removeformat',
+                    toolbar2: '',
+                },
+                quicktags: true,
+                mediaButtons: false,
+            });
+        });
+    }
+
+    /**
+     * Remove TinyMCE (wp.editor) instances inside a context before DOM removal.
+     *
+     * @param {jQuery} $context
+     */
+    function removeEditors($context) {
+        if (typeof wp === 'undefined' || !wp.editor) {
+            return;
+        }
+        $context.find('.wdcs-wysiwyg').each(function () {
+            var id = this.id;
+            if (!id) {
+                return;
+            }
+            wp.editor.remove(id);
+        });
+    }
+
+    /**
      * Run all initialization routines on a freshly added or loaded section.
      *
      * @param {jQuery} $section
@@ -155,6 +203,7 @@
         });
         initBgTypeToggle($section);
         initColLayoutPicker($section);
+        initEditors($section);
     }
 
     /**
@@ -485,7 +534,9 @@
             if (!window.confirm('Are you sure?')) {
                 return;
             }
-            $(this).closest('.wdcs-cb-section').remove();
+            var $section = $(this).closest('.wdcs-cb-section');
+            removeEditors($section);
+            $section.remove();
         });
 
         // Duplicate section
@@ -534,6 +585,7 @@
             var $block = $(html);
             $blocksList.append($block);
             initColorPickers($block);
+            initEditors($block);
             initSortable($blocksList);
         });
 
@@ -554,7 +606,9 @@
 
         // Delete block
         $(document).on('click', '.wdcs-cb-delete-block', function () {
-            $(this).closest('.wdcs-cb-block').remove();
+            var $block = $(this).closest('.wdcs-cb-block');
+            removeEditors($block);
+            $block.remove();
         });
 
         /* =============================================================
@@ -626,6 +680,10 @@
 
         function doSerialize() {
             try {
+                // Flush TinyMCE content back to textareas before reading values.
+                if (typeof tinymce !== 'undefined') {
+                    tinymce.triggerSave();
+                }
                 var data = serializeSections();
                 $('#wdcs-cb-data').val(JSON.stringify(data));
             } catch (err) {

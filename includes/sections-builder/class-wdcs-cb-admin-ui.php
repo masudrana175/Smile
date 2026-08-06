@@ -37,7 +37,16 @@ class WDCS_CB_Admin_UI {
 				<?php echo self::section_html( $section ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 			<?php endforeach; ?>
 		</div>
+
 		<?php
+		// Hidden dummy editor — loads TinyMCE scripts for dynamic WYSIWYG fields.
+		echo '<div style="display:none;">';
+		wp_editor( '', 'wdcs_cb_dummy_wysiwyg', array(
+			'media_buttons' => false,
+			'quicktags'     => false,
+			'tinymce'       => array( 'toolbar1' => '' ),
+		) );
+		echo '</div>';
 	}
 
 	/**
@@ -93,7 +102,7 @@ class WDCS_CB_Admin_UI {
 				</div>
 
 				<div class="wdcs-cb-tab-pane active" data-pane="background">
-					<?php echo self::tab_background( $bg ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+					<?php echo self::tab_background( $bg, $id ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 				</div>
 
 				<div class="wdcs-cb-tab-pane" data-pane="layout">
@@ -105,15 +114,15 @@ class WDCS_CB_Admin_UI {
 				</div>
 
 				<div class="wdcs-cb-tab-pane" data-pane="title">
-					<?php echo self::tab_title( $title, 'title' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+					<?php echo self::tab_title( $title, 'title', $id ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 				</div>
 
 				<div class="wdcs-cb-tab-pane" data-pane="subtitle">
-					<?php echo self::tab_title( $subtitle, 'subtitle' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+					<?php echo self::tab_title( $subtitle, 'subtitle', $id ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 				</div>
 
 				<div class="wdcs-cb-tab-pane" data-pane="description">
-					<?php echo self::tab_description( $description ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+					<?php echo self::tab_description( $description, $id ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 				</div>
 
 				<div class="wdcs-cb-tab-pane" data-pane="columns">
@@ -189,7 +198,7 @@ class WDCS_CB_Admin_UI {
 	 * @param array $bg
 	 * @return string
 	 */
-	private static function tab_background( $bg ) {
+	private static function tab_background( $bg, $section_id = '' ) {
 		$type      = self::v( $bg, 'type', 'color' );
 		$color     = self::v( $bg, 'color' );
 		$image_url = self::v( $bg, 'image_url' );
@@ -223,6 +232,7 @@ class WDCS_CB_Admin_UI {
 			<label>
 				<input type="radio"
 					data-field="background.type"
+					name="wdcs_bg_type_<?php echo esc_attr( $section_id ); ?>"
 					value="color"
 					<?php checked( $type, 'color' ); ?>>
 				<?php esc_html_e( 'Color', 'smile' ); ?>
@@ -230,6 +240,7 @@ class WDCS_CB_Admin_UI {
 			<label>
 				<input type="radio"
 					data-field="background.type"
+					name="wdcs_bg_type_<?php echo esc_attr( $section_id ); ?>"
 					value="image"
 					<?php checked( $type, 'image' ); ?>>
 				<?php esc_html_e( 'Image', 'smile' ); ?>
@@ -301,31 +312,11 @@ class WDCS_CB_Admin_UI {
 	 * @return string
 	 */
 	private static function tab_layout( $layout ) {
-		$container_width = self::v( $layout, 'container_width', 'full' );
-		$max_width       = self::v( $layout, 'max_width' );
-		$content_width   = self::v( $layout, 'content_width' );
-		$column_gap      = self::v( $layout, 'column_gap' );
+		$max_width  = self::v( $layout, 'max_width' );
+		$column_gap = self::v( $layout, 'column_gap' );
 
 		ob_start();
 		?>
-		<div class="wdcs-cb-field-row">
-			<label><?php esc_html_e( 'Container Width', 'smile' ); ?></label>
-			<label>
-				<input type="radio"
-					data-field="layout.container_width"
-					value="full"
-					<?php checked( $container_width, 'full' ); ?>>
-				<?php esc_html_e( 'Full Width', 'smile' ); ?>
-			</label>
-			<label>
-				<input type="radio"
-					data-field="layout.container_width"
-					value="boxed"
-					<?php checked( $container_width, 'boxed' ); ?>>
-				<?php esc_html_e( 'Boxed', 'smile' ); ?>
-			</label>
-		</div>
-
 		<div class="wdcs-cb-field-row">
 			<label><?php esc_html_e( 'Max Width', 'smile' ); ?></label>
 			<input type="text"
@@ -333,15 +324,6 @@ class WDCS_CB_Admin_UI {
 				value="<?php echo esc_attr( $max_width ); ?>"
 				class="regular-text"
 				placeholder="<?php esc_attr_e( 'e.g. 1200px', 'smile' ); ?>">
-		</div>
-
-		<div class="wdcs-cb-field-row">
-			<label><?php esc_html_e( 'Content Width', 'smile' ); ?></label>
-			<input type="text"
-				data-field="layout.content_width"
-				value="<?php echo esc_attr( $content_width ); ?>"
-				class="regular-text"
-				placeholder="<?php esc_attr_e( 'e.g. 1140px', 'smile' ); ?>">
 		</div>
 
 		<div class="wdcs-cb-field-row">
@@ -379,7 +361,7 @@ class WDCS_CB_Admin_UI {
 	 * @param string $key    'title' or 'subtitle' — used to build data-field paths.
 	 * @return string
 	 */
-	private static function tab_title( $title, $key ) {
+	private static function tab_title( $title, $key, $section_id = '' ) {
 		$text      = self::v( $title, 'text' );
 		$alignment = self::v( $title, 'alignment', 'left' );
 		$margin    = is_array( $title['margin']  ?? null ) ? $title['margin']  : array();
@@ -424,6 +406,7 @@ class WDCS_CB_Admin_UI {
 				<label>
 					<input type="radio"
 						data-field="<?php echo esc_attr( $key . '.alignment' ); ?>"
+						name="wdcs_<?php echo esc_attr( $key ); ?>_align_<?php echo esc_attr( $section_id ); ?>"
 						value="<?php echo esc_attr( $align ); ?>"
 						<?php checked( $alignment, $align ); ?>>
 					<?php echo esc_html( ucfirst( $align ) ); ?>
@@ -443,21 +426,22 @@ class WDCS_CB_Admin_UI {
 	 * @param array $desc
 	 * @return string
 	 */
-	private static function tab_description( $desc ) {
+	private static function tab_description( $desc, $section_id = '' ) {
 		$content   = self::v( $desc, 'content' );
 		$alignment = self::v( $desc, 'alignment', 'left' );
 		$margin    = is_array( $desc['margin']  ?? null ) ? $desc['margin']  : array();
 		$padding   = is_array( $desc['padding'] ?? null ) ? $desc['padding'] : array();
+		$editor_id = 'wdcs_desc_' . $section_id;
 
 		ob_start();
 		?>
 		<div class="wdcs-cb-field-row">
 			<label><?php esc_html_e( 'Content', 'smile' ); ?></label>
 			<textarea
+				id="<?php echo esc_attr( $editor_id ); ?>"
 				data-field="description.content"
 				rows="5"
-				class="large-text"
-				placeholder="<?php esc_attr_e( 'HTML content...', 'smile' ); ?>"><?php echo esc_textarea( $content ); ?></textarea>
+				class="large-text wdcs-wysiwyg"><?php echo esc_textarea( $content ); ?></textarea>
 		</div>
 
 		<?php echo self::color_field( 'description.color', self::v( $desc, 'color' ), __( 'Color', 'smile' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
@@ -488,6 +472,7 @@ class WDCS_CB_Admin_UI {
 				<label>
 					<input type="radio"
 						data-field="description.alignment"
+						name="wdcs_desc_align_<?php echo esc_attr( $section_id ); ?>"
 						value="<?php echo esc_attr( $align ); ?>"
 						<?php checked( $alignment, $align ); ?>>
 					<?php echo esc_html( ucfirst( $align ) ); ?>
@@ -581,16 +566,17 @@ class WDCS_CB_Admin_UI {
 		$alignment = self::v( $b, 'alignment', 'left' );
 		$margin    = is_array( $b['margin']  ?? null ) ? $b['margin']  : array();
 		$padding   = is_array( $b['padding'] ?? null ) ? $b['padding'] : array();
+		$editor_id = 'wdcs_text_' . self::v( $b, 'id' );
 
 		ob_start();
 		?>
 		<div class="wdcs-cb-field-row">
 			<label><?php esc_html_e( 'Content', 'smile' ); ?></label>
 			<textarea
+				id="<?php echo esc_attr( $editor_id ); ?>"
 				data-field="content"
 				rows="5"
-				class="large-text"
-				placeholder="<?php esc_attr_e( 'HTML content...', 'smile' ); ?>"><?php echo esc_textarea( $content ); ?></textarea>
+				class="large-text wdcs-wysiwyg"><?php echo esc_textarea( $content ); ?></textarea>
 		</div>
 
 		<?php echo self::color_field( 'color', self::v( $b, 'color' ), __( 'Color', 'smile' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
@@ -621,6 +607,7 @@ class WDCS_CB_Admin_UI {
 				<label>
 					<input type="radio"
 						data-field="alignment"
+						name="wdcs_txt_align_<?php echo esc_attr( self::v( $b, 'id' ) ); ?>"
 						value="<?php echo esc_attr( $align ); ?>"
 						<?php checked( $alignment, $align ); ?>>
 					<?php echo esc_html( ucfirst( $align ) ); ?>
@@ -702,6 +689,7 @@ class WDCS_CB_Admin_UI {
 				<label>
 					<input type="radio"
 						data-field="alignment"
+						name="wdcs_img_align_<?php echo esc_attr( self::v( $b, 'id' ) ); ?>"
 						value="<?php echo esc_attr( $align ); ?>"
 						<?php checked( $alignment, $align ); ?>>
 					<?php echo esc_html( ucfirst( $align ) ); ?>
@@ -780,6 +768,7 @@ class WDCS_CB_Admin_UI {
 				<label>
 					<input type="radio"
 						data-field="alignment"
+						name="wdcs_btn_align_<?php echo esc_attr( self::v( $b, 'id' ) ); ?>"
 						value="<?php echo esc_attr( $align ); ?>"
 						<?php checked( $alignment, $align ); ?>>
 					<?php echo esc_html( ucfirst( $align ) ); ?>

@@ -5,6 +5,9 @@
 .wdcs-cb-section {
 	width: 100%;
 	box-sizing: border-box;
+	padding-left: 20px;
+	padding-right: 20px;
+	font-family: var(--e-global-typography-text-font-family), sans-serif;
 }
 
 .wdcs-cb-container {
@@ -24,7 +27,7 @@
 
 /* Header group */
 .wdcs-cb-header-group {
-	margin-bottom: 24px;
+	margin-bottom: 0;
 }
 
 .wdcs-cb-title,
