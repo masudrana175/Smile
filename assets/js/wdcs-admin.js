@@ -27,6 +27,28 @@
 
 
 	/* =========================================================
+	   Options page – Add / Remove global template rows
+	   ========================================================= */
+	var gtplCount = config.gtplCount || 0;
+
+	$( '#wdcs-add-gtpl' ).on( 'click', function () {
+		var template = $( '#wdcs-gtpl-row-template' ).html();
+		if ( ! template ) return;
+		var html = template.replace( /__GTPL_IDX__/g, gtplCount );
+		var $row = $( '<div class="wdcs-gtpl-row" data-gtpl-index="' + gtplCount + '">' + html + '</div>' );
+		$( '#wdcs-gtpl-list' ).append( $row );
+		$row.find( 'input[type="text"]' ).focus();
+		gtplCount++;
+	} );
+
+	$( document ).on( 'click', '.wdcs-remove-gtpl', function () {
+		$( this ).closest( '.wdcs-gtpl-row' ).fadeOut( 180, function () {
+			$( this ).remove();
+		} );
+	} );
+
+
+	/* =========================================================
 	   Options page – Add / Remove unlimited sections
 	   ========================================================= */
 	var sectionCount = config.sectionCount || 0;

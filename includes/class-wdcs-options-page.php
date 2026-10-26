@@ -5,7 +5,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class WDCS_Options_Page {
 
-	const OPTION_KEY = 'wdcs_sections_settings';
+	const OPTION_KEY          = 'wdcs_sections_settings';
+	const GLOBAL_TEMPLATES_KEY = 'wdcs_global_templates';
+
+	/**
+	 * Returns the saved global templates array.
+	 * Each entry: ['label' => string, 'elementor_id' => int]
+	 */
+	public static function get_global_templates(): array {
+		$saved = get_option( self::GLOBAL_TEMPLATES_KEY, array() );
+		return is_array( $saved ) ? $saved : array();
+	}
 
 	/**
 	 * Default sections seeded on first use.
@@ -90,6 +100,25 @@ class WDCS_Options_Page {
 			}
 		}
 		update_option( WDCS_CB_Meta_Box::POST_TYPES_OPTION, $clean_types );
+
+		// Save Global Templates.
+		$raw_gtpls  = isset( $_POST['wdcs_global_templates'] ) ? (array) $_POST['wdcs_global_templates'] : array();
+		$saved_gtpl = array();
+		foreach ( $raw_gtpls as $row ) {
+			if ( ! is_array( $row ) ) {
+				continue;
+			}
+			$label = sanitize_text_field( isset( $row['label'] ) ? $row['label'] : '' );
+			$eid   = isset( $row['elementor_id'] ) ? absint( $row['elementor_id'] ) : 0;
+			if ( '' === $label || $eid <= 0 ) {
+				continue;
+			}
+			$saved_gtpl[] = array(
+				'label'        => $label,
+				'elementor_id' => $eid,
+			);
+		}
+		update_option( self::GLOBAL_TEMPLATES_KEY, $saved_gtpl );
 
 		wp_safe_redirect( add_query_arg( array(
 			'page'    => 'wdcs-smile-sections',
@@ -176,15 +205,46 @@ class WDCS_Options_Page {
 				<?php endforeach; ?>
 				</div>
 
+				<hr style="margin:32px 0 24px;">
+
+				<h2 style="margin-bottom:8px;">
+					<span class="dashicons dashicons-admin-site-alt3" style="vertical-align:middle;margin-right:6px;color:#9b59b6;"></span>
+					Global Templates
+				</h2>
+				<p class="description" style="margin-bottom:16px;font-size:13px;">
+					Assign Elementor template IDs that appear in the <strong>Global Section</strong> dropdown on the post/page edit screen.
+				</p>
+
+				<?php $global_templates = self::get_global_templates(); $gi = 0; ?>
+				<div id="wdcs-gtpl-list">
+					<?php foreach ( $global_templates as $gtpl ) : ?>
+					<div class="wdcs-gtpl-row" data-gtpl-index="<?php echo esc_attr( $gi ); ?>">
+						<?php echo $this->gtpl_row_html( $gi, $gtpl['label'], $gtpl['elementor_id'] ); ?>
+					</div>
+					<?php $gi++; endforeach; ?>
+				</div>
+
+				<div class="wdcs-gtpl-add-row">
+					<button type="button" id="wdcs-add-gtpl" class="button button-secondary">
+						<span class="dashicons dashicons-plus-alt2" style="vertical-align:middle;margin-right:4px;"></span>
+						Add Global Template
+					</button>
+				</div>
+
 				<p class="submit" style="margin-top:24px;">
 					<?php submit_button( 'Save Smile Sections', 'primary large', 'submit', false ); ?>
 				</p>
 			</form>
 		</div>
 
-		<!-- Row template for JS cloning -->
+		<!-- Row template for JS cloning (sections) -->
 		<script type="text/html" id="wdcs-row-template">
 			<?php echo $this->row_html( '__IDX__', '', '', '', '' ); ?>
+		</script>
+
+		<!-- Row template for JS cloning (global templates) -->
+		<script type="text/html" id="wdcs-gtpl-row-template">
+			<?php echo $this->gtpl_row_html( '__GTPL_IDX__', '', '' ); ?>
 		</script>
 
 		<!-- Lightbox -->
@@ -260,6 +320,35 @@ class WDCS_Options_Page {
 		return ob_get_clean();
 	}
 
+	/**
+	 * Generates inner HTML for a single global-template row.
+	 */
+	private function gtpl_row_html( $index, $label, $elementor_id ) {
+		$idx = esc_attr( $index );
+		ob_start();
+		?>
+		<div class="wdcs-gtpl-fields">
+			<input type="text"
+			       name="wdcs_global_templates[<?php echo $idx; ?>][label]"
+			       value="<?php echo esc_attr( $label ); ?>"
+			       placeholder="Template Label"
+			       class="regular-text">
+			<input type="number"
+			       name="wdcs_global_templates[<?php echo $idx; ?>][elementor_id]"
+			       value="<?php echo esc_attr( $elementor_id ); ?>"
+			       placeholder="Elementor Template ID"
+			       class="small-text"
+			       min="1">
+		</div>
+		<div class="wdcs-gtpl-actions">
+			<button type="button" class="button wdcs-remove-gtpl" title="Remove">
+				<span class="dashicons dashicons-trash"></span>
+			</button>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
 	public function enqueue_assets( $hook ) {
 		if ( 'toplevel_page_wdcs-smile-sections' !== $hook ) {
 			return;
@@ -270,6 +359,7 @@ class WDCS_Options_Page {
 		wp_localize_script( 'wdcs-admin', 'wdcsSections', array(
 			'sections'     => array(),
 			'sectionCount' => count( self::get_settings() ),
+			'gtplCount'    => count( self::get_global_templates() ),
 		) );
 	}
 

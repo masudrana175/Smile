@@ -68,11 +68,15 @@ class WDCS_Admin_Sections {
 		$saved      = get_post_meta( $post->ID, self::META_KEY, true );
 		$active     = is_array( $saved ) ? $saved : array();
 
-		// Sections that have an Elementor template ID — available as Global Sections.
-		$global_sections = array();
-		foreach ( $sections as $slug => $sec ) {
-			if ( ! empty( $sec['elementor_id'] ) ) {
-				$global_sections[ $slug ] = $sec;
+		// Only explicitly designated global templates appear in the Global Section dropdown.
+		$global_templates_raw = WDCS_Options_Page::get_global_templates();
+		$global_sections      = array();
+		foreach ( $global_templates_raw as $gtpl ) {
+			if ( ! empty( $gtpl['elementor_id'] ) && ! empty( $gtpl['label'] ) ) {
+				$global_sections[] = array(
+					'label'        => $gtpl['label'],
+					'elementor_id' => (int) $gtpl['elementor_id'],
+				);
 			}
 		}
 
@@ -89,13 +93,11 @@ class WDCS_Admin_Sections {
 					<button type="button" class="wdcs-add-cb-section button button-small">+ Add</button>
 				</div>
 
-				<?php if ( ! empty( $global_sections ) ) : ?>
 				<div class="wdcs-avail-item wdcs-avail-global" data-type="global">
 					<span class="wdcs-avail-no-thumb dashicons dashicons-admin-site-alt3"></span>
 					<span class="wdcs-avail-label">Global Section</span>
 					<button type="button" class="wdcs-add-global-section button button-small">+ Add</button>
 				</div>
-				<?php endif; ?>
 
 				<?php foreach ( $sections as $slug => $section ) : ?>
 				<div class="wdcs-avail-item"
@@ -138,7 +140,7 @@ class WDCS_Admin_Sections {
 							<select class="wdcs-global-template-select"
 							        name="wdcs_global_template[<?php echo esc_attr( $slug ); ?>]">
 								<option value=""><?php esc_html_e( '— Select Template —', 'smile' ); ?></option>
-								<?php foreach ( $global_sections as $gs_slug => $gs ) : ?>
+								<?php foreach ( $global_sections as $gs ) : ?>
 									<option value="<?php echo esc_attr( $gs['elementor_id'] ); ?>"
 										<?php selected( $saved_eid, (int) $gs['elementor_id'] ); ?>>
 										<?php echo esc_html( $gs['label'] ); ?>
@@ -283,12 +285,11 @@ class WDCS_Admin_Sections {
 		wp_enqueue_script( 'wdcs-admin', WDCS_PLUGIN_URL . 'assets/js/wdcs-admin.js',  array( 'jquery', 'jquery-ui-sortable' ), WDCS_VERSION, true );
 
 		$global_sections_data = array();
-		foreach ( WDCS_Options_Page::get_settings() as $s_slug => $sec ) {
-			if ( ! empty( $sec['elementor_id'] ) ) {
+		foreach ( WDCS_Options_Page::get_global_templates() as $gtpl ) {
+			if ( ! empty( $gtpl['elementor_id'] ) && ! empty( $gtpl['label'] ) ) {
 				$global_sections_data[] = array(
-					'slug'        => $s_slug,
-					'label'       => $sec['label'],
-					'elementor_id' => (int) $sec['elementor_id'],
+					'label'        => $gtpl['label'],
+					'elementor_id' => (int) $gtpl['elementor_id'],
 				);
 			}
 		}
