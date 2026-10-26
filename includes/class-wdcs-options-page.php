@@ -144,19 +144,25 @@ class WDCS_Options_Page {
 			</h1>
 
 			<?php if ( $updated ) : ?>
-			<div class="notice notice-success is-dismissible" style="margin-top:16px;">
+			<div class="notice notice-success is-dismissible">
 				<p><strong>Settings saved.</strong></p>
 			</div>
 			<?php endif; ?>
 
-			<p class="description" style="margin:10px 0 24px;font-size:14px;">
-				Add unlimited sections, upload a preview image, and set the JetEngine meta box ID for each.
-				Editors can enable sections per post from the <strong>Select section(s)</strong> side panel.
-			</p>
-
 			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 				<input type="hidden" name="action" value="wdcs_save_options">
 				<?php wp_nonce_field( 'wdcs_save_options', 'wdcs_options_nonce' ); ?>
+
+				<!-- Sections card -->
+				<div class="wdcs-card">
+					<div class="wdcs-card-header">
+						<span class="dashicons dashicons-layout" style="color:#1ab5b6;"></span>
+						<h2>Sections</h2>
+					</div>
+					<p class="description">
+						Add unlimited sections, upload a preview image, and set the JetEngine / Elementor template ID.
+						Editors enable sections per post from the <strong>Select section(s)</strong> side panel.
+					</p>
 
 				<div id="wdcs-sections-list">
 					<?php foreach ( $sections as $slug => $section ) :
@@ -176,62 +182,65 @@ class WDCS_Options_Page {
 						Add Section
 					</button>
 				</div>
+				</div><!-- /.wdcs-card -->
 
-				<hr style="margin:32px 0 24px;">
-
-				<h2 style="margin-bottom:8px;">
-					<span class="dashicons dashicons-editor-table" style="vertical-align:middle;margin-right:6px;color:#1ab5b6;"></span>
-					Content Builder — Post Types
-				</h2>
-				<p class="description" style="margin-bottom:16px;font-size:13px;">
-					Choose which post types show the <strong>Content Builder</strong> meta box in the editor.
-				</p>
-
-				<?php
-				$enabled_types = WDCS_CB_Meta_Box::get_enabled_post_types();
-				$all_post_types = get_post_types( array( 'public' => true ), 'objects' );
-				unset( $all_post_types['attachment'] );
-				?>
-				<div style="display:flex;flex-wrap:wrap;gap:10px 24px;">
-				<?php foreach ( $all_post_types as $pt_slug => $pt_obj ) : ?>
-					<label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
-						<input type="checkbox"
-						       name="wdcs_cb_post_types[]"
-						       value="<?php echo esc_attr( $pt_slug ); ?>"
-						       <?php checked( in_array( $pt_slug, $enabled_types, true ) ); ?>>
-						<?php echo esc_html( $pt_obj->labels->singular_name ); ?>
-						<span style="color:#999;font-size:11px;">(<?php echo esc_html( $pt_slug ); ?>)</span>
-					</label>
-				<?php endforeach; ?>
-				</div>
-
-				<hr style="margin:32px 0 24px;">
-
-				<h2 style="margin-bottom:8px;">
-					<span class="dashicons dashicons-admin-site-alt3" style="vertical-align:middle;margin-right:6px;color:#9b59b6;"></span>
-					Global Templates
-				</h2>
-				<p class="description" style="margin-bottom:16px;font-size:13px;">
-					Assign Elementor template IDs that appear in the <strong>Global Section</strong> dropdown on the post/page edit screen.
-				</p>
-
-				<?php $global_templates = self::get_global_templates(); $gi = 0; ?>
-				<div id="wdcs-gtpl-list">
-					<?php foreach ( $global_templates as $gtpl ) : ?>
-					<div class="wdcs-gtpl-row" data-gtpl-index="<?php echo esc_attr( $gi ); ?>">
-						<?php echo $this->gtpl_row_html( $gi, $gtpl['label'], $gtpl['elementor_id'] ); ?>
+				<!-- Content Builder post types card -->
+				<div class="wdcs-card">
+					<div class="wdcs-card-header">
+						<span class="dashicons dashicons-editor-table" style="color:#1ab5b6;"></span>
+						<h2>Content Builder — Post Types</h2>
 					</div>
-					<?php $gi++; endforeach; ?>
-				</div>
+					<p class="description">
+						Choose which post types show the <strong>Content Builder</strong> meta box in the editor.
+					</p>
 
-				<div class="wdcs-gtpl-add-row">
-					<button type="button" id="wdcs-add-gtpl" class="button button-secondary">
-						<span class="dashicons dashicons-plus-alt2" style="vertical-align:middle;margin-right:4px;"></span>
-						Add Global Template
-					</button>
-				</div>
+					<?php
+					$enabled_types = WDCS_CB_Meta_Box::get_enabled_post_types();
+					$all_post_types = get_post_types( array( 'public' => true ), 'objects' );
+					unset( $all_post_types['attachment'] );
+					?>
+					<div style="display:flex;flex-wrap:wrap;gap:10px 24px;">
+					<?php foreach ( $all_post_types as $pt_slug => $pt_obj ) : ?>
+						<label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
+							<input type="checkbox"
+							       name="wdcs_cb_post_types[]"
+							       value="<?php echo esc_attr( $pt_slug ); ?>"
+							       <?php checked( in_array( $pt_slug, $enabled_types, true ) ); ?>>
+							<?php echo esc_html( $pt_obj->labels->singular_name ); ?>
+							<span style="color:#999;font-size:11px;">(<?php echo esc_html( $pt_slug ); ?>)</span>
+						</label>
+					<?php endforeach; ?>
+					</div>
+				</div><!-- /.wdcs-card -->
 
-				<p class="submit" style="margin-top:24px;">
+				<!-- Global Templates card -->
+				<div class="wdcs-card wdcs-card--purple">
+					<div class="wdcs-card-header">
+						<span class="dashicons dashicons-admin-site-alt3" style="color:#9b59b6;"></span>
+						<h2>Global Templates</h2>
+					</div>
+					<p class="description">
+						Assign Elementor template IDs that appear in the <strong>Global Section</strong> dropdown on the post/page edit screen.
+					</p>
+
+					<?php $global_templates = self::get_global_templates(); $gi = 0; ?>
+					<div id="wdcs-gtpl-list">
+						<?php foreach ( $global_templates as $gtpl ) : ?>
+						<div class="wdcs-gtpl-row" data-gtpl-index="<?php echo esc_attr( $gi ); ?>">
+							<?php echo $this->gtpl_row_html( $gi, $gtpl['label'], $gtpl['elementor_id'] ); ?>
+						</div>
+						<?php $gi++; endforeach; ?>
+					</div>
+
+					<div class="wdcs-gtpl-add-row">
+						<button type="button" id="wdcs-add-gtpl" class="button button-secondary wdcs-btn--purple">
+							<span class="dashicons dashicons-plus-alt2" style="vertical-align:middle;margin-right:4px;"></span>
+							Add Global Template
+						</button>
+					</div>
+				</div><!-- /.wdcs-card -->
+
+				<p class="submit" style="margin-top:4px;">
 					<?php submit_button( 'Save Smile Sections', 'primary large', 'submit', false ); ?>
 				</p>
 			</form>

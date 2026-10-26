@@ -69,18 +69,55 @@ body.wdcs-lightbox-open { overflow: hidden; }
 	display: flex;
 	align-items: center;
 	font-size: 22px;
+	font-weight: 700;
 	color: #1d2327;
-	padding-bottom: 16px;
-	border-bottom: 2px solid #1ab5b6;
-	margin-bottom: 0;
+	padding: 0 0 18px;
+	border-bottom: 3px solid #1ab5b6;
+	margin-bottom: 28px;
 }
 
-.wdcs-options-wrap h2 {
-	font-size: 16px;
-	font-weight: 600;
-	color: #1d2327;
+.wdcs-options-wrap .notice {
+	max-width: 900px;
+}
+
+/* Card wrapper for each major section */
+.wdcs-card {
+	background: #fff;
+	border: 1px solid #e0e6ec;
+	border-radius: 10px;
+	box-shadow: 0 2px 8px rgba(0,0,0,.05);
+	padding: 24px 28px;
+	max-width: 940px;
+	margin-bottom: 28px;
+}
+
+.wdcs-card-header {
 	display: flex;
 	align-items: center;
+	gap: 10px;
+	margin-bottom: 6px;
+}
+
+.wdcs-card-header h2 {
+	margin: 0;
+	font-size: 15px;
+	font-weight: 700;
+	color: #1d2327;
+	line-height: 1.4;
+}
+
+.wdcs-card-header .dashicons {
+	font-size: 20px;
+	width: 20px;
+	height: 20px;
+	flex-shrink: 0;
+}
+
+.wdcs-card > .description {
+	color: #646970;
+	font-size: 13px;
+	line-height: 1.6;
+	margin: 0 0 18px;
 }
 
 .wdcs-options-wrap .description {
@@ -88,17 +125,32 @@ body.wdcs-lightbox-open { overflow: hidden; }
 	line-height: 1.6;
 }
 
+/* Card variant – purple accent for Global Templates */
+.wdcs-card--purple {
+	border-color: #d5b4e8;
+}
+
+.wdcs-btn--purple {
+	color: #7d3c98 !important;
+	border-color: #9b59b6 !important;
+}
+
+.wdcs-btn--purple:hover {
+	background: #9b59b6 !important;
+	color: #fff !important;
+	border-color: #9b59b6 !important;
+}
+
 /* Section rows list */
 #wdcs-sections-list {
 	display: flex;
 	flex-direction: column;
 	gap: 0;
-	border: 1px solid #ddd;
-	border-radius: 8px;
+	border: 1px solid #e8edf2;
+	border-radius: 6px;
 	overflow: hidden;
-	background: #fff;
-	max-width: 900px;
-	box-shadow: 0 1px 4px rgba(0,0,0,.06);
+	background: #f8fafc;
+	max-width: 100%;
 }
 
 .wdcs-section-row {
@@ -220,16 +272,11 @@ body.wdcs-lightbox-open { overflow: hidden; }
 	display: flex;
 	flex-direction: column;
 	gap: 0;
-	border: 1px solid #d5b4e8;
-	border-radius: 8px;
+	border: 1px solid #e8d5f5;
+	border-radius: 6px;
 	overflow: hidden;
-	background: #fff;
+	background: #fdf8ff;
 	max-width: 600px;
-	box-shadow: 0 1px 4px rgba(155,89,182,.08);
-}
-
-#wdcs-gtpl-list:empty {
-	display: none;
 }
 
 .wdcs-gtpl-row {

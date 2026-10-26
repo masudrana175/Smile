@@ -31,12 +31,22 @@
 	   ========================================================= */
 	var gtplCount = config.gtplCount || 0;
 
-	$( '#wdcs-add-gtpl' ).on( 'click', function () {
-		var template = $( '#wdcs-gtpl-row-template' ).html();
-		if ( ! template ) return;
-		var html = template.replace( /__GTPL_IDX__/g, gtplCount );
-		var $row = $( '<div class="wdcs-gtpl-row" data-gtpl-index="' + gtplCount + '">' + html + '</div>' );
-		$( '#wdcs-gtpl-list' ).append( $row );
+	function buildGtplRow( idx ) {
+		return '<div class="wdcs-gtpl-row" data-gtpl-index="' + idx + '">' +
+			'<div class="wdcs-gtpl-fields">' +
+				'<input type="text" name="wdcs_global_templates[' + idx + '][label]" value="" placeholder="Template Label" class="regular-text">' +
+				'<input type="number" name="wdcs_global_templates[' + idx + '][elementor_id]" value="" placeholder="Elementor Template ID" class="small-text" min="1">' +
+			'</div>' +
+			'<div class="wdcs-gtpl-actions">' +
+				'<button type="button" class="button wdcs-remove-gtpl" title="Remove"><span class="dashicons dashicons-trash"></span></button>' +
+			'</div>' +
+		'</div>';
+	}
+
+	$( document ).on( 'click', '#wdcs-add-gtpl', function () {
+		var $list = $( '#wdcs-gtpl-list' );
+		var $row  = $( buildGtplRow( gtplCount ) );
+		$list.append( $row ).show();
 		$row.find( 'input[type="text"]' ).focus();
 		gtplCount++;
 	} );
