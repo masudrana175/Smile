@@ -5,10 +5,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class WDCS_Admin_Sections {
 
-	const META_KEY     = '_wdcs_active_sections';
-	const NONCE_ACTION = 'wdcs_save_sections';
-	const NONCE_FIELD  = 'wdcs_sections_nonce';
-	const CB_PREFIX    = 'wdcs_cb_';
+	const META_KEY      = '_wdcs_active_sections';
+	const NONCE_ACTION  = 'wdcs_save_sections';
+	const NONCE_FIELD   = 'wdcs_sections_nonce';
+	const CB_PREFIX     = 'wdcs_cb_';
+	const GLOBAL_PREFIX = 'wdcs_global_';
 
 	public static function get_all_sections() {
 		return WDCS_Options_Page::get_settings();
@@ -67,6 +68,14 @@ class WDCS_Admin_Sections {
 		$saved      = get_post_meta( $post->ID, self::META_KEY, true );
 		$active     = is_array( $saved ) ? $saved : array();
 
+		// Sections that have an Elementor template ID — available as Global Sections.
+		$global_sections = array();
+		foreach ( $sections as $slug => $sec ) {
+			if ( ! empty( $sec['elementor_id'] ) ) {
+				$global_sections[ $slug ] = $sec;
+			}
+		}
+
 		wp_nonce_field( self::NONCE_ACTION, self::NONCE_FIELD );
 		?>
 		<div class="wdcs-builder">
@@ -79,6 +88,14 @@ class WDCS_Admin_Sections {
 					<span class="wdcs-avail-label">Content Section</span>
 					<button type="button" class="wdcs-add-cb-section button button-small">+ Add</button>
 				</div>
+
+				<?php if ( ! empty( $global_sections ) ) : ?>
+				<div class="wdcs-avail-item wdcs-avail-global" data-type="global">
+					<span class="wdcs-avail-no-thumb dashicons dashicons-admin-site-alt3"></span>
+					<span class="wdcs-avail-label">Global Section</span>
+					<button type="button" class="wdcs-add-global-section button button-small">+ Add</button>
+				</div>
+				<?php endif; ?>
 
 				<?php foreach ( $sections as $slug => $section ) : ?>
 				<div class="wdcs-avail-item"
@@ -109,6 +126,35 @@ class WDCS_Admin_Sections {
 						$slug = $item['slug'];
 						$name = $item['name'];
 
+						// ── Global Section ────────────────────────────────────
+						if ( strpos( $slug, self::GLOBAL_PREFIX ) === 0 ) :
+							$saved_eid = isset( $raw['elementor_id'] ) ? (int) $raw['elementor_id'] : 0;
+					?>
+					<li class="wdcs-active-item wdcs-active-global"
+					    data-slug="<?php echo esc_attr( $slug ); ?>"
+					    data-jetengine="">
+						<div class="wdcs-active-top">
+							<span class="wdcs-drag-handle dashicons dashicons-menu"></span>
+							<select class="wdcs-global-template-select"
+							        name="wdcs_global_template[<?php echo esc_attr( $slug ); ?>]">
+								<option value=""><?php esc_html_e( '— Select Template —', 'smile' ); ?></option>
+								<?php foreach ( $global_sections as $gs_slug => $gs ) : ?>
+									<option value="<?php echo esc_attr( $gs['elementor_id'] ); ?>"
+										<?php selected( $saved_eid, (int) $gs['elementor_id'] ); ?>>
+										<?php echo esc_html( $gs['label'] ); ?>
+									</option>
+								<?php endforeach; ?>
+							</select>
+							<button type="button" class="wdcs-remove-active">&times;</button>
+						</div>
+						<input type="hidden" name="wdcs_active_sections_slug[]" value="<?php echo esc_attr( $slug ); ?>">
+						<input type="hidden" name="wdcs_active_sections_name[]" value="">
+					</li>
+					<?php
+						continue;
+						endif;
+
+						// ── Content Builder section ───────────────────────────
 						if ( strpos( $slug, self::CB_PREFIX ) === 0 ) :
 							$cb_id    = substr( $slug, strlen( self::CB_PREFIX ) );
 							$cb_label = $cb_map[ $cb_id ] ?? 'Content Section';
@@ -133,6 +179,8 @@ class WDCS_Admin_Sections {
 
 						if ( ! isset( $sections[ $slug ] ) ) continue;
 						$section = $sections[ $slug ];
+
+						// ── Regular Elementor section ─────────────────────────
 					?>
 					<li class="wdcs-active-item"
 					    data-slug="<?php echo esc_attr( $slug ); ?>"
@@ -183,24 +231,43 @@ class WDCS_Admin_Sections {
 			return;
 		}
 
-		$valid_slugs = array_keys( self::get_all_sections() );
-		$slugs       = isset( $_POST['wdcs_active_sections_slug'] ) ? (array) $_POST['wdcs_active_sections_slug'] : array();
-		$name_values = isset( $_POST['wdcs_active_sections_name'] ) ? (array) $_POST['wdcs_active_sections_name'] : array();
+		$valid_slugs     = array_keys( self::get_all_sections() );
+		$slugs           = isset( $_POST['wdcs_active_sections_slug'] ) ? (array) $_POST['wdcs_active_sections_slug'] : array();
+		$name_values     = isset( $_POST['wdcs_active_sections_name'] ) ? (array) $_POST['wdcs_active_sections_name'] : array();
+		$global_tmpl_map = isset( $_POST['wdcs_global_template'] ) ? (array) $_POST['wdcs_global_template'] : array();
 
 		$sanitized = array();
 		$seen      = array();
 		foreach ( $slugs as $i => $slug ) {
 			$slug      = sanitize_key( $slug );
-			$is_cb     = strpos( $slug, self::CB_PREFIX ) === 0;
-			$is_valid  = $is_cb || in_array( $slug, $valid_slugs, true );
-			if ( ! $is_valid || isset( $seen[ $slug ] ) ) {
+			$is_global = strpos( $slug, self::GLOBAL_PREFIX ) === 0;
+			$is_cb     = strpos( $slug, self::CB_PREFIX )     === 0;
+			$is_valid  = $is_global || $is_cb || in_array( $slug, $valid_slugs, true );
+
+			if ( ! $is_valid ) {
 				continue;
 			}
-			$seen[ $slug ] = true;
-			$sanitized[] = array(
-				'slug' => $slug,
-				'name' => isset( $name_values[ $i ] ) ? sanitize_text_field( $name_values[ $i ] ) : '',
-			);
+			// Global sections use unique timestamp slugs — allow multiple; others dedup.
+			if ( ! $is_global ) {
+				if ( isset( $seen[ $slug ] ) ) {
+					continue;
+				}
+				$seen[ $slug ] = true;
+			}
+
+			if ( $is_global ) {
+				$eid = isset( $global_tmpl_map[ $slug ] ) ? absint( $global_tmpl_map[ $slug ] ) : 0;
+				$sanitized[] = array(
+					'slug'        => $slug,
+					'name'        => '',
+					'elementor_id' => $eid,
+				);
+			} else {
+				$sanitized[] = array(
+					'slug' => $slug,
+					'name' => isset( $name_values[ $i ] ) ? sanitize_text_field( $name_values[ $i ] ) : '',
+				);
+			}
 		}
 
 		update_post_meta( $post_id, self::META_KEY, $sanitized );
@@ -215,6 +282,19 @@ class WDCS_Admin_Sections {
 		wp_enqueue_style(  'wdcs-admin', WDCS_PLUGIN_URL . 'assets/css/wdcs-admin.css', array(), WDCS_VERSION );
 		wp_enqueue_script( 'wdcs-admin', WDCS_PLUGIN_URL . 'assets/js/wdcs-admin.js',  array( 'jquery', 'jquery-ui-sortable' ), WDCS_VERSION, true );
 
-		wp_localize_script( 'wdcs-admin', 'wdcsSections', array( 'sections' => array() ) );
+		$global_sections_data = array();
+		foreach ( WDCS_Options_Page::get_settings() as $s_slug => $sec ) {
+			if ( ! empty( $sec['elementor_id'] ) ) {
+				$global_sections_data[] = array(
+					'slug'        => $s_slug,
+					'label'       => $sec['label'],
+					'elementor_id' => (int) $sec['elementor_id'],
+				);
+			}
+		}
+		wp_localize_script( 'wdcs-admin', 'wdcsSections', array(
+			'sections'       => array(),
+			'globalSections' => $global_sections_data,
+		) );
 	}
 }

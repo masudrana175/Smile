@@ -85,6 +85,51 @@
 
 
 	/* =========================================================
+	   Post edit – Add new Global Section from sidebar.
+	   Each click creates a unique instance with a template dropdown.
+	   ========================================================= */
+	$( document ).on( 'click', '.wdcs-add-global-section', function ( e ) {
+		e.stopPropagation();
+
+		var $activeList = $( '#wdcs-active-list' );
+		if ( ! $activeList.length ) return;
+
+		var $btn = $( this );
+		if ( $btn.prop( 'disabled' ) ) return;
+		$btn.prop( 'disabled', true );
+		setTimeout( function () { $btn.prop( 'disabled', false ); }, 600 );
+
+		var uid  = Date.now() + '_' + Math.floor( Math.random() * 1000 );
+		var slug = 'wdcs_global_' + uid;
+
+		var globalSections = ( window.wdcsSections && window.wdcsSections.globalSections )
+			? window.wdcsSections.globalSections : [];
+
+		var $select = $( '<select class="wdcs-global-template-select">' )
+			.attr( 'name', 'wdcs_global_template[' + slug + ']' );
+		$select.append( $( '<option>' ).val( '' ).text( '— Select Template —' ) );
+		$.each( globalSections, function ( i, sec ) {
+			$select.append( $( '<option>' ).val( sec.elementor_id ).text( sec.label ) );
+		} );
+
+		var $top = $( '<div class="wdcs-active-top"></div>' )
+			.append( $( '<span class="wdcs-drag-handle dashicons dashicons-menu"></span>' ) )
+			.append( $select )
+			.append( $( '<button type="button" class="wdcs-remove-active">&times;</button>' ) );
+
+		var $item = $( '<li class="wdcs-active-item wdcs-active-global"></li>' )
+			.attr( 'data-slug', slug )
+			.attr( 'data-jetengine', '' )
+			.append( $top )
+			.append( $( '<input type="hidden" name="wdcs_active_sections_slug[]">' ).val( slug ) )
+			.append( $( '<input type="hidden" name="wdcs_active_sections_name[]">' ).val( '' ) );
+
+		$activeList.append( $item );
+		$( '.wdcs-active-empty' ).hide();
+	} );
+
+
+	/* =========================================================
 	   Post edit – Add new Content Builder section from sidebar.
 	   Registered at the top level so it always works regardless
 	   of whether #wdcs-active-list exists at DOM-ready time.
@@ -130,7 +175,7 @@
 	   Also at the top level for the same reason.
 	   ========================================================= */
 	$( document ).on( 'click', '.wdcs-active-item', function ( e ) {
-		if ( $( e.target ).closest( '.wdcs-remove-active, .wdcs-active-name, .wdcs-drag-handle' ).length ) {
+		if ( $( e.target ).closest( '.wdcs-remove-active, .wdcs-active-name, .wdcs-drag-handle, .wdcs-global-template-select' ).length ) {
 			return;
 		}
 

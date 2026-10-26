@@ -388,3 +388,27 @@ body.wdcs-lightbox-open { overflow: hidden; }
 	margin: 6px 0 0;
 	font-style: italic;
 }
+
+/* Global Section active item */
+.wdcs-active-global {
+	border-color: #9b59b6;
+}
+.wdcs-active-global:hover { background: #faf5ff; }
+
+.wdcs-global-template-select {
+	flex: 1;
+	height: 28px !important;
+	font-size: 12px;
+	font-weight: 600;
+	color: #5e2d7e;
+	border: 1px solid #9b59b6 !important;
+	border-radius: 3px;
+	background: transparent;
+	min-width: 0;
+	box-sizing: border-box;
+}
+.wdcs-global-template-select:focus {
+	background: #fff;
+	outline: none;
+	box-shadow: none;
+}

@@ -36,7 +36,19 @@ class WDCS_Sections_Shortcode {
 				continue;
 			}
 
-			// Elementor template sections.
+			// Global Section — Elementor template chosen per instance.
+			if ( strpos( $slug, 'wdcs_global_' ) === 0 ) {
+				if ( ! is_array( $raw ) ) {
+					continue;
+				}
+				$elementor_id = (int) ( $raw['elementor_id'] ?? 0 );
+				if ( $elementor_id > 0 && class_exists( '\Elementor\Plugin' ) ) {
+					echo \Elementor\Plugin::$instance->frontend->get_builder_content_for_display( $elementor_id );
+				}
+				continue;
+			}
+
+			// Regular Elementor template section from Smile Sections options.
 			if ( ! isset( $all_sections[ $slug ] ) ) {
 				continue;
 			}
