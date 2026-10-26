@@ -3,7 +3,7 @@
  * Plugin Name: Smile
  * Plugin URI:  https://welchdentistry.wpenginepowered.com/
  * Description: Smile plugin for Welch Dentistry.
- * Version:     1.0.0
+ * Version:     1.5.0
  * Author:      WelchDentistry
  * Author URI:  https://welchdentistry.wpenginepowered.com/
  * License:     GPL-2.0+
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'WDCS_VERSION', '1.4.1' );
+define( 'WDCS_VERSION', '1.5.0' );
 define( 'WDCS_PLUGIN_FILE', __FILE__ );
 define( 'WDCS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WDCS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
